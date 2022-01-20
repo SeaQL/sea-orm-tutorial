@@ -1,0 +1,492 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Sea-ORM Simple CRUD Operations</title>
+        <meta name="robots" content="noindex" />
+
+
+        <!-- Custom HTML head -->
+        
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="sea-orm-concepts.html"><strong aria-hidden="true">1.1.</strong> SeaORM Concepts</a></li><li class="chapter-item expanded "><a href="installation.html"><strong aria-hidden="true">1.2.</strong> Installation</a></li><li class="chapter-item expanded "><a href="symbols.html"><strong aria-hidden="true">1.3.</strong> Symbols Used</a></li></ol></li><li class="chapter-item expanded "><a href="simple_crud_operations.html"><strong aria-hidden="true">2.</strong> Simple CRUD Operations</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="create_operation.html"><strong aria-hidden="true">2.1.</strong> Create Operation</a></li><li class="chapter-item expanded "><a href="insert_operations.html"><strong aria-hidden="true">2.2.</strong> Insert Operation</a></li><li class="chapter-item expanded "><a href="update_operation.html"><strong aria-hidden="true">2.3.</strong> Update Operation</a></li><li class="chapter-item expanded "><a href="delete_operation.html"><strong aria-hidden="true">2.4.</strong> Delete Operation</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Sea-ORM Simple CRUD Operations</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
+<p>Sea-ORM is an amazing ORM that aims to be a write code once and run on any popular Relational Database with current support for MySQL, PostgreSQL, MariaDB and SQLite.</p>
+<p>An ORM, short for Object Relational Mapper, is a programming library to help you  interact with a relational database from an Object-Oriented Programming  (OOP) language.</p>
+<p>Tables and columns in a database are mapped to objects and attributes,  while additional methods allow you to load and store data from and to  the database.</p>
+<p>Services built in Rust are lightweight (small binary size, low memory usage), safe (with compile-time guarantee), correct (if unit tests are  well-designed), and fast (compile-time optimizations minimize runtime  overhead).</p>
+<p>Due to Rust being a static, strongly typed, compiled,  thread-safe, non-garbage-collected, and unconventional object-oriented  language, working with an ORM in Rust is a bit different from other  scripting languages you are already familiar with.</p>
+<p>SeaORM tries to help you in reaping the above benefits while avoiding the hiccups when programming in Rust.</p>
+<h3 id="async-support"><a class="header" href="#async-support">Async Support</a></h3>
+<p>Async is a priority for SeaORM and it supports <a href="https://crates.io/crates/tokio">Tokio</a>, <a href="https://crates.io/crates/async-std">async-std</a> and <a href="https://crates.io/crates/actix">Actix</a> libraries which are some of the most popular async libraries in the Rust ecosystem, database operations are done through <a href="https://crates.io/crates/sqlx">SQLx</a> library which implements database drivers for PostgeSQL, MySQL, MariaDB and SQLite in pure Rust.</p>
+<h3 id="testable-service-oriented-orm"><a class="header" href="#testable-service-oriented-orm">Testable Service Oriented ORM</a></h3>
+<p>SeaORM offers a uniform API that you can use for mock connections to various database backends to write unit tests for your logic and  build services with speed, supporting  join, filter, sort and pagination.</p>
+<h3 id="comparison-with-diesel"><a class="header" href="#comparison-with-diesel">Comparison with Diesel</a></h3>
+<p>Diesel ORM is the most popular ORM for Rust relational database ecosystem. Diesel shares some features with SeaORM since they are both relational database ORMs, they are schema first and they both support  PostgeSQL, MySQL, MariaDB and SQLite. However, they differ in some features; Diesel is synchronous which SeaORM has supported async from day 1, SeaORM allows for dynamic queries while Diesel is static and Diesel depends on platform specific native database drivers while SeaORM offers drivers in pure Rust.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="seaorm-concepts"><a class="header" href="#seaorm-concepts">SeaORM Concepts</a></h1>
+<h4 id="schema---a-database-with-tables"><a class="header" href="#schema---a-database-with-tables">Schema - A database with tables</a></h4>
+<p>In SeaORM, a database with a collection of tables is called a <code>Schema</code>. Sea-ORM derives the database name from the provided database URL and the <code>sea_orm::Database::connect(&amp;url)</code> method as shown below:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// The MySQL database URL for the database `fruit_markets`
+let database_url = &quot;mysql://sea:sea@localhost/time_tests&quot;;
+
+// The PostgreSQL database URL for the database `fruit_markets`
+let database_url = &quot;postgres://sea:sea@localhost/time_tests&quot;;
+
+// The SQLite database URL for the database `fruit_markets`
+let database_url = &quot;sqlite://sea:sea@localhost/time_tests&quot;;
+
+// The connection to the provided database selected by the `database_url` variable
+ let dbconn = sea_orm::Database::connect(database_url).await.unwrap();
+<span class="boring">}
+</span></code></pre></pre>
+<h4 id="entity---a-table"><a class="header" href="#entity---a-table">Entity - a table</a></h4>
+<p>An <code>Entity</code> in SeaORM represents a database table  which helps you perform <code>CRUD</code> (Create, Read, Update, and Delete) operations on relevant tables. An entity implements the <code>EntityTrait</code> which provides an API for you to inspect its <a href="https://www.sea-ql.org/SeaORM/docs/generate-entity/entity-structure#column">Column</a>, <a href="https://www.sea-ql.org/SeaORM/docs/generate-entity/entity-structure#primary-key">PrimaryKey</a> and a <a href="https://www.sea-ql.org/SeaORM/docs/generate-entity/entity-structure#relation">Relation</a> . Each column in a table is referred to as <code>attribute</code> . See <a href="https://www.sea-ql.org/SeaORM/docs/generate-entity/entity-structure/#column">https://www.sea-ql.org/SeaORM/docs/generate-entity/entity-structure/#column</a> for more information of the structure of an <code>Entity</code>.</p>
+<p>For more details on the concepts of SeaORM, visit <a href="https://www.sea-ql.org/SeaORM/docs/introduction/sea-orm">https://www.sea-ql.org/SeaORM/docs/introduction/sea-orm</a></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="installation"><a class="header" href="#installation">Installation</a></h1>
+<p>Installing SeaORM is easy.</p>
+<ol>
+<li>
+<p>Install Rust - <a href="https://www.rust-lang.org/tools/install"> https://www.rust-lang.org/tools/install</a></p>
+</li>
+<li>
+<p>Install SeaORM-Cli that will help in reading a database schema and generating the relevant <code>Entity</code>, <code>Model</code> and <code>Relation</code> of every table in our selected database (<code>schema</code>).</p>
+<pre><code class="language-sh">$ cargo install sea-orm-cli
+</code></pre>
+</li>
+<li>
+<p>Create a new Rust Cargo project</p>
+<pre><code class="language-sh">$ cargo new SimpleCrud --name simple-crud
+</code></pre>
+</li>
+<li>
+<p>Switch to the new cargo project</p>
+<pre><code class="language-sh">$ cd simple-crud
+</code></pre>
+</li>
+<li>
+<p>Add SeaORM as a dependency in <code>Cargo.toml</code> file</p>
+<p>If you have <code>cargo edit</code> installed, run</p>
+<pre><code class="language-sh">$ cargo add sea-orm --no-default-features --features &quot;&lt;DATABASE_DRIVER&gt; &lt;ASYNC_RUNTIME&gt; macros&quot;
+</code></pre>
+<p>for our case, we will use Mysql, async-std and Rustls features</p>
+<pre><code class="language-sh">$ cargo add sea-orm --no-default-features --features &quot;runtime-async-std-rustls sqlx-mysql macros&quot; 
+</code></pre>
+<p>or if you don't have <code>cargo edit</code> installed, you can install it by running</p>
+<pre><code class="language-sh">$ cargo install cargo-edit
+</code></pre>
+<p>and then run the previous command <code>cargo add sea-orm ...</code>  The <code>cargo-edit</code> command is a handy tool that allows you to easily add a rust <code>crate</code> to the project and also easily update or upgrade a dependency or dependency tree.</p>
+<p>Add the <code>anyhow</code> crate to perform easier error handling and <code>async-std</code> crate for async operations</p>
+<pre><code class="language-sh">$ cargo add anyhow
+</code></pre>
+<pre><code class="language-sh">$ cargo add async-std --features attributes
+</code></pre>
+<p>You can also add it <code>SeaORM</code>	 manually in the <code>Cargo.toml</code> file</p>
+<pre><code class="language-toml">sea-orm = { version = &quot;0.5&quot;, features = [ &lt;DATABASE_DRIVER&gt;, &lt;ASYNC_RUNTIME&gt;, &quot;macros&quot; ], default-features = false }
+</code></pre>
+<p>The <code>DATABASE_DRIVER</code> and <code>ASYNC_RUNTIME</code> are described in the <code>SeaORM Concepts</code> section of this chapter.</p>
+<p>For this tutorial, we will use <code>async-std</code> for the async runtime, <code>rustls</code> for secure database connections and <code>mysql</code> as the desired database backend. However, even if you choose a different set of features the code stays the same since SeaORM manages the backends.</p>
+<p>So add the following to your <code>Cargo.toml</code> file</p>
+<pre><code class="language-toml">sea-orm = { version = &quot;0.5&quot;, features = [ &quot;runtime-async-std-rustls&quot;, &quot;sqlx-mysql&quot;, &quot;macros&quot; ], default-features = false}
+anyhow = &quot;1&quot;
+async-std = &quot;1&quot;
+</code></pre>
+</li>
+<li>
+<p>Make sure that your database server is running, then login and create a database called <code>fruit_markets</code>.</p>
+<pre><code class="language-sql">CREATE DATABASE fruit_markets;
+</code></pre>
+</li>
+<li>
+<p>Create a new user in the database called <code>webmaster</code> and with a password <code>master_char</code></p>
+<pre><code class="language-sql"># Step1: Create a new user
+CREATE USER 'webmaster'@'localhost' IDENTIFIED BY 'master_char';
+
+# Step 2: Allow the user to have Read, Write access to all tables in database `fruit_markets`
+GRANT ALL PRIVILEGES ON fruit_markets . * TO 'webmaster'@'localhost';
+
+# Step 3: Enable the above settings
+FLUSH PRIVILEGES;
+
+# Step 4: Logout of the database
+exit
+</code></pre>
+</li>
+</ol>
+<p>We are all set to perform CRUD operations from the MySQL database side.</p>
+<p>In the next chapter, we will create simple CRUD operations.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="symbols-used"><a class="header" href="#symbols-used">Symbols Used</a></h1>
+<h3 id="to-show-added-or-removed-code-from-files-we-will-use-comments-or"><a class="header" href="#to-show-added-or-removed-code-from-files-we-will-use-comments-or">To show added or removed code from files, we will use comments or</a></h3>
+<p><code>+</code> to show added code</p>
+<p><code>-</code> to show removed code</p>
+<p><code>...</code> is used to show only part of the existing code instead of rewriting already existing code in the examples.</p>
+<p>This will make it easier to visualize changes to a file</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="simple-crud-operations"><a class="header" href="#simple-crud-operations">Simple CRUD Operations</a></h1>
+<p>In this section, we will perform Create, Read, Update and Delete operations on the <code>fruits</code> table in the <code>fruit_markets</code> database. Each sub-section will focus on one database operation.</p>
+<h3 id="creating-the-database-configuration"><a class="header" href="#creating-the-database-configuration">Creating the database configuration</a></h3>
+<p>Create a <code>.env</code> file that will hold the database configuration and open it in your favourite code editor. Then add the following configuration in the format <code>DATABASE_URL=database://username:password@localhost/database_name</code></p>
+<p><strong>File:</strong> <em>./SimpleCRUD/.env</em></p>
+<pre><code class="language-sh"># Add this line to the .env file
+DATABASE_URL=mysql://webmaster:master_char@localhost/fruit_markets
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="create-operation"><a class="header" href="#create-operation">Create Operation</a></h1>
+<p>SeaORM abstracts database opertaions though the <code>sea_orm::Database::connect()</code> method which yields a <code>DatabaseConnection</code>. We will use this <code>DatabaseConnection</code> to execute database operations. Let's create the <code>fruits</code> table using the database connection.</p>
+<p>Our goal is to do the SQL <code>CREATE TABLE</code> operation:</p>
+<pre><code class="language-sql"># Create a fruits table
+CREATE TABLE fruits(
+    fruit_id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    datetime_utc TIMESTAMP NOT NULL,
+    unit_price INT,
+    sku VARCHAR(255),
+    PRIMARY KEY (fruit_id)
+);
+</code></pre>
+<p>The <code>fruits</code> table is a record of all the fruits available, their id (<code>fruit_id</code>), name (<code>name</code>), the timestamp when the row was entered (<code>datetime_utc</code>) in the UTC timezone, the price per kilogram of fruit (<code>unit_price</code>) and the stock tracking alphanumeric code (<code>sku</code>) commonly known as <strong>Stock Keeping Unit</strong>.</p>
+<hr />
+<p>Add a module <code>fruits_table</code> inside the <code>src</code> folder and add <code>mod.rs</code>, <code>prelude.rs</code> and <code>fruit.rs</code> files as its children.</p>
+<p><strong>FILE:</strong> <em>SimpleCRUD/src/create_fruits_table.rs</em></p>
+<pre><code>|-- SimpleCRUD/
+    |-- Cargo.toml
+    |-- Cargo.lock
+    |-- src/
+        |-- main.rs
++    	|-- fruits_table/ #Code to create table fruits goes here
++			|-- fruits.rs
++			|-- mod.rs
++			|-- prelude.rs
+</code></pre>
+<p>Then, import this module</p>
+<p><strong>FILE:</strong> <em>SimpleCRUD/src/main.rs</em></p>
+<pre><pre class="playground"><code class="language-rust">+ mod fruits_table;
++ use fruits_table::prelude::Fruits;
+
+ // Import the needed modules for table creation
++ use sea_orm::{ConnectionTrait, Database, Schema};
+// Handle errors using the `https://crates.io/crates/anyhow` crate
++ use anyhow::Result;
+
+// Convert this main function into async function
++ #[async_std::main]
++ async fn main() -&gt; Result&lt;()&gt;{
+- fn main {
++
++    
++    Ok(())
++ }
+</code></pre></pre>
+<p>The <code>#[async_std::main]</code> attribute is used to convert our main function <code>fn main() {}</code> into an async function <code>async fn main() {}</code> in order to use <code>await</code> inside main using <code>async-std</code> as the library.</p>
+<p>Inside the <code>fruit.rs</code> add:</p>
+<p><strong>FILE:</strong> <em>SimpleCRUD/src/fruits_table/fruit.rs</em></p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use sea_orm::entity::prelude::*;
+    
+#[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
+#[sea_orm(table_name = &quot;fruits&quot;)]
+pub struct Model {
+    #[sea_orm(primary_key)]
+    pub fruit_id: i32,
+    pub name: String,
+    pub datetime_utc: DateTime,
+    pub unit_price: Option&lt;i32&gt;,
+    pub sku: Option&lt;String&gt;,
+}
+
+#[derive(Copy, Clone, Debug, EnumIter)]
+pub enum Relation {}
+
+impl RelationTrait for Relation {
+    fn def(&amp;self) -&gt; RelationDef {
+        panic!(&quot;No RelationDef&quot;)
+    }
+}
+
+impl ActiveModelBehavior for ActiveModel {}
+
+<span class="boring">}
+</span></code></pre></pre>
+<p>The <code>#[derive(... , DeriveEntityModel)]</code> proc macro is used to automatically derive the code for <code>Entity</code>, <code>Model</code> and <code>ActiveModel</code> . For this to work, the struct <strong>MUST</strong> be called <code>Model</code>.</p>
+<p>The enum <code>Relation</code> <strong>MUST</strong> also be created, currently, it has empty fields but if the table had a relationship with another table, this is where it would be illustrated. The <code>#[derive(... , EnumIter)]</code> is required on a <code>Relation</code> to ensure the type implements and exposes a Rust <code>Iterator</code>.</p>
+<p>A <code>Relation</code> <strong>MUST</strong> implement a the <code>Relation</code> trait and the method <code>def()</code> of the trait. Currently, there is no relation so the <code>def()</code> method returns a <code>panic!(&quot;No RelationDef&quot;)</code> if we try to do operations like joins with other tables.</p>
+<p>Lastly, we implement <code>ActiveModelBehavior</code> for the <code>ActiveModel</code>. The <code>ActiveModel</code> is autogenerated by SeaORM codegen when we derived <code>#[derive(... , DeriveEntityModel)]</code> from <code>Model</code> struct.</p>
+<p>Inside <code>prelude.rs</code> add:</p>
+<p><strong>FILE:</strong> <em>SimpleCRUD/src/fruits_table/prelude.rs</em></p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub use super::fruits::Entity as Fruits;
+<span class="boring">}
+</span></code></pre></pre>
+<p>This code reads the <code>Entity</code> from the generated code and renames it to <code>Fruits</code> to avoid name collisions with other existing <code>Entities</code>.</p>
+<p>Inside <code>mod.rs</code> , export the modules using:</p>
+<p><strong>FILE:</strong> <em>SimpleCRUD/src/fruits_table/mod.rs</em></p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub mod prelude;
+
+pub mod fruits;
+<span class="boring">}
+</span></code></pre></pre>
+<p>Add code to perform execution</p>
+<pre><pre class="playground"><code class="language-rust">// Code snippet
+
+#[async_std::main]
+async fn main() -&gt; Result&lt;()&gt;{
+     // Read the database environment from the `.env` file
++ 	 let env_database_url = include_str!(&quot;../.env&quot;).trim();
+     // Split the env url
++    let split_url: Vec&lt;&amp;str&gt; = env_database_url.split(&quot;=&quot;).collect();
+     // Get item with the format `database_backend://username:password@localhost/database`
++    let database_url = split_url[1];
++
++    let db = Database::connect(database_url).await.unwrap();
++
++    let builder = db.get_database_backend();
++    let schema = Schema::new(builder);
++
++	 let create_table_op =  db.execute(builder.build(&amp;schema.create_table_from_entity(Fruits))).await;
++    println!(&quot;`CREATE TABLE fruits` {:?}&quot;, 
++        match create_table_op {
++    		Ok(_) =&gt; &quot;Operation Successful&quot;.to_owned(),
++    		Err(e) =&gt; format!(&quot;Unsuccessful - Error {:?}&quot;, e),
++    	 }
++    );
+    Ok(())
+}
+</code></pre></pre>
+<p>This operation requires reading the database environment, so we read the <code>.env</code> file using <code>include_str!(&quot;.env&quot;)</code> and store that result as the <code>database_url</code> variable.</p>
+<p>The <code>Database::connect(database_url)</code> creates a <code>DatabaseConnection</code> that we will use to connect to the database abd perform operations. Using this connection, the <code>get_database_backend()</code> method retrieves the database backend in use and then build a schema using <code> Schema::new(builder)</code> which in turn is used by the database backed value stored in the <code>builder</code> variable to build the SQL statement using the <code>.build()</code> method.</p>
+<p>Finally, we run the SQL query using the <code>.execute()</code> method on <code>DatabaseConnection</code> stored as the <code>db</code> variable. Running the program using <code>cargo run</code> should print:</p>
+<pre><code class="language-sh">$ `CREATE TABLE fruits` &quot;Operation Successful&quot;
+</code></pre>
+<p>Running the operation again should print the error:</p>
+<pre><code class="language-sh">$ `CREATE TABLE fruits` &quot;Unsuccessful - Error Exec(\&quot;error returned from database: 1050 (42S01): Table 'fruits' already exists\&quot;)&quot;
+</code></pre>
+<h3 id="automatically-deriving-the-code-to-perform-crud-operations"><a class="header" href="#automatically-deriving-the-code-to-perform-crud-operations">Automatically deriving the code to perform CRUD operations</a></h3>
+<p>If the database we want to use already exists, we can automatically generate an <code>Entity</code>, <code>Model</code> and <code>ActiveModel</code> using <code>sea-orm-cli</code> which we installed in the <code>Installation</code> part of the <code>Introduction</code>.</p>
+<p><code>sea-orm-cli</code> will load the database configuration by reading the <code>.env</code> file we created earlier in order to login to the database using the username and password in this file, then it will load the <code>schema</code> which is the database we specified, create the <code>Entities</code> from all the tables in the selected database and automatically generate the relevant code and of the process is successful, create all the code in the folder we will specify.</p>
+<p>In the current working directory of the project, execute:</p>
+<pre><code class="language-sh">$ sea-orm-cli generate entity -o src/fruits_table
+</code></pre>
+<p>The structure of the current working directory after <code>sea-orm-cli</code> has done its &quot;magical&quot; code generation:</p>
+<pre><code class="language-sh">|-- SimpleCRUD/
+    |-- Cargo.toml
+    |-- Cargo.lock
+    |-- src/
+        |-- main.rs
++    	|-- fruits_table/ #Model, ActiveModel and Entity code generated by `sea-orm-cli`
++            |-- fruit.rs 
++            |-- mod.rs
++            |-- prelude.rs
+</code></pre>
+<p>Next, import the <code>fruits_table</code> module for use with the project</p>
+<p><strong>File:</strong> <em>./SimpleCRUD/src/main.rs</em></p>
+<pre><pre class="playground"><code class="language-rust">+ mod fruits_table;
+
+#[async_std::main]
+async fn main() -&gt; Result&lt;()&gt;{
+	...
+    Ok(())
+}
+</code></pre></pre>
+<p>That's it, we have automatically loaded and created all the tables in our database as <code>Entities</code> using <code>sea-orm-cli</code>.</p>
+<p>Next, we perform <code>Insert</code> operations and print results to the console.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="insert-operation"><a class="header" href="#insert-operation">Insert Operation</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="update-operation"><a class="header" href="#update-operation">Update Operation</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="delete-operation"><a class="header" href="#delete-operation">Delete Operation</a></h1>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script type="text/javascript">
+            var socket = new WebSocket("ws://localhost:3000/__livereload");
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script type="text/javascript">
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </body>
+</html>
