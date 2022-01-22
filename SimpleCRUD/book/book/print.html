@@ -82,7 +82,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="sea-orm-concepts.html"><strong aria-hidden="true">1.1.</strong> SeaORM Concepts</a></li><li class="chapter-item expanded "><a href="installation.html"><strong aria-hidden="true">1.2.</strong> Installation</a></li><li class="chapter-item expanded "><a href="symbols.html"><strong aria-hidden="true">1.3.</strong> Symbols Used</a></li></ol></li><li class="chapter-item expanded "><a href="simple_crud_operations.html"><strong aria-hidden="true">2.</strong> Simple CRUD Operations</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="create_operation.html"><strong aria-hidden="true">2.1.</strong> Create Operation</a></li><li class="chapter-item expanded "><a href="insert_operations.html"><strong aria-hidden="true">2.2.</strong> Insert Operation</a></li><li class="chapter-item expanded "><a href="update_operation.html"><strong aria-hidden="true">2.3.</strong> Update Operation</a></li><li class="chapter-item expanded "><a href="delete_operation.html"><strong aria-hidden="true">2.4.</strong> Delete Operation</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="sea-orm-concepts.html"><strong aria-hidden="true">1.1.</strong> SeaORM Concepts</a></li><li class="chapter-item expanded "><a href="installation.html"><strong aria-hidden="true">1.2.</strong> Installation</a></li><li class="chapter-item expanded "><a href="symbols.html"><strong aria-hidden="true">1.3.</strong> Symbols Used</a></li></ol></li><li class="chapter-item expanded "><a href="simple_crud_operations.html"><strong aria-hidden="true">2.</strong> Simple CRUD Operations</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="create_operation.html"><strong aria-hidden="true">2.1.</strong> Create Operation</a></li><li class="chapter-item expanded "><a href="insert_operations.html"><strong aria-hidden="true">2.2.</strong> Insert Operation</a></li><li class="chapter-item expanded "><a href="read_operation.html"><strong aria-hidden="true">2.3.</strong> Read Operation</a></li><li class="chapter-item expanded "><a href="update_operation.html"><strong aria-hidden="true">2.4.</strong> Update Operation</a></li><li class="chapter-item expanded "><a href="delete_operation.html"><strong aria-hidden="true">2.5.</strong> Delete Operation</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -255,6 +255,7 @@ exit
 <p><code>+</code> to show added code</p>
 <p><code>-</code> to show removed code</p>
 <p><code>...</code> is used to show only part of the existing code instead of rewriting already existing code in the examples.</p>
+<p><code>$ </code> shows an operation is done on the console/shell </p>
 <p>This will make it easier to visualize changes to a file</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="simple-crud-operations"><a class="header" href="#simple-crud-operations">Simple CRUD Operations</a></h1>
 <p>In this section, we will perform Create, Read, Update and Delete operations on the <code>fruits</code> table in the <code>fruit_markets</code> database. Each sub-section will focus on one database operation.</p>
@@ -272,8 +273,8 @@ CREATE TABLE fruits(
     fruit_id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     datetime_utc TIMESTAMP NOT NULL,
-    unit_price INT,
-    sku VARCHAR(255),
+    unit_price INT NOT NULL,
+    sku VARCHAR(255) NOT NULL,
     PRIMARY KEY (fruit_id)
 );
 </code></pre>
@@ -323,10 +324,11 @@ CREATE TABLE fruits(
 pub struct Model {
     #[sea_orm(primary_key)]
     pub fruit_id: i32,
+    #[sea_orm(unique)]
     pub name: String,
     pub datetime_utc: DateTime,
-    pub unit_price: Option&lt;i32&gt;,
-    pub sku: Option&lt;String&gt;,
+    pub unit_price: i32,
+    pub sku: String,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter)]
@@ -346,15 +348,33 @@ impl ActiveModelBehavior for ActiveModel {}
 <p>The enum <code>Relation</code> <strong>MUST</strong> also be created, currently, it has empty fields but if the table had a relationship with another table, this is where it would be illustrated. The <code>#[derive(... , EnumIter)]</code> is required on a <code>Relation</code> to ensure the type implements and exposes a Rust <code>Iterator</code>.</p>
 <p>A <code>Relation</code> <strong>MUST</strong> implement a the <code>Relation</code> trait and the method <code>def()</code> of the trait. Currently, there is no relation so the <code>def()</code> method returns a <code>panic!(&quot;No RelationDef&quot;)</code> if we try to do operations like joins with other tables.</p>
 <p>Lastly, we implement <code>ActiveModelBehavior</code> for the <code>ActiveModel</code>. The <code>ActiveModel</code> is autogenerated by SeaORM codegen when we derived <code>#[derive(... , DeriveEntityModel)]</code> from <code>Model</code> struct.</p>
+<p>The <code>#[sea_orm(primary_key)]</code> is used to set the primary key and can be called using the <code>..Default::default()</code> when instantiating a model.</p>
+<p><code>#[sea_orm(unique)]</code> derive macro is used on the <code>name</code> field to ensure that two rows are not entered with the same name. This corresponds to SQL <code>UNIQUE</code> constraint.</p>
+<p>To set the field of a <code>Model</code> to a default of <code>NULL</code> , ensure the field is set to an <code>Option&lt;T&gt;</code> , for example, to set <code>sku</code> field of <code>Model</code> to SQL default of <code>NULL</code>:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
+#[sea_orm(table_name = &quot;fruits&quot;)]
+pub struct Model {
+    // -- shippet --
++   pub sku: Option&lt;String&gt;,
+-   pub sku: String,
+}
+<span class="boring">}
+</span></code></pre></pre>
 <p>Inside <code>prelude.rs</code> add:</p>
 <p><strong>FILE:</strong> <em>SimpleCRUD/src/fruits_table/prelude.rs</em></p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>pub use super::fruits::Entity as Fruits;
+</span>pub use super::fruits::{
+    ActiveModel as FruitsActiveModel, Column as FruitsColumn, Entity as Fruits,
+    Model as FruitsModel, PrimaryKey as FruitsPrimaryKey, Relation as FruitsRelation,
+};
 <span class="boring">}
 </span></code></pre></pre>
-<p>This code reads the <code>Entity</code> from the generated code and renames it to <code>Fruits</code> to avoid name collisions with other existing <code>Entities</code>.</p>
+<p>This code reads the <code>Entity</code> from the generated code and renames it to <code>Fruits</code> to avoid name collisions with other existing <code>Entities</code>. The same goes for the <code>Model</code>, <code>Relation</code>, <code>ActiveModel</code>, <code>Column</code>, etc..</p>
 <p>Inside <code>mod.rs</code> , export the modules using:</p>
 <p><strong>FILE:</strong> <em>SimpleCRUD/src/fruits_table/mod.rs</em></p>
 <pre><pre class="playground"><code class="language-rust">
@@ -430,6 +450,120 @@ async fn main() -&gt; Result&lt;()&gt;{
 <p>That's it, we have automatically loaded and created all the tables in our database as <code>Entities</code> using <code>sea-orm-cli</code>.</p>
 <p>Next, we perform <code>Insert</code> operations and print results to the console.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="insert-operation"><a class="header" href="#insert-operation">Insert Operation</a></h1>
+<p>SeaORM insert and read operations are done using the <code>Entity</code> derived from the <code>Model</code> struct using the <code>EntityTrait</code>. </p>
+<p>Let's insert a fruit <code>Apple</code> with a unit price per Kg of $2 and an SKU of <code>FM2022AKB40</code>.</p>
+<p>Add <code>chrono</code> crate to get the current time from  the system time</p>
+<pre><code class="language-toml">[package]
+name = &quot;simple-crud&quot;
+version = &quot;0.1.0&quot;
+edition = &quot;2021&quot;
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = &quot;1.0.52&quot;
+async-std = { version = &quot;1.10.0&quot;, features = [&quot;attributes&quot;] }
+sea-orm = { version = &quot;0.5.0&quot;, features = [
+    &quot;runtime-async-std-rustls&quot;,
+    &quot;sqlx-mysql&quot;,
+    &quot;macros&quot;,
+], default-features = false }
++ chrono = &quot;0.4.19&quot; # Add chrono here
+</code></pre>
+<p>Modify the current <code>sea-orm</code> features to add the feature <code>with-chrono</code>. This activates Date and Time features.</p>
+<pre><code class="language-TOML">[package]
+name = &quot;simple-crud&quot;
+version = &quot;0.1.0&quot;
+edition = &quot;2021&quot;
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = &quot;1.0.52&quot;
+async-std = { version = &quot;1.10.0&quot;, features = [&quot;attributes&quot;] }
+chrono = &quot;0.4.19&quot;
+sea-orm = { version = &quot;0.5.0&quot;, features = [
+    &quot;runtime-async-std-rustls&quot;,
+    &quot;sqlx-mysql&quot;,
+    &quot;macros&quot;,
++   &quot;with-chrono&quot;, # New feature
+], default-features = false }
+chrono = &quot;0.4.19&quot; # Add chrono here
+</code></pre>
+<p>Next, call <code>Utc::now()</code> chrono method to get the system time and then import     sea_orm::entity::<code>Set</code>  to perform convertions of the Rust data types into SQL ready data type <code>ActiveValue</code></p>
+<pre><pre class="playground"><code class="language-rust">// -- code snippet --
++ use sea_orm::entity::Set;
+
+#[async_std::main]
+async fn main() -&gt; Result&lt;()&gt;{
+	...
+
+    // Get current system time
++   let now = chrono::offset::Utc::now();
+
+    // Convert system time to `NaiveDateTime` since SeaORM `DateTime` expects this;
++   let naive_system_time = now.naive_utc();
+    
++   let fruit_01 = FruitsActiveModel {
++       name: Set(&quot;Apple&quot;.to_owned()),
++       datetime_utc: Set(naive_system_time),
++       unit_price: Set(2),
++       sku: Set(&quot;FM2022AKB40&quot;.to_owned()),
++       ..Default::default()
++   };
++   let fruit_insert_operation = Fruits::insert(fruit_01).exec(&amp;db).await;
+    
++   println!(&quot;INSERTED ONE: {:?}&quot;, fruit_insert_operation.unwrap());
+    
+    Ok(())
+}
+</code></pre></pre>
+<p>Since an <code>Entity</code> implements <code>EntityTrait</code>, the insert method is availabe. executing <code>Fruits::insert(fruit_01)</code>  will perform the operation on the database using <code>exec(&amp;db).await</code>. Here, the <code>insert</code> operation inserts only one row into the specified database;</p>
+<p>Running the program using <code>cargo run</code> should print</p>
+<pre><code class="language-sh">$ INSERTED ONE: InsertResult { last_insert_id: 1 }
+</code></pre>
+<p>Let's insert more than one row at a time using the  <code>Fruits::insert_many()</code> method.</p>
+<pre><pre class="playground"><code class="language-rust">// -- code snippet --
++ use chrono::offset::Utc;
+#[async_std::main]
+async fn main() -&gt; Result&lt;()&gt;{
+	...
+    
++   let fruit_02 = FruitsActiveModel {
++       name: Set(&quot;Banana&quot;.to_owned()),
++       datetime_utc: Set(Utc::now().naive_utc()),
++       unit_price: Set(2),
++       sku: Set(&quot;FM2022AKB41&quot;.to_owned()),
++       ..Default::default()
++   };
+    
++   let fruit_03 = FruitsActiveModel {
++       name: Set(&quot;Pineapple&quot;.to_owned()),
++       datetime_utc: Set(Utc::now().naive_utc()),
++       unit_price: Set(8),
++       sku: Set(&quot;FM2022AKB42&quot;.to_owned()),
++       ..Default::default()
++   };
+    
++   let fruit_04 = FruitsActiveModel {
++       name: Set(&quot;Mango&quot;.to_owned()),
++       datetime_utc: Set(Utc::now().naive_utc()),
++       unit_price: Set(6),
++       sku: Set(&quot;FM2022AKB43&quot;.to_owned()),
++       ..Default::default()
++   };
++   let fruit_insert_operation = Fruits::insert_many(vec![fruit_02, fruit_03, fruit_04]).exec(&amp;db).await;
+    
++   println!(&quot;INSERTED MANY: {:?}&quot;, fruit_insert_operation.unwrap());
+    
+    Ok(())
+}
+</code></pre></pre>
+<p>Running the program with <code>cargo run</code> prints</p>
+<pre><code class="language-sh">$ INSERTED MANY: InsertResult { last_insert_id: 3 }
+</code></pre>
+<p>Next up is reading one value or many values from a table.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="read-operation"><a class="header" href="#read-operation">Read Operation</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="update-operation"><a class="header" href="#update-operation">Update Operation</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="delete-operation"><a class="header" href="#delete-operation">Delete Operation</a></h1>
 

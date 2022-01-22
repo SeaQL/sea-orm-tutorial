@@ -8,4 +8,6 @@
 
 `...` is used to show only part of the existing code instead of rewriting already existing code in the examples.
 
+`$ ` shows an operation is done on the console/shell 
+
 This will make it easier to visualize changes to a file

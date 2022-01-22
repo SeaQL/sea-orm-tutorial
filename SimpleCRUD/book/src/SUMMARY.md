@@ -7,5 +7,6 @@
 - [Simple CRUD Operations](simple_crud_operations.md)
   - [Create Operation](create_operation.md)
   - [Insert Operation](insert_operations.md)
+  - [Read Operation](read_operation.md)
   - [Update Operation](update_operation.md)
   - [Delete Operation](delete_operation.md)

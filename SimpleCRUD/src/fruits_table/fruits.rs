@@ -5,10 +5,11 @@ use sea_orm::entity::prelude::*;
 pub struct Model {
     #[sea_orm(primary_key)]
     pub fruit_id: i32,
+    #[sea_orm(unique)]
     pub name: String,
     pub datetime_utc: DateTime,
-    pub unit_price: Option<i32>,
-    pub sku: Option<String>,
+    pub unit_price: i32,
+    pub sku: String,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter)]
