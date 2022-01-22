@@ -76,5 +76,17 @@ async fn main() -> Result<()> {
 
     println!("INSERTED ONE: {:?}", fruit_insert_operation.unwrap());
 
+    let fruits_table_rows = Fruits::find().all(&db).await;
+    println!("{:?}", fruits_table_rows.unwrap());
+
+    let fruits_by_id = Fruits::find_by_id(2).one(&db).await;
+    println!("{:?}", fruits_by_id.unwrap());
+
+    let find_pineapple = Fruits::find()
+        .filter(FruitsColumn::Name.contains("pineapple"))
+        .one(&db)
+        .await;
+    println!("{:?}", find_pineapple.unwrap());
+
     Ok(())
 }

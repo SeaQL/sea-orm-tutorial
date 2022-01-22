@@ -143,6 +143,82 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="read-operation"><a class="header" href="#read-operation">Read Operation</a></h1>
+<p>SeaORM can perform read operations through the <code>Entity::find()</code> method.</p>
+<h4 id="find-all-rows-using-in-a-table"><a class="header" href="#find-all-rows-using-in-a-table">Find all rows using in a table</a></h4>
+<p>The <code>.all()</code> method in <code>Entity</code> is used to fetch all rows in a table.</p>
+<pre><pre class="playground"><code class="language-rust">//-- snippet --
+
+#[async_std::main]
+async fn main() -&gt; Result&lt;()&gt; {
+    let env_database_url = include_str!(&quot;../.env&quot;).trim();
+    let split_url: Vec&lt;&amp;str&gt; = env_database_url.split(&quot;=&quot;).collect();
+    let database_url = split_url[1];
+
+    let db = Database::connect(database_url).await.unwrap();
+    
+    ...
+
++   let fruits_table_rows = Fruits::find().all(&amp;db).await;
++   println!(&quot;{:?}&quot;, fruits_table_rows.unwrap());
+
+    Ok(())
+}
+</code></pre></pre>
+<p>To fetch all the rows inside a table, in this case <code>Fruits</code>, call the <code>.all()</code> method on <code>Fruits::find()</code></p>
+<p>This should print all the rows in the table <code>fruits</code> to the console as an array of <code>Model</code>s.</p>
+<pre><code class="language-sh">$ [Model { fruit_id: 1, name: &quot;Apple&quot;, datetime_utc: 2022-01-22T10:36:39, unit_price: 2, sku: &quot;FM2022AKB40&quot; }, Model { fruit_id: 2, name: &quot;Banana&quot;, datetime_utc: 2022-01-22T10:36:39, unit_price: 2, sku: &quot;FM2022AKB41&quot; }, Model { fruit_id: 3, name: &quot;Pineapple&quot;, datetime_utc: 2022-01-22T10:36:39, unit_price: 8, sku: &quot;FM2022AKB42&quot; }, Model { fruit_id: 4, name: &quot;Mango&quot;, datetime_utc: 2022-01-22T10:36:39, unit_price: 6, sku: &quot;FM2022AKB43&quot; }]
+</code></pre>
+<h4 id="find-one-row-by-the-primary-key"><a class="header" href="#find-one-row-by-the-primary-key">Find one row by the primary key</a></h4>
+<p>Call the <code>.find_by_id(primary_key)</code> on <code>Fruits</code> entity (table).</p>
+<pre><pre class="playground"><code class="language-rust">//-- snippet --
+
+#[async_std::main]
+async fn main() -&gt; Result&lt;()&gt; {
+    let env_database_url = include_str!(&quot;../.env&quot;).trim();
+    let split_url: Vec&lt;&amp;str&gt; = env_database_url.split(&quot;=&quot;).collect();
+    let database_url = split_url[1];
+
+    let db = Database::connect(database_url).await.unwrap();
+    
+    ...
+
++   let fruits_by_id = Fruits::find_by_id(2).one(&amp;db).await;
++   println!(&quot;{:?}&quot;, fruits_by_id.unwrap());
+
+    Ok(())
+}
+</code></pre></pre>
+<p>The <code>.one()</code> method is used to retrieve one <code>Model</code> that matches the query instead of a <code>Vec&lt;Model&gt;</code> like the <code>.all()</code> method. <code>.one()</code> method returns an <code>Option&lt;Model&gt;</code> where <code>Some(Model)</code> is returned if the <code>Model</code> exists or a <code>None</code> is returned if a <code>Model</code> doesn't exist.</p>
+<p>Running the program prints</p>
+<pre><code class="language-sh">$ Some(Model { fruit_id: 2, name: &quot;Banana&quot;, datetime_utc: 2022-01-22T10:36:39, unit_price: 2, sku: &quot;FM2022AKB41&quot; })
+</code></pre>
+<h4 id="find-and-filter-a-row-by-column-name"><a class="header" href="#find-and-filter-a-row-by-column-name">Find and Filter a Row by Column Name</a></h4>
+<p>Calling <code>filter()</code> method on <code>Entity::find()</code> returns a <code>Model</code> containing the matching row.</p>
+<pre><pre class="playground"><code class="language-rust">//-- snippet --
+
+#[async_std::main]
+async fn main() -&gt; Result&lt;()&gt; {
+    let env_database_url = include_str!(&quot;../.env&quot;).trim();
+    let split_url: Vec&lt;&amp;str&gt; = env_database_url.split(&quot;=&quot;).collect();
+    let database_url = split_url[1];
+
+    let db = Database::connect(database_url).await.unwrap();
+    
+    ...
+
++   let find_pineapple = Fruits::find()
++    	.filter(FruitsColumn::Name.contains(&quot;pineapple&quot;))
++    	.one(&amp;db)
++    	.await;
++   println!(&quot;{:?}&quot;, find_pineapple.unwrap());
+
+    Ok(())
+}
+</code></pre></pre>
+<p>The <code>FruitsColumn::Name</code> is a <code>Column</code> that was autoderived by SeaORM from the <code>Model</code> struct fields, which we imported and renamed using <code>use super::fruits::Column as FruitsColumn</code> in the previous section. <code>.contains()</code> method on <code>FruitsColumn</code> allows filtering of the <code>Model</code>with <code>Pineapple</code> as it's name. Note that this is case insensitive so even calling <code>.contains(piNeApPle)</code> will yield the same results.</p>
+<p>Running the program prints:</p>
+<pre><code class="language-sh">$ Some(Model { fruit_id: 3, name: &quot;Pineapple&quot;, datetime_utc: 2022-01-22T10:36:39, unit_price: 8, sku: &quot;FM2022AKB42&quot; })
+</code></pre>
 
                     </main>
 
