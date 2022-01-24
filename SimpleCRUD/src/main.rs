@@ -86,7 +86,36 @@ async fn main() -> Result<()> {
         .filter(FruitsColumn::Name.contains("pineapple"))
         .one(&db)
         .await;
-    println!("{:?}", find_pineapple.unwrap());
+    println!("{:?}", find_pineapple.as_ref().unwrap());
+
+    // Update the `pineapple` column with a new unit price
+    if let Some(pineapple_model) = find_pineapple.unwrap() {
+        let mut pineapple_active_model: FruitsActiveModel = pineapple_model.into();
+        pineapple_active_model.unit_price = Set(10);
+
+        let updated_pineapple_model: FruitsModel =
+            pineapple_active_model.update(&db).await.unwrap();
+
+        println!("UPDATED PRICE: {:?}", updated_pineapple_model.clone());
+    } else {
+        println!("`Pineapple` column not found");
+    }
+
+    // Delete the `mango` column
+
+    let find_mango = Fruits::find()
+        .filter(FruitsColumn::Name.contains("mango"))
+        .one(&db)
+        .await;
+
+    if let Some(mango_model) = find_mango.unwrap() {
+        println!(
+            "DELETED MANGO: {:?}",
+            mango_model.delete(&db).await.unwrap()
+        );
+    } else {
+        println!("`Mango` column not found");
+    }
 
     Ok(())
 }

@@ -143,6 +143,47 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="update-operation"><a class="header" href="#update-operation">Update Operation</a></h1>
+<p>To perform an update in SeaORM, first, fetch the row to perform the operation using <code>Model</code> convert it into an <code>ActiveModel</code> by calling the <code>into()</code> methof on the <code>Model</code> , perform the operation on the field on the <code>ActiveModel</code> and then and then call the <code>.update()</code> method on the <code>ActiveModel</code>. The executed result returns the  <code>Model</code> that was updated if successful.</p>
+<pre><pre class="playground"><code class="language-rust">//-- snippet --
+
++ use sea_orm::sea_query::{Expr, Value}; // Types necessary to perform updates and conversions between types
+
+#[async_std::main]
+async fn main() -&gt; Result&lt;()&gt; {
+    let env_database_url = include_str!(&quot;../.env&quot;).trim();
+    let split_url: Vec&lt;&amp;str&gt; = env_database_url.split(&quot;=&quot;).collect();
+    let database_url = split_url[1];
+
+    let db = Database::connect(database_url).await.unwrap();
+    
+    ...
+
+   let find_pineapple = Fruits::find()
+    	.filter(FruitsColumn::Name.contains(&quot;pineapple&quot;))
+    	.one(&amp;db)
+    	.await;
+-  println!(&quot;{:?}&quot;, find_pineapple.unwrap());
++  println!(&quot;{:?}&quot;, find_pineapple.as_ref().unwrap()); // Reference the `Model` instead of owning it
+    
+   // Update the `pineapple` column with a new unit price
++  if let Some(pineapple_model) = find_pineapple.unwrap() {
++      let mut pineapple_active_model: FruitsActiveModel = pineapple_model.into();
++      pineapple_active_model.unit_price = Set(10);
+
++      let updated_pineapple_model: FruitsModel =
++          pineapple_active_model.update(&amp;db).await.unwrap();
+
++      println!(&quot;UPDATED PRICE: {:?}&quot;, updated_pineapple_model);
++  } else {
++      println!(&quot;`Pineapple` column not found&quot;);
++  }
+
+    Ok(())
+}
+</code></pre></pre>
+<p>Running the program returns </p>
+<pre><code class="language-sh">$ UPDATED PRICE: Model { fruit_id: 3, name: &quot;Pineapple&quot;, datetime_utc: 2022-01-22T13:35:27, unit_price: 10, sku: &quot;FM2022AKB42&quot; }
+</code></pre>
 
                     </main>
 

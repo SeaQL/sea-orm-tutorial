@@ -143,6 +143,43 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="delete-operation"><a class="header" href="#delete-operation">Delete Operation</a></h1>
+<p>To perform a delete operation in SeaORM, first, fetch the row to perform the operation using <code>Model</code> convert it into an <code>ActiveModel</code> by calling the <code>into()</code> methof on the <code>Model</code> , perform the operation on the field on the <code>ActiveModel</code> and then and then call the <code>.delete()</code> method on the <code>ActiveModel</code> or use <code>Fruit::delete()</code>. The executed result returns the  <code>Model</code> that was updated if successful.</p>
+<pre><pre class="playground"><code class="language-rust">//-- snippet --
+
++ use sea_orm::sea_query::{Expr, Value}; // Types necessary to perform updates and conversions between types
+
+#[async_std::main]
+async fn main() -&gt; Result&lt;()&gt; {
+    let env_database_url = include_str!(&quot;../.env&quot;).trim();
+    let split_url: Vec&lt;&amp;str&gt; = env_database_url.split(&quot;=&quot;).collect();
+    let database_url = split_url[1];
+
+    let db = Database::connect(database_url).await.unwrap();
+    
+    ...
+
+   // Delete the `mango` row
+
++  let find_mango = Fruits::find()
++       .filter(FruitsColumn::Name.contains(&quot;mango&quot;))
++       .one(&amp;db)
++       .await;
+    
++   if let Some(mango_model) = find_mango.unwrap() {
++       println!(
++           &quot;DELETED MANGO: {:?}&quot;,
++           mango_model.delete(&amp;db).await.unwrap()
++       );
++   } else {
++       println!(&quot;`Mango` row not found&quot;);
++   }
+
+    Ok(())
+}
+</code></pre></pre>
+<p>Running the program returns </p>
+<pre><code class="language-sh">$ DELETED MANGO: DeleteResult { rows_affected: 1 }
+</code></pre>
 
                     </main>
 
