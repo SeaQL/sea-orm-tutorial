@@ -15,7 +15,7 @@ let database_url = "postgres://sea:sea@localhost/time_tests";
 let database_url = "sqlite://sea:sea@localhost/time_tests";
 
 // The connection to the provided database selected by the `database_url` variable
- let dbconn = sea_orm::Database::connect(database_url).await.unwrap();
+ let dbconn = sea_orm::Database::connect(database_url).await?;
 ```
 
 #### Entity - a table

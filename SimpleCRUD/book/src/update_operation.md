@@ -15,24 +15,24 @@ async fn main() -> Result<()> {
     let split_url: Vec<&str> = env_database_url.split("=").collect();
     let database_url = split_url[1];
 
-    let db = Database::connect(database_url).await.unwrap();
+    let db = Database::connect(database_url).await?;
     
     ...
 
    let find_pineapple = Fruits::find()
     	.filter(FruitsColumn::Name.contains("pineapple"))
     	.one(&db)
-    	.await;
--  println!("{:?}", find_pineapple.unwrap());
-+  println!("{:?}", find_pineapple.as_ref().unwrap()); // Reference the `Model` instead of owning it
+    	.await?;
+-  println!("{:?}", find_pineapple?);
++  println!("{:?}", find_pineapple.as_ref()); // Reference the `Model` instead of owning it
     
    // Update the `pineapple` column with a new unit price
-+  if let Some(pineapple_model) = find_pineapple.unwrap() {
++  if let Some(pineapple_model) = find_pineapple {
 +      let mut pineapple_active_model: FruitsActiveModel = pineapple_model.into();
 +      pineapple_active_model.unit_price = Set(10);
 
 +      let updated_pineapple_model: FruitsModel =
-+          pineapple_active_model.update(&db).await.unwrap();
++          pineapple_active_model.update(&db).await?;
 
 +      println!("UPDATED PRICE: {:?}", updated_pineapple_model);
 +  } else {

@@ -15,12 +15,12 @@ async fn main() -> Result<()> {
     let split_url: Vec<&str> = env_database_url.split("=").collect();
     let database_url = split_url[1];
 
-    let db = Database::connect(database_url).await.unwrap();
+    let db = Database::connect(database_url).await?;
     
     ...
 
 +   let fruits_table_rows = Fruits::find().all(&db).await;
-+   println!("{:?}", fruits_table_rows.unwrap());
++   println!("{:?}", fruits_table_rows?);
 
     Ok(())
 }
@@ -49,12 +49,12 @@ async fn main() -> Result<()> {
     let split_url: Vec<&str> = env_database_url.split("=").collect();
     let database_url = split_url[1];
 
-    let db = Database::connect(database_url).await.unwrap();
+    let db = Database::connect(database_url).await?;
     
     ...
 
 +   let fruits_by_id = Fruits::find_by_id(2).one(&db).await;
-+   println!("{:?}", fruits_by_id.unwrap());
++   println!("{:?}", fruits_by_id?);
 
     Ok(())
 }
@@ -83,7 +83,7 @@ async fn main() -> Result<()> {
     let split_url: Vec<&str> = env_database_url.split("=").collect();
     let database_url = split_url[1];
 
-    let db = Database::connect(database_url).await.unwrap();
+    let db = Database::connect(database_url).await?;
     
     ...
 
@@ -91,7 +91,7 @@ async fn main() -> Result<()> {
 +    	.filter(FruitsColumn::Name.contains("pineapple"))
 +    	.one(&db)
 +    	.await;
-+   println!("{:?}", find_pineapple.unwrap());
++   println!("{:?}", find_pineapple?);
 
     Ok(())
 }

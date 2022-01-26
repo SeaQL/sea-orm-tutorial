@@ -1,5 +1,7 @@
 mod fruits_table;
 use fruits_table::prelude::*;
+mod suppliers_table;
+use suppliers_table::prelude::*;
 
 // Import the needed modules for table creation
 use sea_orm::{entity::Set, prelude::*, ConnectionTrait, Database, Schema};
@@ -14,7 +16,7 @@ async fn main() -> Result<()> {
     let split_url: Vec<&str> = env_database_url.split("=").collect();
     let database_url = split_url[1];
 
-    let db = Database::connect(database_url).await.unwrap();
+    let db = Database::connect(database_url).await?;
 
     let builder = db.get_database_backend();
     let schema = Schema::new(builder);
@@ -45,7 +47,7 @@ async fn main() -> Result<()> {
     };
     let fruit_insert_operation = Fruits::insert(fruit_01).exec(&db).await;
 
-    println!("INSERTED ONE: {:?}", fruit_insert_operation.unwrap());
+    println!("INSERTED ONE: {:?}", fruit_insert_operation?);
 
     let fruit_02 = FruitsActiveModel {
         name: Set("Banana".to_owned()),
@@ -74,27 +76,26 @@ async fn main() -> Result<()> {
         .exec(&db)
         .await;
 
-    println!("INSERTED ONE: {:?}", fruit_insert_operation.unwrap());
+    println!("INSERTED ONE: {:?}", fruit_insert_operation?);
 
     let fruits_table_rows = Fruits::find().all(&db).await;
-    println!("{:?}", fruits_table_rows.unwrap());
+    println!("{:?}", fruits_table_rows?);
 
     let fruits_by_id = Fruits::find_by_id(2).one(&db).await;
-    println!("{:?}", fruits_by_id.unwrap());
+    println!("{:?}", fruits_by_id?);
 
     let find_pineapple = Fruits::find()
         .filter(FruitsColumn::Name.contains("pineapple"))
         .one(&db)
-        .await;
-    println!("{:?}", find_pineapple.as_ref().unwrap());
+        .await?;
+    println!("{:?}", find_pineapple.as_ref());
 
     // Update the `pineapple` column with a new unit price
-    if let Some(pineapple_model) = find_pineapple.unwrap() {
+    if let Some(pineapple_model) = find_pineapple {
         let mut pineapple_active_model: FruitsActiveModel = pineapple_model.into();
         pineapple_active_model.unit_price = Set(10);
 
-        let updated_pineapple_model: FruitsModel =
-            pineapple_active_model.update(&db).await.unwrap();
+        let updated_pineapple_model: FruitsModel = pineapple_active_model.update(&db).await?;
 
         println!("UPDATED PRICE: {:?}", updated_pineapple_model.clone());
     } else {
@@ -108,14 +109,40 @@ async fn main() -> Result<()> {
         .one(&db)
         .await;
 
-    if let Some(mango_model) = find_mango.unwrap() {
-        println!(
-            "DELETED MANGO: {:?}",
-            mango_model.delete(&db).await.unwrap()
-        );
+    if let Some(mango_model) = find_mango? {
+        println!("DELETED MANGO: {:?}", mango_model.delete(&db).await?);
     } else {
         println!("`Mango` column not found");
     }
+
+    let supplier_01 = SuppliersActiveModel {
+        supplier_name: Set("John Doe".to_owned()),
+        fruit_id: Set(1_i32),
+        ..Default::default()
+    };
+
+    let supplier_02 = SuppliersActiveModel {
+        supplier_name: Set("Jane Doe".to_owned()),
+        fruit_id: Set(2_i32),
+        ..Default::default()
+    };
+
+    let supplier_03 = SuppliersActiveModel {
+        supplier_name: Set("Junior Doe".to_owned()),
+        fruit_id: Set(3_i32),
+        ..Default::default()
+    };
+
+    let supplier_insert_operation =
+        Suppliers::insert_many(vec![supplier_01, supplier_02, supplier_03])
+            .exec(&db)
+            .await;
+
+    println!("INSERTED MANY: {:?}", supplier_insert_operation?);
+
+    let who_supplies = Suppliers::find().find_with_related(Fruits).all(&db).await?;
+
+    dbg!(&who_supplies);
 
     Ok(())
 }

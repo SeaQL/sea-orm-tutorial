@@ -75,7 +75,7 @@ async fn main() -> Result<()>{
 +   };
 +   let fruit_insert_operation = Fruits::insert(fruit_01).exec(&db).await;
     
-+   println!("INSERTED ONE: {:?}", fruit_insert_operation.unwrap());
++   println!("INSERTED ONE: {:?}", fruit_insert_operation?);
     
     Ok(())
 }
@@ -123,7 +123,7 @@ async fn main() -> Result<()>{
 +   };
 +   let fruit_insert_operation = Fruits::insert_many(vec![fruit_02, fruit_03, fruit_04]).exec(&db).await;
     
-+   println!("INSERTED MANY: {:?}", fruit_insert_operation.unwrap());
++   println!("INSERTED MANY: {:?}", fruit_insert_operation?);
     
     Ok(())
 }

@@ -14,7 +14,7 @@ async fn main() -> Result<()> {
     let split_url: Vec<&str> = env_database_url.split("=").collect();
     let database_url = split_url[1];
 
-    let db = Database::connect(database_url).await.unwrap();
+    let db = Database::connect(database_url).await?;
     
     ...
 
@@ -25,10 +25,10 @@ async fn main() -> Result<()> {
 +       .one(&db)
 +       .await;
     
-+   if let Some(mango_model) = find_mango.unwrap() {
++   if let Some(mango_model) = find_mango? {
 +       println!(
 +           "DELETED MANGO: {:?}",
-+           mango_model.delete(&db).await.unwrap()
++           mango_model.delete(&db).await?
 +       );
 +   } else {
 +       println!("`Mango` row not found");

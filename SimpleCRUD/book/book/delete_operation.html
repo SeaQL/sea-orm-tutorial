@@ -81,7 +81,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="sea-orm-concepts.html"><strong aria-hidden="true">1.1.</strong> SeaORM Concepts</a></li><li class="chapter-item expanded "><a href="installation.html"><strong aria-hidden="true">1.2.</strong> Installation</a></li><li class="chapter-item expanded "><a href="symbols.html"><strong aria-hidden="true">1.3.</strong> Symbols Used</a></li></ol></li><li class="chapter-item expanded "><a href="simple_crud_operations.html"><strong aria-hidden="true">2.</strong> Simple CRUD Operations</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="create_operation.html"><strong aria-hidden="true">2.1.</strong> Create Operation</a></li><li class="chapter-item expanded "><a href="insert_operations.html"><strong aria-hidden="true">2.2.</strong> Insert Operation</a></li><li class="chapter-item expanded "><a href="read_operation.html"><strong aria-hidden="true">2.3.</strong> Read Operation</a></li><li class="chapter-item expanded "><a href="update_operation.html"><strong aria-hidden="true">2.4.</strong> Update Operation</a></li><li class="chapter-item expanded "><a href="delete_operation.html" class="active"><strong aria-hidden="true">2.5.</strong> Delete Operation</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="sea-orm-concepts.html"><strong aria-hidden="true">1.1.</strong> SeaORM Concepts</a></li><li class="chapter-item expanded "><a href="installation.html"><strong aria-hidden="true">1.2.</strong> Installation</a></li><li class="chapter-item expanded "><a href="symbols.html"><strong aria-hidden="true">1.3.</strong> Symbols Used</a></li></ol></li><li class="chapter-item expanded "><a href="simple_crud_operations.html"><strong aria-hidden="true">2.</strong> Simple CRUD Operations</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="create_operation.html"><strong aria-hidden="true">2.1.</strong> Create Operation</a></li><li class="chapter-item expanded "><a href="insert_operations.html"><strong aria-hidden="true">2.2.</strong> Insert Operation</a></li><li class="chapter-item expanded "><a href="read_operation.html"><strong aria-hidden="true">2.3.</strong> Read Operation</a></li><li class="chapter-item expanded "><a href="update_operation.html"><strong aria-hidden="true">2.4.</strong> Update Operation</a></li><li class="chapter-item expanded "><a href="delete_operation.html" class="active"><strong aria-hidden="true">2.5.</strong> Delete Operation</a></li></ol></li><li class="chapter-item expanded "><a href="relationships.html"><strong aria-hidden="true">3.</strong> Multi-table relationships</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="foreign_key_insert.html"><strong aria-hidden="true">3.1.</strong> Inserting Values into a Table with a Foreign Key</a></li><li class="chapter-item expanded "><a href="related_tables.html"><strong aria-hidden="true">3.2.</strong> SELECTing related tables</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -154,7 +154,7 @@ async fn main() -&gt; Result&lt;()&gt; {
     let split_url: Vec&lt;&amp;str&gt; = env_database_url.split(&quot;=&quot;).collect();
     let database_url = split_url[1];
 
-    let db = Database::connect(database_url).await.unwrap();
+    let db = Database::connect(database_url).await?;
     
     ...
 
@@ -165,10 +165,10 @@ async fn main() -&gt; Result&lt;()&gt; {
 +       .one(&amp;db)
 +       .await;
     
-+   if let Some(mango_model) = find_mango.unwrap() {
++   if let Some(mango_model) = find_mango? {
 +       println!(
 +           &quot;DELETED MANGO: {:?}&quot;,
-+           mango_model.delete(&amp;db).await.unwrap()
++           mango_model.delete(&amp;db).await?
 +       );
 +   } else {
 +       println!(&quot;`Mango` row not found&quot;);
@@ -189,6 +189,9 @@ async fn main() -&gt; Result&lt;()&gt; {
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
+                            <a rel="next" href="relationships.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
 
                         <div style="clear: both"></div>
                     </nav>
@@ -200,6 +203,9 @@ async fn main() -&gt; Result&lt;()&gt; {
                         <i class="fa fa-angle-left"></i>
                     </a>
 
+                    <a rel="next" href="relationships.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
             </nav>
 
         </div>
