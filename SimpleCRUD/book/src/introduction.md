@@ -1,25 +1,100 @@
 # Introduction
 
-Sea-ORM is an amazing ORM that aims to be a write code once and run on any popular Relational Database with current support for MySQL, PostgreSQL, MariaDB and SQLite.
+Sea-ORM is an amazing ORM that aims to be a write code once and run on any popular Relational Database with current support for MySQL, PostgreSQL, MariaDB and SQLite. In this tutorial, SeaORM with be used with `async-std` as the async runtime, `rustls` for database TLS connections and `sqlx-mysql` for the MySQL database backend.
 
-An ORM, short for Object Relational Mapper, is a programming library to help you  interact with a relational database from an Object-Oriented Programming  (OOP) language.
+### Installation of dependencies and tools
 
-Tables and columns in a database are mapped to objects and attributes,  while additional methods allow you to load and store data from and to  the database.
+1. Install SeaORM-Cli that will help in reading a database schema and generating the relevant `Entity`, `Model` and `Relation` of every table in our selected database (`schema`).
 
-Services built in Rust are lightweight (small binary size, low memory usage), safe (with compile-time guarantee), correct (if unit tests are  well-designed), and fast (compile-time optimizations minimize runtime  overhead).
+   ```sh
+   $ cargo install sea-orm-cli
+   ```
 
-Due to Rust being a static, strongly typed, compiled,  thread-safe, non-garbage-collected, and unconventional object-oriented  language, working with an ORM in Rust is a bit different from other  scripting languages you are already familiar with.
+2. Create a new Rust Cargo project
+    ```sh
+    $ cargo new SimpleCrud --name simple-crud
+    ```
 
-SeaORM tries to help you in reaping the above benefits while avoiding the hiccups when programming in Rust.
+3. Switch to the new cargo project
 
-### Async Support
+   ```sh
+   $ cd simple-crud
+   ```
 
-Async is a priority for SeaORM and it supports [Tokio](https://crates.io/crates/tokio), [async-std](https://crates.io/crates/async-std) and [Actix](https://crates.io/crates/actix) libraries which are some of the most popular async libraries in the Rust ecosystem, database operations are done through [SQLx](https://crates.io/crates/sqlx) library which implements database drivers for PostgeSQL, MySQL, MariaDB and SQLite in pure Rust.
+4. Add SeaORM as a dependency in `Cargo.toml` file
 
-### Testable Service Oriented ORM
+   If you have `cargo edit` installed, run
 
-SeaORM offers a uniform API that you can use for mock connections to various database backends to write unit tests for your logic and  build services with speed, supporting  join, filter, sort and pagination.
+   ```sh
+   $ cargo add sea-orm --no-default-features --features "runtime-async-std-rustls sqlx-mysql macros" 
+   ```
 
-### Comparison with Diesel
+   or if you don't have `cargo edit` installed, you can install it by running
 
-Diesel ORM is the most popular ORM for Rust relational database ecosystem. Diesel shares some features with SeaORM since they are both relational database ORMs, they are schema first and they both support  PostgeSQL, MySQL, MariaDB and SQLite. However, they differ in some features; Diesel is synchronous which SeaORM has supported async from day 1, SeaORM allows for dynamic queries while Diesel is static and Diesel depends on platform specific native database drivers while SeaORM offers drivers in pure Rust.
+   ```sh
+   $ cargo install cargo-edit
+   ```
+
+5. Add the async runtime
+
+    ```sh
+    $ cargo add anyhow
+    
+    $ cargo add async-std --features attributes
+    ```
+
+    You can also add them manually in the `Cargo.toml` file
+
+    ```toml
+    sea-orm = { version = "0.5", features = [ "runtime-async-std-rustls", "sqlx-mysql", "macros" ], default-features = false}
+    anyhow = "1"
+    async-std = "1"
+    ```
+
+    
+
+6. Make sure that your database server is running, then login and create a database called `fruit_markets`.
+
+   ```sql
+   CREATE DATABASE fruit_markets;
+   ```
+
+   
+
+7. Create a new user in the database called `webmaster` and with a password `master_char`
+
+   ```sql
+   # Step1: Create a new user
+   CREATE USER 'webmaster'@'localhost' IDENTIFIED BY 'master_char';
+   
+   # Step 2: Allow the user to have Read, Write access to all tables in database `fruit_markets`
+   GRANT ALL PRIVILEGES ON fruit_markets . * TO 'webmaster'@'localhost';
+   
+   # Step 3: Enable the above settings
+   FLUSH PRIVILEGES;
+   
+   # Step 4: Logout of the database
+   exit
+   ```
+
+We are all set to perform CRUD operations from the MySQL database side.
+
+
+
+### Symbols Used
+
+To show added or removed code from files, we will use comments or 
+
+`+` to show added code
+
+`-` to show removed code
+
+`...` is used to show only part of the existing code instead of rewriting already existing code in the examples.
+
+`$ ` shows an operation is done on the console/shell 
+
+This will make it easier to visualize changes to a file
+
+
+In the next chapter, we will create simple CRUD operations.
+

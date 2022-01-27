@@ -82,7 +82,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="sea-orm-concepts.html"><strong aria-hidden="true">1.1.</strong> SeaORM Concepts</a></li><li class="chapter-item expanded "><a href="installation.html"><strong aria-hidden="true">1.2.</strong> Installation</a></li><li class="chapter-item expanded "><a href="symbols.html"><strong aria-hidden="true">1.3.</strong> Symbols Used</a></li></ol></li><li class="chapter-item expanded "><a href="simple_crud_operations.html"><strong aria-hidden="true">2.</strong> Simple CRUD Operations</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="create_operation.html"><strong aria-hidden="true">2.1.</strong> Create Operation</a></li><li class="chapter-item expanded "><a href="insert_operations.html"><strong aria-hidden="true">2.2.</strong> Insert Operation</a></li><li class="chapter-item expanded "><a href="read_operation.html"><strong aria-hidden="true">2.3.</strong> Read Operation</a></li><li class="chapter-item expanded "><a href="update_operation.html"><strong aria-hidden="true">2.4.</strong> Update Operation</a></li><li class="chapter-item expanded "><a href="delete_operation.html"><strong aria-hidden="true">2.5.</strong> Delete Operation</a></li></ol></li><li class="chapter-item expanded "><a href="relationships.html"><strong aria-hidden="true">3.</strong> Multi-table relationships</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="foreign_key_insert.html"><strong aria-hidden="true">3.1.</strong> Inserting Values into a Table with a Foreign Key</a></li><li class="chapter-item expanded "><a href="related_tables.html"><strong aria-hidden="true">3.2.</strong> SELECTing related tables</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="simple_crud_operations.html"><strong aria-hidden="true">2.</strong> Simple CRUD Operations</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="create_operation.html"><strong aria-hidden="true">2.1.</strong> Create Operation</a></li><li class="chapter-item expanded "><a href="insert_operations.html"><strong aria-hidden="true">2.2.</strong> Insert Operation</a></li><li class="chapter-item expanded "><a href="read_operation.html"><strong aria-hidden="true">2.3.</strong> Read Operation</a></li><li class="chapter-item expanded "><a href="update_operation.html"><strong aria-hidden="true">2.4.</strong> Update Operation</a></li><li class="chapter-item expanded "><a href="delete_operation.html"><strong aria-hidden="true">2.5.</strong> Delete Operation</a></li></ol></li><li class="chapter-item expanded "><a href="relationships.html"><strong aria-hidden="true">3.</strong> Multi-table relationships</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="foreign_key_insert.html"><strong aria-hidden="true">3.1.</strong> Inserting Values into a Table with a Foreign Key</a></li><li class="chapter-item expanded "><a href="related_tables.html"><strong aria-hidden="true">3.2.</strong> SELECTing related tables</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -144,46 +144,9 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
-<p>Sea-ORM is an amazing ORM that aims to be a write code once and run on any popular Relational Database with current support for MySQL, PostgreSQL, MariaDB and SQLite.</p>
-<p>An ORM, short for Object Relational Mapper, is a programming library to help you  interact with a relational database from an Object-Oriented Programming  (OOP) language.</p>
-<p>Tables and columns in a database are mapped to objects and attributes,  while additional methods allow you to load and store data from and to  the database.</p>
-<p>Services built in Rust are lightweight (small binary size, low memory usage), safe (with compile-time guarantee), correct (if unit tests are  well-designed), and fast (compile-time optimizations minimize runtime  overhead).</p>
-<p>Due to Rust being a static, strongly typed, compiled,  thread-safe, non-garbage-collected, and unconventional object-oriented  language, working with an ORM in Rust is a bit different from other  scripting languages you are already familiar with.</p>
-<p>SeaORM tries to help you in reaping the above benefits while avoiding the hiccups when programming in Rust.</p>
-<h3 id="async-support"><a class="header" href="#async-support">Async Support</a></h3>
-<p>Async is a priority for SeaORM and it supports <a href="https://crates.io/crates/tokio">Tokio</a>, <a href="https://crates.io/crates/async-std">async-std</a> and <a href="https://crates.io/crates/actix">Actix</a> libraries which are some of the most popular async libraries in the Rust ecosystem, database operations are done through <a href="https://crates.io/crates/sqlx">SQLx</a> library which implements database drivers for PostgeSQL, MySQL, MariaDB and SQLite in pure Rust.</p>
-<h3 id="testable-service-oriented-orm"><a class="header" href="#testable-service-oriented-orm">Testable Service Oriented ORM</a></h3>
-<p>SeaORM offers a uniform API that you can use for mock connections to various database backends to write unit tests for your logic and  build services with speed, supporting  join, filter, sort and pagination.</p>
-<h3 id="comparison-with-diesel"><a class="header" href="#comparison-with-diesel">Comparison with Diesel</a></h3>
-<p>Diesel ORM is the most popular ORM for Rust relational database ecosystem. Diesel shares some features with SeaORM since they are both relational database ORMs, they are schema first and they both support  PostgeSQL, MySQL, MariaDB and SQLite. However, they differ in some features; Diesel is synchronous which SeaORM has supported async from day 1, SeaORM allows for dynamic queries while Diesel is static and Diesel depends on platform specific native database drivers while SeaORM offers drivers in pure Rust.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="seaorm-concepts"><a class="header" href="#seaorm-concepts">SeaORM Concepts</a></h1>
-<h4 id="schema---a-database-with-tables"><a class="header" href="#schema---a-database-with-tables">Schema - A database with tables</a></h4>
-<p>In SeaORM, a database with a collection of tables is called a <code>Schema</code>. Sea-ORM derives the database name from the provided database URL and the <code>sea_orm::Database::connect(&amp;url)</code> method as shown below:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>// The MySQL database URL for the database `fruit_markets`
-let database_url = &quot;mysql://sea:sea@localhost/time_tests&quot;;
-
-// The PostgreSQL database URL for the database `fruit_markets`
-let database_url = &quot;postgres://sea:sea@localhost/time_tests&quot;;
-
-// The SQLite database URL for the database `fruit_markets`
-let database_url = &quot;sqlite://sea:sea@localhost/time_tests&quot;;
-
-// The connection to the provided database selected by the `database_url` variable
- let dbconn = sea_orm::Database::connect(database_url).await?;
-<span class="boring">}
-</span></code></pre></pre>
-<h4 id="entity---a-table"><a class="header" href="#entity---a-table">Entity - a table</a></h4>
-<p>An <code>Entity</code> in SeaORM represents a database table  which helps you perform <code>CRUD</code> (Create, Read, Update, and Delete) operations on relevant tables. An entity implements the <code>EntityTrait</code> which provides an API for you to inspect its <a href="https://www.sea-ql.org/SeaORM/docs/generate-entity/entity-structure#column">Column</a>, <a href="https://www.sea-ql.org/SeaORM/docs/generate-entity/entity-structure#primary-key">PrimaryKey</a> and a <a href="https://www.sea-ql.org/SeaORM/docs/generate-entity/entity-structure#relation">Relation</a> . Each column in a table is referred to as <code>attribute</code> . See <a href="https://www.sea-ql.org/SeaORM/docs/generate-entity/entity-structure/#column">https://www.sea-ql.org/SeaORM/docs/generate-entity/entity-structure/#column</a> for more information of the structure of an <code>Entity</code>.</p>
-<p>For more details on the concepts of SeaORM, visit <a href="https://www.sea-ql.org/SeaORM/docs/introduction/sea-orm">https://www.sea-ql.org/SeaORM/docs/introduction/sea-orm</a></p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="installation"><a class="header" href="#installation">Installation</a></h1>
-<p>Installing SeaORM is easy.</p>
+<p>Sea-ORM is an amazing ORM that aims to be a write code once and run on any popular Relational Database with current support for MySQL, PostgreSQL, MariaDB and SQLite. In this tutorial, SeaORM with be used with <code>async-std</code> as the async runtime, <code>rustls</code> for database TLS connections and <code>sqlx-mysql</code> for the MySQL database backend.</p>
+<h3 id="installation-of-dependencies-and-tools"><a class="header" href="#installation-of-dependencies-and-tools">Installation of dependencies and tools</a></h3>
 <ol>
-<li>
-<p>Install Rust - <a href="https://www.rust-lang.org/tools/install"> https://www.rust-lang.org/tools/install</a></p>
-</li>
 <li>
 <p>Install SeaORM-Cli that will help in reading a database schema and generating the relevant <code>Entity</code>, <code>Model</code> and <code>Relation</code> of every table in our selected database (<code>schema</code>).</p>
 <pre><code class="language-sh">$ cargo install sea-orm-cli
@@ -202,26 +165,19 @@ let database_url = &quot;sqlite://sea:sea@localhost/time_tests&quot;;
 <li>
 <p>Add SeaORM as a dependency in <code>Cargo.toml</code> file</p>
 <p>If you have <code>cargo edit</code> installed, run</p>
-<pre><code class="language-sh">$ cargo add sea-orm --no-default-features --features &quot;&lt;DATABASE_DRIVER&gt; &lt;ASYNC_RUNTIME&gt; macros&quot;
-</code></pre>
-<p>for our case, we will use Mysql, async-std and Rustls features</p>
 <pre><code class="language-sh">$ cargo add sea-orm --no-default-features --features &quot;runtime-async-std-rustls sqlx-mysql macros&quot; 
 </code></pre>
 <p>or if you don't have <code>cargo edit</code> installed, you can install it by running</p>
 <pre><code class="language-sh">$ cargo install cargo-edit
 </code></pre>
-<p>and then run the previous command <code>cargo add sea-orm ...</code>  The <code>cargo-edit</code> command is a handy tool that allows you to easily add a rust <code>crate</code> to the project and also easily update or upgrade a dependency or dependency tree.</p>
-<p>Add the <code>anyhow</code> crate to perform easier error handling and <code>async-std</code> crate for async operations</p>
+</li>
+<li>
+<p>Add the async runtime</p>
 <pre><code class="language-sh">$ cargo add anyhow
+
+$ cargo add async-std --features attributes
 </code></pre>
-<pre><code class="language-sh">$ cargo add async-std --features attributes
-</code></pre>
-<p>You can also add it <code>SeaORM</code>	 manually in the <code>Cargo.toml</code> file</p>
-<pre><code class="language-toml">sea-orm = { version = &quot;0.5&quot;, features = [ &lt;DATABASE_DRIVER&gt;, &lt;ASYNC_RUNTIME&gt;, &quot;macros&quot; ], default-features = false }
-</code></pre>
-<p>The <code>DATABASE_DRIVER</code> and <code>ASYNC_RUNTIME</code> are described in the <code>SeaORM Concepts</code> section of this chapter.</p>
-<p>For this tutorial, we will use <code>async-std</code> for the async runtime, <code>rustls</code> for secure database connections and <code>mysql</code> as the desired database backend. However, even if you choose a different set of features the code stays the same since SeaORM manages the backends.</p>
-<p>So add the following to your <code>Cargo.toml</code> file</p>
+<p>You can also add them manually in the <code>Cargo.toml</code> file</p>
 <pre><code class="language-toml">sea-orm = { version = &quot;0.5&quot;, features = [ &quot;runtime-async-std-rustls&quot;, &quot;sqlx-mysql&quot;, &quot;macros&quot; ], default-features = false}
 anyhow = &quot;1&quot;
 async-std = &quot;1&quot;
@@ -249,14 +205,14 @@ exit
 </li>
 </ol>
 <p>We are all set to perform CRUD operations from the MySQL database side.</p>
-<p>In the next chapter, we will create simple CRUD operations.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="symbols-used"><a class="header" href="#symbols-used">Symbols Used</a></h1>
-<h3 id="to-show-added-or-removed-code-from-files-we-will-use-comments-or"><a class="header" href="#to-show-added-or-removed-code-from-files-we-will-use-comments-or">To show added or removed code from files, we will use comments or</a></h3>
+<h3 id="symbols-used"><a class="header" href="#symbols-used">Symbols Used</a></h3>
+<p>To show added or removed code from files, we will use comments or </p>
 <p><code>+</code> to show added code</p>
 <p><code>-</code> to show removed code</p>
 <p><code>...</code> is used to show only part of the existing code instead of rewriting already existing code in the examples.</p>
 <p><code>$ </code> shows an operation is done on the console/shell </p>
 <p>This will make it easier to visualize changes to a file</p>
+<p>In the next chapter, we will create simple CRUD operations.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="simple-crud-operations"><a class="header" href="#simple-crud-operations">Simple CRUD Operations</a></h1>
 <p>In this section, we will perform Create, Read, Update and Delete operations on the <code>fruits</code> table in the <code>fruit_markets</code> database. Each sub-section will focus on one database operation.</p>
 <h3 id="creating-the-database-configuration"><a class="header" href="#creating-the-database-configuration">Creating the database configuration</a></h3>
