@@ -146,7 +146,7 @@
 <p>SeaORM can perform read operations through the <code>Entity::find()</code> method.</p>
 <h4 id="find-all-rows-using-in-a-table"><a class="header" href="#find-all-rows-using-in-a-table">Find all rows using in a table</a></h4>
 <p>The <code>.all()</code> method in <code>Entity</code> is used to fetch all rows in a table.</p>
-<pre><pre class="playground"><code class="language-rust">//-- snippet --
+<pre><pre class="playground"><code class="language-rust no_run">//-- snippet --
 
 #[async_std::main]
 async fn main() -&gt; Result&lt;()&gt; {
@@ -170,7 +170,7 @@ async fn main() -&gt; Result&lt;()&gt; {
 </code></pre>
 <h4 id="find-one-row-by-the-primary-key"><a class="header" href="#find-one-row-by-the-primary-key">Find one row by the primary key</a></h4>
 <p>Call the <code>.find_by_id(primary_key)</code> on <code>Fruits</code> entity (table).</p>
-<pre><pre class="playground"><code class="language-rust">//-- snippet --
+<pre><pre class="playground"><code class="language-rust no_run">//-- snippet --
 
 #[async_std::main]
 async fn main() -&gt; Result&lt;()&gt; {
@@ -194,7 +194,7 @@ async fn main() -&gt; Result&lt;()&gt; {
 </code></pre>
 <h4 id="find-and-filter-a-row-by-column-name"><a class="header" href="#find-and-filter-a-row-by-column-name">Find and Filter a Row by Column Name</a></h4>
 <p>Calling <code>filter()</code> method on <code>Entity::find()</code> returns a <code>Model</code> containing the matching row.</p>
-<pre><pre class="playground"><code class="language-rust">//-- snippet --
+<pre><pre class="playground"><code class="language-rust no_run">//-- snippet --
 
 #[async_std::main]
 async fn main() -&gt; Result&lt;()&gt; {

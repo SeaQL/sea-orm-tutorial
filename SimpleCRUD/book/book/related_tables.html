@@ -144,7 +144,7 @@
                     <main>
                         <h1 id="selecting-related-tables"><a class="header" href="#selecting-related-tables">SELECTing related tables</a></h1>
 <p>SeaORM makes it easy to fetch a table and it's related table referenced by its primary key using the <code>Entity::find().find_with_related(Other_Entity).all(DatabaseConnection)</code> chain of methods.</p>
-<pre><pre class="playground"><code class="language-rust">// --- Code Snippet ---
+<pre><pre class="playground"><code class="language-rust no_run">// --- Code Snippet ---
 #[async_std::main]
 async fn main() -&gt; Result&lt;()&gt; {
     let env_database_url = include_str!(&quot;../.env&quot;).trim();

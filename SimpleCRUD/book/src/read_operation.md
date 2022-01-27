@@ -6,7 +6,7 @@ SeaORM can perform read operations through the `Entity::find()` method.
 
 The `.all()` method in `Entity` is used to fetch all rows in a table.
 
-```rust
+```rust,no_run
 //-- snippet --
 
 #[async_std::main]
@@ -40,7 +40,7 @@ $ [Model { fruit_id: 1, name: "Apple", datetime_utc: 2022-01-22T10:36:39, unit_p
 
 Call the `.find_by_id(primary_key)` on `Fruits` entity (table).
 
-```rust
+```rust,no_run
 //-- snippet --
 
 #[async_std::main]
@@ -74,7 +74,7 @@ $ Some(Model { fruit_id: 2, name: "Banana", datetime_utc: 2022-01-22T10:36:39, u
 
 Calling `filter()` method on `Entity::find()` returns a `Model` containing the matching row.
 
-```rust
+```rust,no_run
 //-- snippet --
 
 #[async_std::main]

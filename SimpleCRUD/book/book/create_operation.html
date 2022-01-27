@@ -171,7 +171,7 @@ CREATE TABLE fruits(
 </code></pre>
 <p>Then, import this module</p>
 <p><strong>FILE:</strong> <em>SimpleCRUD/src/main.rs</em></p>
-<pre><pre class="playground"><code class="language-rust">+ mod fruits_table;
+<pre><pre class="playground"><code class="language-rust no_run">+ mod fruits_table;
 + use fruits_table::prelude::Fruits;
 
  // Import the needed modules for table creation
@@ -191,10 +191,7 @@ CREATE TABLE fruits(
 <p>The <code>#[async_std::main]</code> attribute is used to convert our main function <code>fn main() {}</code> into an async function <code>async fn main() {}</code> in order to use <code>await</code> inside main using <code>async-std</code> as the library.</p>
 <p>Inside the <code>fruit.rs</code> add:</p>
 <p><strong>FILE:</strong> <em>SimpleCRUD/src/fruits_table/fruit.rs</em></p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use sea_orm::entity::prelude::*;
+<pre><code class="language-rust noplayground">use sea_orm::entity::prelude::*;
     
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
 #[sea_orm(table_name = &quot;fruits&quot;)]
@@ -219,8 +216,7 @@ impl RelationTrait for Relation {
 
 impl ActiveModelBehavior for ActiveModel {}
 
-<span class="boring">}
-</span></code></pre></pre>
+</code></pre>
 <p>The <code>#[derive(... , DeriveEntityModel)]</code> proc macro is used to automatically derive the code for <code>Entity</code>, <code>Model</code> and <code>ActiveModel</code> . For this to work, the struct <strong>MUST</strong> be called <code>Model</code>.</p>
 <p>The enum <code>Relation</code> <strong>MUST</strong> also be created, currently, it has empty fields but if the table had a relationship with another table, this is where it would be illustrated. The <code>#[derive(... , EnumIter)]</code> is required on a <code>Relation</code> to ensure the type implements and exposes a Rust <code>Iterator</code>.</p>
 <p>A <code>Relation</code> <strong>MUST</strong> implement a the <code>Relation</code> trait and the method <code>def()</code> of the trait. Currently, there is no relation so the <code>def()</code> method returns a <code>panic!(&quot;No RelationDef&quot;)</code> if we try to do operations like joins with other tables.</p>
@@ -228,42 +224,30 @@ impl ActiveModelBehavior for ActiveModel {}
 <p>The <code>#[sea_orm(primary_key)]</code> is used to set the primary key and can be called using the <code>..Default::default()</code> when instantiating a model.</p>
 <p><code>#[sea_orm(unique)]</code> derive macro is used on the <code>name</code> field to ensure that two rows are not entered with the same name. This corresponds to SQL <code>UNIQUE</code> constraint.</p>
 <p>To set the field of a <code>Model</code> to a default of <code>NULL</code> , ensure the field is set to an <code>Option&lt;T&gt;</code> , for example, to set <code>sku</code> field of <code>Model</code> to SQL default of <code>NULL</code>:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>#[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
+<pre><code class="language-rust noplayground">#[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
 #[sea_orm(table_name = &quot;fruits&quot;)]
 pub struct Model {
     // -- shippet --
 +   pub sku: Option&lt;String&gt;,
 -   pub sku: String,
 }
-<span class="boring">}
-</span></code></pre></pre>
+</code></pre>
 <p>Inside <code>prelude.rs</code> add:</p>
 <p><strong>FILE:</strong> <em>SimpleCRUD/src/fruits_table/prelude.rs</em></p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>pub use super::fruits::{
+<pre><code class="language-rust noplayground">pub use super::fruits::{
     ActiveModel as FruitsActiveModel, Column as FruitsColumn, Entity as Fruits,
     Model as FruitsModel, PrimaryKey as FruitsPrimaryKey, Relation as FruitsRelation,
 };
-<span class="boring">}
-</span></code></pre></pre>
+</code></pre>
 <p>This code reads the <code>Entity</code> from the generated code and renames it to <code>Fruits</code> to avoid name collisions with other existing <code>Entities</code>. The same goes for the <code>Model</code>, <code>Relation</code>, <code>ActiveModel</code>, <code>Column</code>, etc..</p>
 <p>Inside <code>mod.rs</code> , export the modules using:</p>
 <p><strong>FILE:</strong> <em>SimpleCRUD/src/fruits_table/mod.rs</em></p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>pub mod prelude;
+<pre><code class="language-rust noplayground">pub mod prelude;
 
 pub mod fruits;
-<span class="boring">}
-</span></code></pre></pre>
+</code></pre>
 <p>Add code to perform execution</p>
-<pre><pre class="playground"><code class="language-rust">// Code snippet
+<pre><pre class="playground"><code class="language-rust no_run">// Code snippet
 
 #[async_std::main]
 async fn main() -&gt; Result&lt;()&gt;{
@@ -316,7 +300,7 @@ async fn main() -&gt; Result&lt;()&gt;{
 </code></pre>
 <p>Next, import the <code>fruits_table</code> module for use with the project</p>
 <p><strong>File:</strong> <em>./SimpleCRUD/src/main.rs</em></p>
-<pre><pre class="playground"><code class="language-rust">+ mod fruits_table;
+<pre><pre class="playground"><code class="language-rust no_run">+ mod fruits_table;
 
 #[async_std::main]
 async fn main() -&gt; Result&lt;()&gt;{

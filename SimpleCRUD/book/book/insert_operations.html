@@ -184,7 +184,7 @@ sea-orm = { version = &quot;0.5.0&quot;, features = [
 chrono = &quot;0.4.19&quot; # Add chrono here
 </code></pre>
 <p>Next, call <code>Utc::now()</code> chrono method to get the system time and then import     sea_orm::entity::<code>Set</code>  to perform convertions of the Rust data types into SQL ready data type <code>ActiveValue</code></p>
-<pre><pre class="playground"><code class="language-rust">// -- code snippet --
+<pre><pre class="playground"><code class="language-rust no_run">// -- code snippet --
 + use sea_orm::entity::Set;
 
 #[async_std::main]
@@ -216,7 +216,7 @@ async fn main() -&gt; Result&lt;()&gt;{
 <pre><code class="language-sh">$ INSERTED ONE: InsertResult { last_insert_id: 1 }
 </code></pre>
 <p>Let's insert more than one row at a time using the  <code>Fruits::insert_many()</code> method.</p>
-<pre><pre class="playground"><code class="language-rust">// -- code snippet --
+<pre><pre class="playground"><code class="language-rust no_run">// -- code snippet --
 + use chrono::offset::Utc;
 #[async_std::main]
 async fn main() -&gt; Result&lt;()&gt;{

@@ -3,7 +3,7 @@
 
 To perform a delete operation in SeaORM, first, fetch the row to perform the operation using `Model` convert it into an `ActiveModel` by calling the `into()` methof on the `Model` , perform the operation on the field on the `ActiveModel` and then and then call the `.delete()` method on the `ActiveModel` or use `Fruit::delete()`. The executed result returns the  `Model` that was updated if successful.
 
-```rust
+```rust,no_run
 //-- snippet --
 
 + use sea_orm::sea_query::{Expr, Value}; // Types necessary to perform updates and conversions between types

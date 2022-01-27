@@ -44,7 +44,7 @@ Then, import this module
 
 **FILE:** *SimpleCRUD/src/main.rs*
 
-```rust
+```rust,no_run
 + mod fruits_table;
 + use fruits_table::prelude::Fruits;
 
@@ -71,7 +71,7 @@ Inside the `fruit.rs` add:
 
 **FILE:** *SimpleCRUD/src/fruits_table/fruit.rs*
 
-```rust
+```rust,noplayground
 use sea_orm::entity::prelude::*;
     
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
@@ -113,7 +113,7 @@ The `#[sea_orm(primary_key)]` is used to set the primary key and can be called u
 
 To set the field of a `Model` to a default of `NULL` , ensure the field is set to an `Option<T>` , for example, to set `sku` field of `Model` to SQL default of `NULL`:
 
-```rust
+```rust,noplayground
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
 #[sea_orm(table_name = "fruits")]
 pub struct Model {
@@ -129,7 +129,7 @@ Inside `prelude.rs` add:
 
 **FILE:** *SimpleCRUD/src/fruits_table/prelude.rs*
 
-```rust
+```rust,noplayground
 pub use super::fruits::{
     ActiveModel as FruitsActiveModel, Column as FruitsColumn, Entity as Fruits,
     Model as FruitsModel, PrimaryKey as FruitsPrimaryKey, Relation as FruitsRelation,
@@ -144,7 +144,7 @@ Inside `mod.rs` , export the modules using:
 
 **FILE:** *SimpleCRUD/src/fruits_table/mod.rs*
 
-```rust
+```rust,noplayground
 pub mod prelude;
 
 pub mod fruits;
@@ -154,7 +154,7 @@ pub mod fruits;
 
 Add code to perform execution
 
-```rust
+```rust,no_run
 // Code snippet
 
 #[async_std::main]
@@ -230,7 +230,7 @@ Next, import the `fruits_table` module for use with the project
 
 **File:** *./SimpleCRUD/src/main.rs*
 
-```rust
+```rust,no_run
 + mod fruits_table;
 
 #[async_std::main]

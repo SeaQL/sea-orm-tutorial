@@ -52,7 +52,7 @@ chrono = "0.4.19" # Add chrono here
 
 Next, call `Utc::now()` chrono method to get the system time and then import     sea_orm::entity::`Set`  to perform convertions of the Rust data types into SQL ready data type `ActiveValue`
 
-```rust
+```rust,no_run
 // -- code snippet --
 + use sea_orm::entity::Set;
 
@@ -91,7 +91,7 @@ $ INSERTED ONE: InsertResult { last_insert_id: 1 }
 
 Let's insert more than one row at a time using the  `Fruits::insert_many()` method.
 
-```rust
+```rust,no_run
 // -- code snippet --
 + use chrono::offset::Utc;
 #[async_std::main]

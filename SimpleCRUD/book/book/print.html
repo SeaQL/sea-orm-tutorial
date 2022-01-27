@@ -250,7 +250,7 @@ CREATE TABLE fruits(
 </code></pre>
 <p>Then, import this module</p>
 <p><strong>FILE:</strong> <em>SimpleCRUD/src/main.rs</em></p>
-<pre><pre class="playground"><code class="language-rust">+ mod fruits_table;
+<pre><pre class="playground"><code class="language-rust no_run">+ mod fruits_table;
 + use fruits_table::prelude::Fruits;
 
  // Import the needed modules for table creation
@@ -270,10 +270,7 @@ CREATE TABLE fruits(
 <p>The <code>#[async_std::main]</code> attribute is used to convert our main function <code>fn main() {}</code> into an async function <code>async fn main() {}</code> in order to use <code>await</code> inside main using <code>async-std</code> as the library.</p>
 <p>Inside the <code>fruit.rs</code> add:</p>
 <p><strong>FILE:</strong> <em>SimpleCRUD/src/fruits_table/fruit.rs</em></p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use sea_orm::entity::prelude::*;
+<pre><code class="language-rust noplayground">use sea_orm::entity::prelude::*;
     
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
 #[sea_orm(table_name = &quot;fruits&quot;)]
@@ -298,8 +295,7 @@ impl RelationTrait for Relation {
 
 impl ActiveModelBehavior for ActiveModel {}
 
-<span class="boring">}
-</span></code></pre></pre>
+</code></pre>
 <p>The <code>#[derive(... , DeriveEntityModel)]</code> proc macro is used to automatically derive the code for <code>Entity</code>, <code>Model</code> and <code>ActiveModel</code> . For this to work, the struct <strong>MUST</strong> be called <code>Model</code>.</p>
 <p>The enum <code>Relation</code> <strong>MUST</strong> also be created, currently, it has empty fields but if the table had a relationship with another table, this is where it would be illustrated. The <code>#[derive(... , EnumIter)]</code> is required on a <code>Relation</code> to ensure the type implements and exposes a Rust <code>Iterator</code>.</p>
 <p>A <code>Relation</code> <strong>MUST</strong> implement a the <code>Relation</code> trait and the method <code>def()</code> of the trait. Currently, there is no relation so the <code>def()</code> method returns a <code>panic!(&quot;No RelationDef&quot;)</code> if we try to do operations like joins with other tables.</p>
@@ -307,42 +303,30 @@ impl ActiveModelBehavior for ActiveModel {}
 <p>The <code>#[sea_orm(primary_key)]</code> is used to set the primary key and can be called using the <code>..Default::default()</code> when instantiating a model.</p>
 <p><code>#[sea_orm(unique)]</code> derive macro is used on the <code>name</code> field to ensure that two rows are not entered with the same name. This corresponds to SQL <code>UNIQUE</code> constraint.</p>
 <p>To set the field of a <code>Model</code> to a default of <code>NULL</code> , ensure the field is set to an <code>Option&lt;T&gt;</code> , for example, to set <code>sku</code> field of <code>Model</code> to SQL default of <code>NULL</code>:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>#[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
+<pre><code class="language-rust noplayground">#[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
 #[sea_orm(table_name = &quot;fruits&quot;)]
 pub struct Model {
     // -- shippet --
 +   pub sku: Option&lt;String&gt;,
 -   pub sku: String,
 }
-<span class="boring">}
-</span></code></pre></pre>
+</code></pre>
 <p>Inside <code>prelude.rs</code> add:</p>
 <p><strong>FILE:</strong> <em>SimpleCRUD/src/fruits_table/prelude.rs</em></p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>pub use super::fruits::{
+<pre><code class="language-rust noplayground">pub use super::fruits::{
     ActiveModel as FruitsActiveModel, Column as FruitsColumn, Entity as Fruits,
     Model as FruitsModel, PrimaryKey as FruitsPrimaryKey, Relation as FruitsRelation,
 };
-<span class="boring">}
-</span></code></pre></pre>
+</code></pre>
 <p>This code reads the <code>Entity</code> from the generated code and renames it to <code>Fruits</code> to avoid name collisions with other existing <code>Entities</code>. The same goes for the <code>Model</code>, <code>Relation</code>, <code>ActiveModel</code>, <code>Column</code>, etc..</p>
 <p>Inside <code>mod.rs</code> , export the modules using:</p>
 <p><strong>FILE:</strong> <em>SimpleCRUD/src/fruits_table/mod.rs</em></p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>pub mod prelude;
+<pre><code class="language-rust noplayground">pub mod prelude;
 
 pub mod fruits;
-<span class="boring">}
-</span></code></pre></pre>
+</code></pre>
 <p>Add code to perform execution</p>
-<pre><pre class="playground"><code class="language-rust">// Code snippet
+<pre><pre class="playground"><code class="language-rust no_run">// Code snippet
 
 #[async_std::main]
 async fn main() -&gt; Result&lt;()&gt;{
@@ -395,7 +379,7 @@ async fn main() -&gt; Result&lt;()&gt;{
 </code></pre>
 <p>Next, import the <code>fruits_table</code> module for use with the project</p>
 <p><strong>File:</strong> <em>./SimpleCRUD/src/main.rs</em></p>
-<pre><pre class="playground"><code class="language-rust">+ mod fruits_table;
+<pre><pre class="playground"><code class="language-rust no_run">+ mod fruits_table;
 
 #[async_std::main]
 async fn main() -&gt; Result&lt;()&gt;{
@@ -447,7 +431,7 @@ sea-orm = { version = &quot;0.5.0&quot;, features = [
 chrono = &quot;0.4.19&quot; # Add chrono here
 </code></pre>
 <p>Next, call <code>Utc::now()</code> chrono method to get the system time and then import     sea_orm::entity::<code>Set</code>  to perform convertions of the Rust data types into SQL ready data type <code>ActiveValue</code></p>
-<pre><pre class="playground"><code class="language-rust">// -- code snippet --
+<pre><pre class="playground"><code class="language-rust no_run">// -- code snippet --
 + use sea_orm::entity::Set;
 
 #[async_std::main]
@@ -479,7 +463,7 @@ async fn main() -&gt; Result&lt;()&gt;{
 <pre><code class="language-sh">$ INSERTED ONE: InsertResult { last_insert_id: 1 }
 </code></pre>
 <p>Let's insert more than one row at a time using the  <code>Fruits::insert_many()</code> method.</p>
-<pre><pre class="playground"><code class="language-rust">// -- code snippet --
+<pre><pre class="playground"><code class="language-rust no_run">// -- code snippet --
 + use chrono::offset::Utc;
 #[async_std::main]
 async fn main() -&gt; Result&lt;()&gt;{
@@ -523,7 +507,7 @@ async fn main() -&gt; Result&lt;()&gt;{
 <p>SeaORM can perform read operations through the <code>Entity::find()</code> method.</p>
 <h4 id="find-all-rows-using-in-a-table"><a class="header" href="#find-all-rows-using-in-a-table">Find all rows using in a table</a></h4>
 <p>The <code>.all()</code> method in <code>Entity</code> is used to fetch all rows in a table.</p>
-<pre><pre class="playground"><code class="language-rust">//-- snippet --
+<pre><pre class="playground"><code class="language-rust no_run">//-- snippet --
 
 #[async_std::main]
 async fn main() -&gt; Result&lt;()&gt; {
@@ -547,7 +531,7 @@ async fn main() -&gt; Result&lt;()&gt; {
 </code></pre>
 <h4 id="find-one-row-by-the-primary-key"><a class="header" href="#find-one-row-by-the-primary-key">Find one row by the primary key</a></h4>
 <p>Call the <code>.find_by_id(primary_key)</code> on <code>Fruits</code> entity (table).</p>
-<pre><pre class="playground"><code class="language-rust">//-- snippet --
+<pre><pre class="playground"><code class="language-rust no_run">//-- snippet --
 
 #[async_std::main]
 async fn main() -&gt; Result&lt;()&gt; {
@@ -571,7 +555,7 @@ async fn main() -&gt; Result&lt;()&gt; {
 </code></pre>
 <h4 id="find-and-filter-a-row-by-column-name"><a class="header" href="#find-and-filter-a-row-by-column-name">Find and Filter a Row by Column Name</a></h4>
 <p>Calling <code>filter()</code> method on <code>Entity::find()</code> returns a <code>Model</code> containing the matching row.</p>
-<pre><pre class="playground"><code class="language-rust">//-- snippet --
+<pre><pre class="playground"><code class="language-rust no_run">//-- snippet --
 
 #[async_std::main]
 async fn main() -&gt; Result&lt;()&gt; {
@@ -598,7 +582,7 @@ async fn main() -&gt; Result&lt;()&gt; {
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="update-operation"><a class="header" href="#update-operation">Update Operation</a></h1>
 <p>To perform an update in SeaORM, first, fetch the row to perform the operation using <code>Model</code> convert it into an <code>ActiveModel</code> by calling the <code>into()</code> methof on the <code>Model</code> , perform the operation on the field on the <code>ActiveModel</code> and then and then call the <code>.update()</code> method on the <code>ActiveModel</code>. The executed result returns the  <code>Model</code> that was updated if successful.</p>
-<pre><pre class="playground"><code class="language-rust">//-- snippet --
+<pre><pre class="playground"><code class="language-rust no_run">//-- snippet --
 
 + use sea_orm::sea_query::{Expr, Value}; // Types necessary to perform updates and conversions between types
 
@@ -640,7 +624,7 @@ async fn main() -&gt; Result&lt;()&gt; {
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="delete-operation"><a class="header" href="#delete-operation">Delete Operation</a></h1>
 <p>To perform a delete operation in SeaORM, first, fetch the row to perform the operation using <code>Model</code> convert it into an <code>ActiveModel</code> by calling the <code>into()</code> methof on the <code>Model</code> , perform the operation on the field on the <code>ActiveModel</code> and then and then call the <code>.delete()</code> method on the <code>ActiveModel</code> or use <code>Fruit::delete()</code>. The executed result returns the  <code>Model</code> that was updated if successful.</p>
-<pre><pre class="playground"><code class="language-rust">//-- snippet --
+<pre><pre class="playground"><code class="language-rust no_run">//-- snippet --
 
 + use sea_orm::sea_query::{Expr, Value}; // Types necessary to perform updates and conversions between types
 
@@ -709,25 +693,18 @@ use fruit_markets;
 </li>
 <li>
 <p>Modify the <code>src/suppliers_table/prelude.rs</code> file to export memorable names of the <code>Entity, ActiveModel</code> etc</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>- pub use super::suppliers::Entity as Suppliers;
+<pre><code class="language-rust noplayground no_run">- pub use super::suppliers::Entity as Suppliers;
 
 + pub use super::suppliers::{
 +     ActiveModel as SuppliersActiveModel, Column as SuppliersColumn, Entity as Suppliers,
 +     Model as SuppliersModel, PrimaryKey as SuppliersPrimaryKey, Relation as SuppliersRelation,
 + };
 
-<span class="boring">}
-</span></code></pre></pre>
+</code></pre>
 </li>
 <li>
 <p>The <code>src/suppliers_table/suppliers.rs</code> contains errors indicating the <code>super::fruits</code> cannot be found in <code>supper</code>. This means the module is not exported properly. Fix this by importing the module:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>//! SeaORM Entity. Generated by sea-orm-codegen 0.5.0
+<pre><code class="language-rust noplayground no_run">//! SeaORM Entity. Generated by sea-orm-codegen 0.5.0
 
 use sea_orm::entity::prelude::*;
 
@@ -760,8 +737,7 @@ pub enum Relation {
    }
 
 impl ActiveModelBehavior for ActiveModel {}
-<span class="boring">}
-</span></code></pre></pre>
+</code></pre>
 <p><code>sea-orm-cli</code> automatically generates code to bind the <code>suppliers</code> table <code>Model</code> to the primary key of the <code>fruits</code> table using <code>belongs_to = &quot;crate::Fruits&quot;,</code> <code>to = &quot;crate::FruitsColumn::FruitId&quot;</code> and <code>impl Related&lt;crate::Fruits&gt; for Entity</code>. This corresponds to the SQL query part</p>
 <pre><code class="language-sql"> CONSTRAINT fk_fruits
     FOREIGN KEY (fruit_id) 
@@ -772,7 +748,7 @@ impl ActiveModelBehavior for ActiveModel {}
 </li>
 <li>
 <p>Import the module to the <code>src/main.rs</code> file</p>
-<pre><pre class="playground"><code class="language-rust">  mod fruits_table;
+<pre><code class="language-rust noplayground no_run">  mod fruits_table;
   use fruits_table::prelude::*;
 + mod suppliers_table;
 + use suppliers_table::prelude::*;
@@ -784,13 +760,13 @@ impl ActiveModelBehavior for ActiveModel {}
 async fn main() -&gt; Result&lt;()&gt; {
     // -- code snippet --
 }
-</code></pre></pre>
+</code></pre>
 </li>
 </ol>
 <p>Next, <code>INSERT</code> and <code>SELECT</code> SQL queries on tables with foreign key using <code>SeaORM</code>.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="inserting-values-into-a-table-with-a-foreign-key"><a class="header" href="#inserting-values-into-a-table-with-a-foreign-key">Inserting Values into a Table with a Foreign Key</a></h1>
 <p>Insert many suppliers in the <code>supplies</code> table</p>
-<pre><pre class="playground"><code class="language-rust">// -- code snippet --
+<pre><pre class="playground"><code class="language-rust no_run">// -- code snippet --
 
 // Convert this main function into async function
 #[async_std::main]
@@ -831,7 +807,7 @@ async fn main() -&gt; Result&lt;()&gt; {
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="selecting-related-tables"><a class="header" href="#selecting-related-tables">SELECTing related tables</a></h1>
 <p>SeaORM makes it easy to fetch a table and it's related table referenced by its primary key using the <code>Entity::find().find_with_related(Other_Entity).all(DatabaseConnection)</code> chain of methods.</p>
-<pre><pre class="playground"><code class="language-rust">// --- Code Snippet ---
+<pre><pre class="playground"><code class="language-rust no_run">// --- Code Snippet ---
 #[async_std::main]
 async fn main() -&gt; Result&lt;()&gt; {
     let env_database_url = include_str!(&quot;../.env&quot;).trim();

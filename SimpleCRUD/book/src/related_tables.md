@@ -2,7 +2,7 @@
 
 SeaORM makes it easy to fetch a table and it's related table referenced by its primary key using the `Entity::find().find_with_related(Other_Entity).all(DatabaseConnection)` chain of methods.
 
-```rust
+```rust,no_run
 // --- Code Snippet ---
 #[async_std::main]
 async fn main() -> Result<()> {

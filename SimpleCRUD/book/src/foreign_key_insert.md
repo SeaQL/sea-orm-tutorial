@@ -2,7 +2,7 @@
 
 Insert many suppliers in the `supplies` table
 
-```rust
+```rust,no_run
 // -- code snippet --
 
 // Convert this main function into async function

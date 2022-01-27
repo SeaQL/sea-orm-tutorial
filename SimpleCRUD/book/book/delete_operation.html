@@ -144,7 +144,7 @@
                     <main>
                         <h1 id="delete-operation"><a class="header" href="#delete-operation">Delete Operation</a></h1>
 <p>To perform a delete operation in SeaORM, first, fetch the row to perform the operation using <code>Model</code> convert it into an <code>ActiveModel</code> by calling the <code>into()</code> methof on the <code>Model</code> , perform the operation on the field on the <code>ActiveModel</code> and then and then call the <code>.delete()</code> method on the <code>ActiveModel</code> or use <code>Fruit::delete()</code>. The executed result returns the  <code>Model</code> that was updated if successful.</p>
-<pre><pre class="playground"><code class="language-rust">//-- snippet --
+<pre><pre class="playground"><code class="language-rust no_run">//-- snippet --
 
 + use sea_orm::sea_query::{Expr, Value}; // Types necessary to perform updates and conversions between types
 
