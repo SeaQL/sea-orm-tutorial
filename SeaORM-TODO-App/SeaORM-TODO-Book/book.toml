@@ -1,0 +1,13 @@
+[book]
+authors = ["Charles Chege"]
+language = "en"
+multilingual = false
+src = "src"
+title = "SeaORM-TODO-App"
+
+
+[output.html]
+default-theme = "navy"
+preferred-dark-theme = "navy"
+git-repository-url = "https://github.com/SeaQL/sea-orm-tutorial"
+git-repository-icon = "fa-github"

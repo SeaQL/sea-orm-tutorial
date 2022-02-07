@@ -1,0 +1,5 @@
+[workspace]
+members = [
+    "TODO-Server",
+    "TODO-Client",
+]
