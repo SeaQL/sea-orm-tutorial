@@ -2,6 +2,10 @@
 
 #### Install necessary dependencies
 
+1. Ensure you have installed Rust programming language [https://www.rust-lang.org/tools/install](https://www.rust-lang.org/tools/install)
+
+1. Ensure you have `sea-orm-cli` installed [https://crates.io/crates/sea-orm-cli](https://crates.io/crates/sea-orm-cli)
+
 1. `async-std` will be used as the async library
 
    ```sh
@@ -89,24 +93,26 @@
    postgres=# CREATE DATABASE fruits_market WITH OWNER = webmaster;
    ```
 
-5. Create a `postgresql_config.env` file in the workspace directory
+5. Create a `.env` file in the workspace directory
 
    The file structure should look 
 
    ```
    SeaORM-TODO-App
    	|-- Cargo.toml
-   +   |-- postgresql_config.env
    	|-- TODO-Client
+   			|-- src
+   			|-- Cargo.toml
+   +   		|-- .env
    	|-- TODO-Server
    ```
 
    Then add the PostgreSQL configuration with the new user `webmaster` and database `fruits_market`  we created earlier
 
-   File: `SeaORM-TODO-App/postgresql_config.env`
-
+   File: `SeaORM-TODO-App/TODO-Server/.env`
+   
    ```sh
    + DATABASE_URL=postgres://webmaster:master_char@localhost/fruits_market
    ```
-
+   
    Next, we will create all the required tables and their relationships
