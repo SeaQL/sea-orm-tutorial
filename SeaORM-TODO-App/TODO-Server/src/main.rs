@@ -1,8 +1,10 @@
 mod fruits_table;
+mod server;
 mod suppliers_table;
 mod todos_table;
 
 pub use fruits_table::prelude::*;
+pub use server::*;
 pub use suppliers_table::prelude::*;
 pub use todos_table::prelude::*;
 
@@ -135,6 +137,8 @@ async fn main() -> anyhow::Result<()> {
             Err(e) => format!("Unsuccessful - Error {:?}", e),
         }
     );
+
+    start_server().await?;
 
     Ok(())
 }
