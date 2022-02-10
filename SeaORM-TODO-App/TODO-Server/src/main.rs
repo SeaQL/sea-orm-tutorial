@@ -138,7 +138,6 @@ async fn main() -> anyhow::Result<()> {
         }
     );
 
-    start_server().await?;
 
     Ok(())
 }
