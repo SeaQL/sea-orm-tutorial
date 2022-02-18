@@ -1,3 +1,6 @@
 /target
 Cargo.lock
 .vscode
+my_todos.db
+my_todos.db-shm
+my_todos.db-wal
