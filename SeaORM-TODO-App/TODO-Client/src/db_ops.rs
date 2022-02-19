@@ -81,6 +81,26 @@ pub async fn edit(
     Ok(todos_active_model.update(db).await?)
 }
 
+pub async fn done(
+    db: &DatabaseConnection,
+    todo_model: &MyTodosModel,
+) -> Result<MyTodosModel, sea_orm::DbErr> {
+    let mut todos_active_model: MyTodosActiveModel = todo_model.to_owned().into();
+    todos_active_model.status = Set(1);
+
+    Ok(todos_active_model.update(db).await?)
+}
+
+pub async fn undo(
+    db: &DatabaseConnection,
+    todo_model: &MyTodosModel,
+) -> Result<MyTodosModel, sea_orm::DbErr> {
+    let mut todos_active_model: MyTodosActiveModel = todo_model.to_owned().into();
+    todos_active_model.status = Set(0);
+
+    Ok(todos_active_model.update(db).await?)
+}
+
 pub(crate) async fn load_sqlite_cache(
     db: &DatabaseConnection,
     memdb: &mut MemDB,

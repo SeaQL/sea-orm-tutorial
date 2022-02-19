@@ -5,7 +5,6 @@ use std::collections::HashMap;
 pub(crate) const TITLE: &str = "FRUITS AVAILABLE";
 pub(crate) const NUMBER: &str = "No.";
 pub(crate) const ADD_COMMAND: &str = "ADD";
-pub(crate) const REMOVE_COMMAND: &str = "REMOVE";
 pub(crate) const DONE_COMMAND: &str = "DONE";
 pub(crate) const UNDO_COMMAND: &str = "UNDO";
 pub(crate) const EDIT_COMMAND: &str = "EDIT";
@@ -58,9 +57,11 @@ pub async fn format_todos(todo_models: &MemDB) {
         }
 
         if done.is_empty() {
-            println!("Bummer :( You Have Not Completed Any TODOs!")
+            println!("----------------");
+            println!("Bummer :( You Have Not Completed Any TODOs!");
+            println!("----------------\n\n");
         } else {
-            println!("{QUANTITY:9}| {NOT_DONE:10}");
+            println!("{QUANTITY:9}| {DONE:10}");
             println!("----------------");
             done.iter().for_each(|todo| {
                 println!("{:>8} | {:10}", todo.quantity, todo.todo_name);
@@ -68,7 +69,6 @@ pub async fn format_todos(todo_models: &MemDB) {
             println!("----------------\n");
         }
     }
-    println!("----------------\n\n");
 }
 
 pub fn convert_case(word: &str) -> String {

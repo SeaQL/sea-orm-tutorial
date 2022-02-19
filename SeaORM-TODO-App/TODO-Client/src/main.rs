@@ -52,10 +52,14 @@ async fn main() -> anyhow::Result<()> {
         read_line(&mut buffer, fruits_list.as_ref(), &memdb).await?;
         buffer = buffer.trim().to_owned();
         let words = split_words(buffer.clone());
-        dbg!(&words);
         let command = words[0].to_lowercase().to_string();
-        let quantity = &words[1];
-        let text_buffer = convert_case(&words[2]);
+        let mut quantity: &str = "";
+        if command.as_str() == "done" || command.as_str() == "undo" {
+            text_buffer = convert_case(&words[1]);
+        } else {
+            quantity = &words[1];
+            text_buffer = convert_case(&words[2]);
+        }
 
         if !text_buffer.is_empty() {
             match fruits_list.iter().find(|&fruit| *fruit == text_buffer) {
@@ -74,22 +78,49 @@ async fn main() -> anyhow::Result<()> {
                             utils::synching();
                             let db_result = store(&db, quantity, &text_buffer).await?;
                             load_sqlite_cache(&db, &mut memdb).await?;
+                            buffer.clear();
                         }
                     } else if command.as_str() == "edit" {
                         if let Some(mut todo_model) = memdb.lock().await.get_mut(&text_buffer) {
                             utils::synching();
                             edit(&db, todo_model, quantity.to_owned()).await?;
                             todo_model.quantity = quantity.to_owned();
+                            buffer.clear();
+                        } else {
+                            buffer.clear();
+                            continue;
+                        }
+                    } else if command.as_str() == "done" {
+                        if let Some(mut todo_model) = memdb.lock().await.get_mut(&text_buffer) {
+                            if todo_model.status == 0 {
+                                utils::synching();
+                                let updated_model = done(&db, todo_model).await?;
+                                *todo_model = updated_model;
+                            }
+                            buffer.clear();
+                            continue;
+                        } else {
+                            buffer.clear();
+                            continue;
+                        }
+                    } else if command.as_str() == "undo" {
+                        if let Some(mut todo_model) = memdb.lock().await.get_mut(&text_buffer) {
+                            if todo_model.status == 1 {
+                                utils::synching();
+                                let updated_model = undo(&db, todo_model).await?;
+                                *todo_model = updated_model;
+                            }
+                            buffer.clear();
+                            continue;
                         } else {
                             buffer.clear();
                             continue;
                         }
                     } else {
-                        dbg!(command);
+                        dbg!("Unsupported Command");
+                        buffer.clear();
                         break;
                     }
-
-                    continue;
                 }
             }
         }
@@ -115,11 +146,10 @@ async fn read_line(
     println!("+--------------------------+");
     println!("+ {:^5}{:17}+", "COMMANDS", " ");
     println!("+{:26}+", " ");
-    println!("+ → {ADD_COMMAND:5}{:18}+", " ");
-    println!("+ → {REMOVE_COMMAND:23}+");
-    println!("+ → {DONE_COMMAND:23}+");
-    println!("+ → {UNDO_COMMAND:23}+");
-    println!("+ → {EDIT_COMMAND:23}+");
+    println!("→   {ADD_COMMAND:5}{:18}+", " ");
+    println!("→   {DONE_COMMAND:23}+");
+    println!("→   {UNDO_COMMAND:23}+");
+    println!("→   {EDIT_COMMAND:23}+");
     println!("+{:26}+", " ");
     println!("+--------------------------+");
 
