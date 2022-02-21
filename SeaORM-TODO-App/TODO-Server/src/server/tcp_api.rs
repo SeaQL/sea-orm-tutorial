@@ -1,7 +1,6 @@
 use crate::{Fruits, Suppliers, Todos, TodosActiveModel, TodosColumn, TodosModel};
 use sea_orm::{
-    ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, IntoActiveModel, ModelTrait,
-    QueryFilter, Set,
+    ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, ModelTrait, QueryFilter, Set,
 };
 use serde::{Deserialize, Serialize};
 use std::{error::Error, fmt};
@@ -12,22 +11,23 @@ pub enum Command {
     Store { username: String, todo_list: String },
     UpdateTodoList { username: String, todo_list: String },
     Get(String),
+    CreateUser(String),
     ListFruits,
     ListSuppliers,
     DeleteUser(String),
 }
 
 impl Command {
-    pub async fn get_fruits(db: &DatabaseConnection) -> anyhow::Result<Vec<u8>> {
+    pub async fn get_fruits(&self, db: &DatabaseConnection) -> anyhow::Result<Vec<u8>> {
         let fruit_models = Fruits::find().all(db).await?;
         let fruits = fruit_models
             .iter()
             .map(|fruit_model| fruit_model.fruit_name.clone())
-            .collect::<String>();
+            .collect::<Vec<String>>();
 
         Ok(bincode::serialize(&fruits)?)
     }
-    pub async fn get_suppliers(db: &DatabaseConnection) -> anyhow::Result<Vec<u8>> {
+    pub async fn get_suppliers(&self, db: &DatabaseConnection) -> anyhow::Result<Vec<u8>> {
         let supplier_models = Suppliers::find().all(db).await?;
         let suppliers = supplier_models
             .iter()
@@ -56,23 +56,34 @@ impl Command {
         }
     }
 
+    pub async fn create_new_user(&self, db: &DatabaseConnection) -> anyhow::Result<Vec<u8>> {
+        match self {
+            Self::CreateUser(username) => {
+                let todo_user = TodosActiveModel {
+                    username: Set(username.to_owned()),
+                    ..Default::default()
+                };
+                Todos::insert(todo_user).exec(db).await?;
+
+                Ok(bincode::serialize(&format!("CREATED_USER `{}`", username))?)
+            }
+            _ => Err(anyhow::Error::new(ServerErrors::InvalidCommand)),
+        }
+    }
+
     pub async fn get_user_todo(&self, db: &DatabaseConnection) -> anyhow::Result<Vec<u8>> {
         match self {
             Self::Get(user) => {
-                let found_todo = Todos::find()
+                let get_todo = Todos::find()
                     .filter(TodosColumn::Username.contains(user))
-                    .all(db)
+                    .one(db)
                     .await?;
 
-                let mut todo_list = Vec::default();
-
-                found_todo.iter().for_each(|todo_model| {
-                    if let Some(todo_exists) = &todo_model.todo_list {
-                        todo_list.push(todo_exists);
-                    }
-                });
-
-                Ok(bincode::serialize(&todo_list)?)
+                if let Some(found_todo) = get_todo {
+                    Ok(bincode::serialize(&found_todo.todo_list)?)
+                } else {
+                    Ok(bincode::serialize(&Some("USER_NOT_FOUND"))?)
+                }
             }
             _ => Err(anyhow::Error::new(ServerErrors::InvalidCommand)),
         }
@@ -134,7 +145,10 @@ pub enum ServerErrors {
 
 impl Error for ServerErrors {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
-        Some(&crate::ServerErrors::InvalidCommand)
+        match self {
+            ServerErrors::InvalidCommand => Some(&crate::ServerErrors::InvalidCommand),
+            ServerErrors::ModelNotFound => Some(&crate::ServerErrors::ModelNotFound),
+        }
     }
 }
 
@@ -145,7 +159,7 @@ impl fmt::Display for ServerErrors {
             "{:?}",
             match self {
                 ServerErrors::InvalidCommand => "Invalid command provided",
-                ModelNotFound => "The result of the query is `None`",
+                ServerErrors::ModelNotFound => "The result of the query is `None`",
             }
         )
     }
