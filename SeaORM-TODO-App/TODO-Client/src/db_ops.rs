@@ -1,4 +1,10 @@
-use crate::{MemDB, MyTodos, MyTodosActiveModel, MyTodosModel};
+use crate::{
+    synching_to_server, Command, MemDB, MyTodos, MyTodosActiveModel, MyTodosModel, TodoList,
+};
+use async_std::{
+    io::{ReadExt, WriteExt},
+    net::TcpStream,
+};
 use sea_orm::{
     sea_query::{Alias, ColumnDef, ForeignKey, ForeignKeyAction, Table},
     ActiveModelTrait, ConnectionTrait, Database, DatabaseConnection, EntityTrait, Set,
@@ -51,6 +57,30 @@ pub async fn create_todo_table(db: &DatabaseConnection) -> anyhow::Result<()> {
     );
 
     Ok(())
+}
+
+pub async fn get_fruits(db: &DatabaseConnection) -> anyhow::Result<Vec<String>> {
+    // Get the fruits first
+    let get_fruits = Command::ListFruits;
+    let serialized_command = bincode::serialize(&get_fruits)?;
+    let mut fruits_list: Vec<String>;
+
+    let mut stream = TcpStream::connect("127.0.0.1:8080").await?;
+    stream.write_all(&serialized_command).await?;
+
+    let mut fruits_buf = vec![0u8; 4096];
+    loop {
+        let n = stream.read(&mut fruits_buf).await?;
+        let rx: Vec<String> = bincode::deserialize(&fruits_buf)?;
+
+        fruits_list = rx;
+
+        if n != 0 {
+            break;
+        }
+    }
+
+    Ok(fruits_list)
 }
 
 pub async fn store(db: &DatabaseConnection, quantity: &str, todo_name: &str) -> anyhow::Result<()> {
@@ -115,4 +145,60 @@ pub(crate) async fn load_sqlite_cache(
     }
 
     Ok(())
+}
+
+pub async fn update_remote_storage(memdb: &MemDB, username: &str) -> anyhow::Result<()> {
+    let mut temp_list = TodoList::default();
+    memdb.lock().await.values().for_each(|todo| {
+        if todo.status == 0 {
+            temp_list.queued.push(todo.to_owned());
+        } else {
+            temp_list.completed.push(todo.to_owned());
+        }
+    });
+
+    synching_to_server();
+
+    // Update a todo_list
+    let update_todo = Command::UpdateTodoList {
+        username: username.to_owned(),
+        todo_list: serde_json::to_string(&temp_list)?,
+    };
+    let serialized_command = bincode::serialize(&update_todo)?;
+
+    let mut stream = TcpStream::connect("127.0.0.1:8080").await?;
+    stream.write_all(&serialized_command).await?;
+
+    let mut buffer = vec![0u8; 4096];
+    stream.read(&mut buffer).await?;
+
+    bincode::deserialize::<String>(&buffer)?;
+
+    Ok(())
+}
+
+pub async fn get_user_remote_storage(username: &str) -> anyhow::Result<Option<String>> {
+    let get_user = Command::Get(username.to_owned());
+    let serialized_command = bincode::serialize(&get_user)?;
+
+    let mut stream = TcpStream::connect("127.0.0.1:8080").await?;
+    stream.write_all(&serialized_command).await?;
+
+    let mut buffer = vec![0u8; 4096];
+    stream.read(&mut buffer).await?;
+
+    Ok(bincode::deserialize::<Option<String>>(&buffer)?)
+}
+
+pub async fn create_new_user(username: &str) -> anyhow::Result<String> {
+    let create_user = Command::CreateUser(username.to_owned());
+    let serialized_command = bincode::serialize(&create_user)?;
+
+    let mut stream = TcpStream::connect("127.0.0.1:8080").await?;
+    stream.write_all(&serialized_command).await?;
+
+    let mut buffer = vec![0u8; 4096];
+    stream.read(&mut buffer).await?;
+
+    Ok(bincode::deserialize::<String>(&buffer)?)
 }

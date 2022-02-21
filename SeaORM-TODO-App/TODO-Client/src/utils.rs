@@ -23,6 +23,9 @@ pub fn synching() {
     clear_terminal();
     println!("SYNCING TO DATABASE...");
 }
+pub fn synching_to_server() {
+    println!("SYNCING TO SERVER...");
+}
 
 pub fn loading() {
     clear_terminal();
