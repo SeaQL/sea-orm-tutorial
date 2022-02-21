@@ -38,8 +38,10 @@ First, install PostgreSQL and SQLite and ensure PostgreSQL server is running.
    $ cargo new TODO-Client --name todo-client
    ```
 
-   Then register the cargo projects with the `cargo workspace`
+   Then register the cargo projects with the `cargo workspace` by creating a workspace file in the current directory.
 
+   **File**:*SeaORM-TODO-App/Cargo.toml* file
+   
    ```TOML
    [workspace]
    members = [

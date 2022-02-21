@@ -2,6 +2,12 @@
 
 #### Install necessary dependencies
 
+1. Switch to the `SeaORM-TODO-App/TODO-Server` directory to build the TCP server
+
+   ```sh
+   $ cd TODO-Server
+   ```
+
 1. Ensure you have installed Rust programming language [https://www.rust-lang.org/tools/install](https://www.rust-lang.org/tools/install)
 
 1. Ensure you have `sea-orm-cli` installed [https://crates.io/crates/sea-orm-cli](https://crates.io/crates/sea-orm-cli)
@@ -52,10 +58,10 @@
 
    
 
-3. Add the sql drivers and database backend 
+6. Add the sql drivers for database backend and enable date and time features with the `with-chrono` feature
 
    ```sh
-   $  cargo add sea-orm --no-default-features --features "runtime-async-std-rustls sqlx-postgres sqlx-sqlite macros"
+   $  cargo add sea-orm --no-default-features --features "runtime-async-std-rustls sqlx-postgres macros with-chrono"
    ```
 
    This adds sea-orm to `src/Cargo.toml` 
@@ -71,7 +77,12 @@
    [dependencies]
      anyhow = "1.0.53"
      async-std = { version = "1.10.0", features = ["attributes"] }
-   + sea-orm = { version = "0.6.0", features = ["runtime-async-std-rustls", "sqlx-postgres", "sqlx-sqlite", "macros"], default-features = false }
+   + sea-orm = { version = "0.6.0", features = [
+   +     "runtime-async-std-rustls",
+   +     "sqlx-postgres",
+   +     "macros",
+   +     "with-chrono",
+   + ], default-features = false }
    
    ```
 
@@ -114,5 +125,22 @@
    ```sh
    + DATABASE_URL=postgres://webmaster:master_char@localhost/fruits_market
    ```
+   
+   
+   
+   Change the main function to async function using async-std
+   
+   ```rust,no_run,noplayground
+   - fn main() {
+   -     println!("Hello, world!");
+   - }
+   
+   + #[async_std::main]
+   + async fn main() -> anyhow::Result<()> {
+   +     Ok(())
+   + }
+   ```
+   
+   
    
    Next, we will create all the required tables and their relationships

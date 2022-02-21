@@ -3,9 +3,11 @@
 - [Introduction](./introduction.md)
 
 - [Building The TCP Server](tcp-server.md)
-  - [Create Tables using SeaORM](create-tables.md)
   
-  - [TCP Server](creating-tcp-server.md)
+  - [Creating Tables](tables.md)
+  
+  - [Building Server Connections and Responses](server.md)
   
     
+  
 
