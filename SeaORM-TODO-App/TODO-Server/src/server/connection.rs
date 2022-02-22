@@ -88,10 +88,8 @@ async fn process_database_op(
         Command::Get(..) => command.get_user_todo(db).await,
         Command::CreateUser(..) => command.create_new_user(db).await,
         Command::ListFruits => command.get_fruits(db).await,
-        Command::ListSuppliers => command.get_suppliers(db).await,
         Command::Store { .. } => command.store(db).await,
         Command::UpdateTodoList { .. } => command.update_todo_list(db).await,
-        Command::DeleteUser(..) => command.delete_user(db).await,
     };
 
     match db_op {
