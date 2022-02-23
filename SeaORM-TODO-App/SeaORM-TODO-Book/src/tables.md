@@ -66,11 +66,6 @@ async fn main() -> anyhow::Result<()> {
                 .unique_key()
                 .not_null(),
         )
-        .col(
-            ColumnDef::new(Alias::new("date_time"))
-                .timestamp()
-                .not_null(),
-        )
         .to_owned();
 
     // Executing the SQL query to create the `fruits_table` in PostgreSQL
@@ -78,50 +73,6 @@ async fn main() -> anyhow::Result<()> {
     // Print the result in a user friendly way
     println!(
         "`CREATE TABLE fruits` {:?}",
-        match create_table_op {
-            Ok(_) => "Operation Successful".to_owned(),
-            Err(e) => format!("Unsuccessful - Error {:?}", e),
-        }
-    );
-
-    // Create the `suppliers` table
-    let suppliers_table = Table::create()
-        .table(Alias::new("suppliers"))
-        .if_not_exists()
-        .col(
-            ColumnDef::new(Alias::new("suppliers_id"))
-                .integer()
-                .auto_increment()
-                .primary_key()
-                .not_null(),
-        )
-        .col(
-            ColumnDef::new(Alias::new("suppliers_name"))
-                .string()
-                .unique_key()
-                .not_null(),
-        )
-        .col(ColumnDef::new(Alias::new("fruit_id")).integer().not_null())
-        .col(
-            ColumnDef::new(Alias::new("date_time"))
-                .timestamp()
-                .not_null(),
-        )
-        .foreign_key(
-            ForeignKey::create()
-                .name("FK_supplier_fruits")
-                .from(Alias::new("suppliers"), Alias::new("fruit_id"))
-                .to(Alias::new("fruits"), Alias::new("fruit_id"))
-                .on_delete(ForeignKeyAction::Cascade)
-                .on_update(ForeignKeyAction::Cascade),
-        )
-        .to_owned();
-
-    // Executing the SQL query to create the `suppliers` table in PostgreSQL
-    let create_table_op = db.execute(db_postgres.build(&suppliers_table)).await;
-    // Print the result in a user friendly way
-    println!(
-        "`CREATE TABLE suppliers` {:?}",
         match create_table_op {
             Ok(_) => "Operation Successful".to_owned(),
             Err(e) => format!("Unsuccessful - Error {:?}", e),
@@ -245,7 +196,6 @@ pub struct Model {
     #[sea_orm(unique)]
     pub suppliers_name: String,
     pub fruit_id: i32,
-    pub date_time: DateTimeUtc,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
@@ -293,45 +243,34 @@ async fn main() -> anyhow::Result<()> {
  }
 ```
 
-Next, populate the `fruits` and `suppliers` tables with data. First, add `chrono` crate to `Cargo.toml` file.
+Next, populate the `fruits` and `suppliers` tables with data.
 
-```sh
-$ cargo add chrono
-```
-
-Then,  Create a new file `src/insert_values.rs` and add the following code:
+Create a new file `src/insert_values.rs` and add the following code:
 
 ```rust,no_run,noplayground
 use crate::{Fruits, FruitsActiveModel, Suppliers, SuppliersActiveModel};
-use chrono::Utc;
 use sea_orm::{DatabaseConnection, EntityTrait, Set};
 
 // Insert suppliers in the `suppliers` table
 pub async fn insert_fruits(db: &DatabaseConnection) -> anyhow::Result<()> {
-    // Get current system time
-    let now = Utc::now();
 
     let apple = FruitsActiveModel {
         fruit_name: Set("Apple".to_owned()),
-        date_time: Set(now),
         ..Default::default()
     };
 
     let orange = FruitsActiveModel {
         fruit_name: Set("Orange".to_owned()),
-        date_time: Set(now),
         ..Default::default()
     };
 
     let mango = FruitsActiveModel {
         fruit_name: Set("Mango".to_owned()),
-        date_time: Set(now),
         ..Default::default()
     };
 
     let pineapple = FruitsActiveModel {
         fruit_name: Set("Pineapple".to_owned()),
-        date_time: Set(now),
         ..Default::default()
     };
 
@@ -343,50 +282,6 @@ pub async fn insert_fruits(db: &DatabaseConnection) -> anyhow::Result<()> {
 
     Ok(())
 }
-
-// Insert suppliers in the `suppliers` table
-pub async fn insert_suppliers(db: &DatabaseConnection) -> anyhow::Result<()> {
-    // Get current system time
-    let now = Utc::now();
-
-    let john_doe = SuppliersActiveModel {
-        suppliers_name: Set("John Doe".to_owned()),
-        fruit_id: Set(1),
-        date_time: Set(now),
-        ..Default::default()
-    };
-
-    let jane_doe = SuppliersActiveModel {
-        suppliers_name: Set("Jane Doe".to_owned()),
-        fruit_id: Set(2),
-        date_time: Set(now),
-        ..Default::default()
-    };
-
-    let doe_junior = SuppliersActiveModel {
-        suppliers_name: Set("Doe Junior".to_owned()),
-        fruit_id: Set(3),
-        date_time: Set(now),
-        ..Default::default()
-    };
-
-    let doe_senior = SuppliersActiveModel {
-        suppliers_name: Set("Doe Senior".to_owned()),
-        fruit_id: Set(4),
-        date_time: Set(now),
-        ..Default::default()
-    };
-
-    let suppliers_insert_operation =
-        Suppliers::insert_many(vec![john_doe, jane_doe, doe_senior, doe_junior])
-            .exec(db)
-            .await;
-
-    println!("INSERTED SUPPLIERS: {:?}", suppliers_insert_operation?);
-
-    Ok(())
-}
-
 ```
 
 Here, `ActiveModel` is used to prepare the data for insertion into the database using `Entity::insert()` .

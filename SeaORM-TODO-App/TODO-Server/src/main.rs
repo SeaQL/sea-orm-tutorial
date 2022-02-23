@@ -91,7 +91,7 @@ async fn main() -> anyhow::Result<()> {
         }
     );
 
-    insert_fruits(&db).await?;
+    //insert_fruits(&db).await?;
 
     start_server(db).await?;
 

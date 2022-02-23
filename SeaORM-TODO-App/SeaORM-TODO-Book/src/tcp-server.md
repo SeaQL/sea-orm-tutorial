@@ -58,10 +58,10 @@
 
    
 
-6. Add the sql drivers for database backend and enable date and time features with the `with-chrono` feature
+6. Add sea-orm with the features to enable sql drivers for PostgreSQL backend 
 
    ```sh
-   $  cargo add sea-orm --no-default-features --features "runtime-async-std-rustls sqlx-postgres macros with-chrono"
+   $  cargo add sea-orm --no-default-features --features "runtime-async-std-rustls sqlx-postgres macros"
    ```
 
    This adds sea-orm to `src/Cargo.toml` 
@@ -81,11 +81,10 @@
    +     "runtime-async-std-rustls",
    +     "sqlx-postgres",
    +     "macros",
-   +     "with-chrono",
    + ], default-features = false }
    
    ```
-
+   
 4. Login to Postgres database and create a new user and database
 
    ```sh
