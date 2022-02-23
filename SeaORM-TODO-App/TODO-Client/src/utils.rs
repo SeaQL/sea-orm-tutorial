@@ -8,6 +8,7 @@ pub(crate) const ADD_COMMAND: &str = "ADD";
 pub(crate) const DONE_COMMAND: &str = "DONE";
 pub(crate) const UNDO_COMMAND: &str = "UNDO";
 pub(crate) const EDIT_COMMAND: &str = "EDIT";
+pub(crate) const EXIT_COMMAND: &str = "EXIT";
 
 const DONE: &str = "DONE TODOS";
 const NOT_DONE: &str = "NOT DONE";
@@ -24,12 +25,32 @@ pub fn synching() {
     println!("SYNCING TO DATABASE...");
 }
 pub fn synching_to_server() {
+    clear_terminal();
     println!("SYNCING TO SERVER...");
 }
 
 pub fn loading() {
     clear_terminal();
     println!("LOADING FROM DATABASE...");
+}
+
+pub fn convert_case(word: &str) -> String {
+    let word = word.to_lowercase();
+    let mut chars = word
+        .chars()
+        .map(|character| character.to_string())
+        .collect::<Vec<String>>();
+
+    chars[0] = chars[0].to_uppercase().to_string();
+
+    chars.into_iter().collect::<String>()
+}
+
+pub fn split_words(user_input: String) -> Vec<String> {
+    user_input
+        .split(" ")
+        .map(|word| word.to_owned())
+        .collect::<Vec<String>>()
 }
 
 pub async fn format_todos(todo_models: &MemDB) {
@@ -72,23 +93,4 @@ pub async fn format_todos(todo_models: &MemDB) {
             println!("----------------\n");
         }
     }
-}
-
-pub fn convert_case(word: &str) -> String {
-    let word = word.to_lowercase();
-    let mut chars = word
-        .chars()
-        .map(|character| character.to_string())
-        .collect::<Vec<String>>();
-
-    chars[0] = chars[0].to_uppercase().to_string();
-
-    chars.into_iter().collect::<String>()
-}
-
-pub fn split_words(user_input: String) -> Vec<String> {
-    user_input
-        .split(" ")
-        .map(|word| word.to_owned())
-        .collect::<Vec<String>>()
 }

@@ -9,8 +9,6 @@ pub enum Command {
     Get(String),
     CreateUser(String),
     ListFruits,
-    ListSuppliers,
-    DeleteUser(String),
 }
 
 //  The structure for a TodoList

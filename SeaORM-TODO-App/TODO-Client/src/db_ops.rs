@@ -6,7 +6,7 @@ use async_std::{
     net::TcpStream,
 };
 use sea_orm::{
-    sea_query::{Alias, ColumnDef, ForeignKey, ForeignKeyAction, Table},
+    sea_query::{Alias, ColumnDef, Table},
     ActiveModelTrait, ConnectionTrait, Database, DatabaseConnection, EntityTrait, Set,
 };
 
@@ -43,7 +43,6 @@ pub async fn create_todo_table(db: &DatabaseConnection) -> anyhow::Result<()> {
         .col(ColumnDef::new(Alias::new("quantity")).string().not_null())
         .col(ColumnDef::new(Alias::new("status")).boolean().not_null())
         .to_owned();
-    let create_table_op = db.execute(database_backend.build(&todos_table)).await;
 
     // Executing the SQL query to create the `todos` table in SQLite
     let create_table_op = db.execute(database_backend.build(&todos_table)).await;
@@ -59,7 +58,7 @@ pub async fn create_todo_table(db: &DatabaseConnection) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub async fn get_fruits(db: &DatabaseConnection) -> anyhow::Result<Vec<String>> {
+pub async fn get_fruits() -> anyhow::Result<Vec<String>> {
     // Get the fruits first
     let get_fruits = Command::ListFruits;
     let serialized_command = bincode::serialize(&get_fruits)?;
@@ -71,7 +70,7 @@ pub async fn get_fruits(db: &DatabaseConnection) -> anyhow::Result<Vec<String>> 
     let mut fruits_buf = vec![0u8; 4096];
     loop {
         let n = stream.read(&mut fruits_buf).await?;
-        let rx: Vec<String> = bincode::deserialize(&fruits_buf)?;
+        let rx: Vec<_> = bincode::deserialize(&fruits_buf).unwrap();
 
         fruits_list = rx;
 
