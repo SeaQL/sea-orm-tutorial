@@ -1,0 +1,53 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: Install mdbook
+        run: (test -x $HOME/.cargo/bin/mdbook || cargo install --debug --vers "^0.4" mdbook)
+      - name: Install static-sitemap-cli
+        run: npm install static-sitemap-cli
+
+      # Build SimpleCRUD mdbook
+      - name: Build SimpleCRUD mdbook
+        run: mdbook build SimpleCRUD/book -d ../../gh-pages
+      - name: Generate SimpleCRUD sitemap
+        run: |
+          cd gh-pages
+          npx sscli --base https://www.sea-ql.org/sea-orm-tutorial
+
+      # Build SimpleCRUD mdbook
+      - name: Build SimpleCRUD mdbook
+        run: mdbook build SimpleCRUD/book -d ../../gh-pages/SimpleCRUD
+      - name: Generate SimpleCRUD sitemap
+        run: |
+          cd gh-pages/SimpleCRUD
+          npx sscli --base https://www.sea-ql.org/sea-orm-tutorial/SimpleCRUD
+
+      # Build SeaORM-TODO-App mdbook
+      - name: Build SeaORM-TODO-App mdbook
+        run: mdbook build SeaORM-TODO-App/book -d ../../gh-pages/SeaORM-TODO-App
+      - name: Generate SeaORM-TODO-App sitemap
+        run: |
+          cd gh-pages/SeaORM-TODO-App
+          npx sscli --base https://www.sea-ql.org/sea-orm-tutorial/SeaORM-TODO-App
+
+      # Deploy GitHub Pages
+      - name: Deploy GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: gh-pages
+          single-commit: true
+          clean: true

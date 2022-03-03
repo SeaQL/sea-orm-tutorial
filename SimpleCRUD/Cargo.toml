@@ -1,3 +1,6 @@
+[workspace]
+# Open a separate workspace for each tutorial
+
 [package]
 name = "simple-crud"
 version = "0.1.0"
