@@ -18,23 +18,19 @@
    $ cargo add async-std --features attributes
    ```
 
-   This adds async-std `src/Cargo.toml` file
+   This adds async-std to `Cargo.toml` file
 
    ```toml
    [package]
-   name = "sea-orm-todo"
+   name = "todo-server"
    version = "0.1.0"
    edition = "2021"
-   
-   # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
    
    [dependencies]
    + async-std = { version = "1.10.0", features = ["attributes"] }
    ```
 
-   
-
-2. Add `anyhow` crate for error handling
+1. Add `anyhow` crate for error handling
 
    ```sh
    $ cargo add anyhow
@@ -44,35 +40,28 @@
 
    ```toml
    [package]
-   name = "todo-client"
+   name = "todo-server"
    version = "0.1.0"
    edition = "2021"
-   
-   # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
    
    [dependencies]
    + anyhow = "1.0.53"
      async-std = { version = "1.10.0", features = ["attributes"] }
-   
    ```
 
-   
-
-6. Add sea-orm with the features to enable sql drivers for PostgreSQL backend 
+1. Add `sea-orm` with the features to enable sql drivers for PostgreSQL backend 
 
    ```sh
    $  cargo add sea-orm --no-default-features --features "runtime-async-std-rustls sqlx-postgres macros"
    ```
 
-   This adds sea-orm to `src/Cargo.toml` 
+   This adds sea-orm to `Cargo.toml`
 
    ```toml
    [package]
-   name = "sea-orm-todo"
+   name = "todo-server"
    version = "0.1.0"
    edition = "2021"
-   
-   # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
    
    [dependencies]
      anyhow = "1.0.53"
@@ -82,10 +71,9 @@
    +     "sqlx-postgres",
    +     "macros",
    + ], default-features = false }
-   
    ```
    
-4. Login to Postgres database and create a new user and database
+1. Login to Postgres database and create a new user and database
 
    ```sh
    $ sudo -u postgres psql postgres
@@ -103,7 +91,7 @@
    postgres=# CREATE DATABASE fruits_market WITH OWNER = webmaster;
    ```
 
-5. Create a `.env` file in the workspace directory
+1. Create a `.env` file in the workspace directory
 
    The file structure should look 
 
@@ -117,15 +105,13 @@
    	|-- TODO-Server
    ```
 
-   Then add the PostgreSQL configuration with the new user `webmaster` and database `fruits_market`  we created earlier
+   Then add the PostgreSQL configuration with the new user `webmaster` and database `fruits_market` we created earlier
 
    File: `SeaORM-TODO-App/TODO-Server/.env`
    
    ```sh
    + DATABASE_URL=postgres://webmaster:master_char@localhost/fruits_market
    ```
-   
-   
    
    Change the main function to async function using async-std
    
@@ -139,7 +125,5 @@
    +     Ok(())
    + }
    ```
-   
-   
-   
-   Next, we will create all the required tables and their relationships
+
+Next, we will create all the required tables and their relationships
