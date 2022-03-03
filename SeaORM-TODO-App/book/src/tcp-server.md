@@ -1,6 +1,6 @@
 # Building The TCP Server
 
-1. #### Install necessary dependencies
+## Install necessary dependencies
 
    - Switch to the `SeaORM-TODO-App/TODO-Server` directory to build the TCP server
 
@@ -88,7 +88,7 @@
        + }
        ```
 
-1. #### Creating a new user and database
+## Creating a new user and database
 
    - Login to Postgres database and create a new user and database
 
@@ -108,7 +108,7 @@
        postgres=# CREATE DATABASE fruits_market WITH OWNER = webmaster;
        ```
 
-1. #### Configuring the database environment
+## Configuring the database environment
 
    - Create a `.env` file in the workspace directory
 
