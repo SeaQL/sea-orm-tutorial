@@ -1,8 +1,13 @@
-use async_std::sync::Arc;
+use axum::{
+    routing::{get, post},
+    Router,
+};
+use dotenv::dotenv;
 use sea_orm::{
     sea_query::{Alias, ColumnDef, Table},
     ConnectionTrait, Database, DbBackend,
 };
+use std::net::SocketAddr;
 
 mod fruits_list_table;
 mod insert_values;
@@ -14,21 +19,22 @@ pub use insert_values::*;
 pub use server::*;
 pub use todo_list_table::prelude::*;
 
-#[async_std::main]
+use once_cell::sync::OnceCell;
+use sea_orm::DatabaseConnection;
+
+static DATABASE_CONNECTION: OnceCell<DatabaseConnection> = OnceCell::new();
+
+#[tokio::main]
 async fn main() -> anyhow::Result<()> {
     //Define the database backend
     let db_postgres = DbBackend::Postgres;
 
-    // Read the database environment from the `.env` file
-    let env_database_url = include_str!("../.env").trim();
-    // Split the env url
-    let split_url: Vec<&str> = env_database_url.split("=").collect();
-    // Get item with the format `database_backend://username:password@localhost/database`
-    let database_url = split_url[1];
+    dotenv().ok();
 
-    // Perform a database connection
+    // Read the database environment from the `.env` file
+    let database_url = dotenv::var("DATABASE_URL")?;
     let db = Database::connect(database_url).await?;
-    let db = Arc::new(db);
+    DATABASE_CONNECTION.set(db).unwrap();
 
     // Create the fruits table
     let fruits_table = Table::create()
@@ -48,6 +54,8 @@ async fn main() -> anyhow::Result<()> {
                 .not_null(),
         )
         .to_owned();
+
+    let db = DATABASE_CONNECTION.get().unwrap();
 
     // Executing the SQL query to create the `fruits_table` in PostgreSQL
     let create_table_op = db.execute(db_postgres.build(&fruits_table)).await;
@@ -91,9 +99,19 @@ async fn main() -> anyhow::Result<()> {
         }
     );
 
-    //insert_fruits(&db).await?;
+    //insert_fruits(&db).await?; //TODO
+    let app = Router::new()
+        .route("/", get(root))
+        .route("/fruits", get(get_fruits))
+        .route("/get_user", post(get_user))
+        .route("/store", post(store_todo))
+        .route("/update_todo", post(update_todo));
 
-    start_server(db).await?;
+    let addr = SocketAddr::from(([127, 0, 0, 1], 8080));
+    println!("listening on http://{}", addr);
+    axum::Server::bind(&addr)
+        .serve(app.into_make_service())
+        .await?;
 
     Ok(())
 }
