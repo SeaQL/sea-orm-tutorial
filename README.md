@@ -6,10 +6,11 @@ The tutorial is based on a software system for managing fruits in a fruit market
 
 The tutorials are
 
-1. **Simple CRUD operations** - This tutorials explains how to use SeaORM to do basic tasks like create a table in a database, insert a row into the table, update a column, delete operations and logging the results to the console. The database used is MySQL
-2. **TODO Application** - This tutorial shows how to use SeaORM, SQLite and PostgreSQL to create a realtime sync TODO application where a user can buy fruits from the mango market.
+1. [**Simple CRUD operations**](https://www.sea-ql.org/sea-orm-tutorial/SimpleCRUD) - This tutorials explains how to use SeaORM to do basic tasks like create a table in a database, insert a row into the table, update a column, delete operations and logging the results to the console. The database used is MySQL
+2. [**TODO Application**](https://www.sea-ql.org/sea-orm-tutorial/SeaORM-TODO-App) - This tutorial shows how to use SeaORM, SQLite and PostgreSQL to create a realtime sync TODO application where a user can buy fruits from the mango market.
 
-For additional help on **SeaORM** specific questions, join the support Discord chat [https://discord.com/invite/uCPdDXzbdv](https://discord.com/invite/uCPdDXzbdv)
+[![Discord](https://img.shields.io/discord/873880840487206962?label=Discord)](https://discord.com/invite/uCPdDXzbdv)
+For additional help on **SeaORM** specific questions, join the support Discord chat.
 
 ### Running the tutorials
 
