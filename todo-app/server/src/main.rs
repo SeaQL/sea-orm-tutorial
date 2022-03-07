@@ -3,24 +3,22 @@ use axum::{
     Router,
 };
 use dotenv::dotenv;
+use once_cell::sync::OnceCell;
 use sea_orm::{
     sea_query::{Alias, ColumnDef, Table},
-    ConnectionTrait, Database, DbBackend,
+    ConnectionTrait, Database, DatabaseConnection, DbBackend,
 };
 use std::net::SocketAddr;
 
 mod fruits_list_table;
 mod insert_values;
-mod server;
+mod routing;
 mod todo_list_table;
 
 pub use fruits_list_table::prelude::*;
 pub use insert_values::*;
-pub use server::*;
+pub use routing::*;
 pub use todo_list_table::prelude::*;
-
-use once_cell::sync::OnceCell;
-use sea_orm::DatabaseConnection;
 
 static DATABASE_CONNECTION: OnceCell<DatabaseConnection> = OnceCell::new();
 
@@ -99,11 +97,11 @@ async fn main() -> anyhow::Result<()> {
         }
     );
 
-    //insert_fruits(&db).await?; //TODO
+    insert_fruits(&db).await?;
+
     let app = Router::new()
         .route("/", get(root))
         .route("/fruits", get(get_fruits))
-        .route("/get_user", post(get_user))
         .route("/store", post(store_todo))
         .route("/update_todo", post(update_todo));
 

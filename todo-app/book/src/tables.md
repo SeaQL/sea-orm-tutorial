@@ -1,47 +1,43 @@
 # Creating Tables
 
-First, create a database config for the `sea_orm::DatabaseConnection` to use to connect and authenticate to the PostgreSQL server.
+First, create a database config for the `sea_orm::DatabaseConnection` to use to connect and authenticate to the PostgreSQL server. 
 
 ```rust,no_run,noplayground
-+ use async_std::sync::Arc;
-+ use sea_orm::{Database, DbBackend};
++ use once_cell::sync::OnceCell;
++ use sea_orm::{DatabaseConnection, Database};
++ use dotenv::dotenv;
 
-#[async_std::main]
++ static DATABASE_CONNECTION: OnceCell<DatabaseConnection> = OnceCell::new();
+
+#[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    //Define the database backend
-    + let db_postgres = DbBackend::Postgres;
+    dotenv().ok();
 
     // Read the database environment from the `.env` file
-    + let env_database_url = include_str!("../.env").trim();
-    // Split the env url
-    + let split_url: Vec<&str> = env_database_url.split("=").collect();
-    // Get item with the format `database_backend://username:password@localhost/database`
-    + let database_url = split_url[1];
-
-    // Perform a database connection
-    + let db = Database::connect(database_url).await?;
-    + let db = Arc::new(db);
+    let database_url = dotenv::var("DATABASE_URL")?;
+    let db = Database::connect(database_url).await?;
+    DATABASE_CONNECTION.set(db).unwrap();
 
     Ok(())
 }
 ```
 
-The `include_str!("../.env").trim();` reads the `.env` file and loads it's content at compile time. This content is the PostgreSQL database configuration which we later split using `split("=")` and discard the `DATABASE_URL=` part since it's only needed by `sea-orm-cli` and not ` Database::connect()` which only accepts `database_backend://username:password@localhost/database`.
+`dotenv::var()` is used to load the configuration `DATABASE_URL` as specified in the `.env` file. This is passed to the `Database::connect()` method in order to create a `sea_orm::DatabaseConnection` which executes queries in the database. The database connection is exported to the global scope using `once_cell` crate  as a static global variable 
 
-Calling the `Database::connect()` on the parsed URL creates a `DatabaseConnection` that will perform all CRUD operations. This connection is kept behind an `async_std::sync::Arc` for thread safety when we `spawn` async tasks.
+`static DATABASE_CONNECTION: OnceCell<DatabaseConnection> = OnceCell::new();`
 
+This is later set to the `DatabaseConnection` using ` DATABASE_CONNECTION.set(db).unwrap();`. 
 
-
-Add the code to create the three tables, `todos`, `fruits` and `suppliers`.
+Add the code to create the tables, `todos` and `fruits`.
 
 **FILE**:***src/main.rs***
 
 ```rust,no_run,noplayground
   use async_std::sync::Arc;
-- use sea_orm::{Database, DbBackend};
+- use sea_orm::{Database, DatabaseConnection};
 + use sea_orm::{
 +     sea_query::{Alias, ColumnDef, ForeignKey, ForeignKeyAction, Table},
-+     ConnectionTrait, Database, DbBackend,
++     ConnectionTrait, Database, DatabaseConnection, DbBackend,
 + };
 
 #[async_std::main]
@@ -49,7 +45,17 @@ async fn main() -> anyhow::Result<()> {
 
 // --- code snippet ---
 
-// Create the fruits table
+//Define the database backend
+    let db_postgres = DbBackend::Postgres;
+
+    dotenv().ok();
+
+    // Read the database environment from the `.env` file
+    let database_url = dotenv::var("DATABASE_URL")?;
+    let db = Database::connect(database_url).await?;
+    DATABASE_CONNECTION.set(db).unwrap();
+
+    // Create the fruits table
     let fruits_table = Table::create()
         .table(Alias::new("fruits"))
         .if_not_exists()
@@ -67,6 +73,8 @@ async fn main() -> anyhow::Result<()> {
                 .not_null(),
         )
         .to_owned();
+
+    let db = DATABASE_CONNECTION.get().unwrap();
 
     // Executing the SQL query to create the `fruits_table` in PostgreSQL
     let create_table_op = db.execute(db_postgres.build(&fruits_table)).await;
@@ -122,8 +130,6 @@ Next, use `sea-orm-cli` to auto-generate the code for `Entity`, `Model`, `Relati
 $ sea-orm-cli generate entity -o src/todo_list_table -t todos #The todos table
 
 $ sea-orm-cli generate entity -o src/fruits_list_table -t fruits #The fruits table
-
-$ sea-orm-cli generate entity -o src/suppliers_list_table -t suppliers #The suppliers table
 ```
 
 This generates new directories
@@ -133,10 +139,6 @@ SeaORM-TODO-App
 	|-- Cargo.toml
 	|-- .env
 	|-- src
-+ 	|-- suppliers_list_table
-+ 		|-- mod.rs
-+ 		|-- prelude.rs
-+ 		|-- suppliers.rs
 + 	|-- fruits_list_table
 + 		|-- mod.rs
 + 		|-- prelude.rs
@@ -147,18 +149,7 @@ SeaORM-TODO-App
 + 		|-- todos.rs
 ```
 
-Modify the `src/suppliers_list_table/prelude.rs` and import the types using friendly names.
-
-```rust,no_rust,noplayground
-- pub use super::suppliers::Entity as Suppliers;
-
-+ pub use super::suppliers::{
-+     ActiveModel as SuppliersActiveModel, Column as SuppliersColumn, Entity as Suppliers,
-+     Model as SuppliersModel, PrimaryKey as SuppliersPrimaryKey, Relation as SuppliersRelation,
-+ };
-```
-
-Do the same to the `src/fruits_table/prelude.rs`
+Modify the `src/fruits_table/prelude.rs` and import the types using friendly names.
 
 ```rust,no_run,noplayground
 - pub use super::fruits::Entity as Fruits;
@@ -169,7 +160,7 @@ Do the same to the `src/fruits_table/prelude.rs`
 + };
 ```
 
-Do the same ot the `src/todos_table/prelude.rs`
+Do the same to the `src/todos_table/prelude.rs`
 
 ```rust,no_run,noplayground
 //! SeaORM Entity. Generated by sea-orm-codegen 0.5.0
@@ -181,58 +172,14 @@ Do the same ot the `src/todos_table/prelude.rs`
 + };
 ```
 
-Modify the `Model` and `Relation` part of `Suppliers` Entity to  import `Fruits` entity properly
-
-```rust,no_run,noplayground
-//! SeaORM Entity. Generated by sea-orm-codegen 0.6.0
-
-use sea_orm::entity::prelude::*;
-
-#[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
-#[sea_orm(table_name = "suppliers")]
-pub struct Model {
-    #[sea_orm(primary_key)]
-    pub suppliers_id: i32,
-    #[sea_orm(unique)]
-    pub suppliers_name: String,
-    pub fruit_id: i32,
-}
-
-#[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
-pub enum Relation {
-    #[sea_orm(
--		belongs_to = "super::fruits::Entity",
-+		belongs_to = "crate::Fruits",
-        from = "Column::FruitId",
--		to = "super::fruits::Column::FruitId",
-+		to = "crate::FruitsColumn::FruitId",
-        on_update = "Cascade",
-        on_delete = "Cascade"
-    )]
-    Fruits,
-}
-
-- impl Related<super::fruits::Entity> for Entity {
-+ impl Related<crate::Fruits> for Entity {
-    fn to() -> RelationDef {
-        Relation::Fruits.def()
-    }
-}
-
-impl ActiveModelBehavior for ActiveModel {}
-
-```
-
 Import these modules into `src/main.rs`
 
 ```rust,no_run,noplayground
 // --- code snippet ---
 + mod fruits_list_table;
-+ mod suppliers_list_table;
 + mod todo_list_table;
 
 + pub use fruits_list_table::prelude::*;
-+ pub use suppliers_list_table::prelude::*;
 + pub use todo_list_table::prelude::*;
 
 #[async_std::main]
@@ -243,17 +190,16 @@ async fn main() -> anyhow::Result<()> {
  }
 ```
 
-Next, populate the `fruits` and `suppliers` tables with data.
+Next, populate the `fruits` table with a list of fruits.
 
 Create a new file `src/insert_values.rs` and add the following code:
 
 ```rust,no_run,noplayground
-use crate::{Fruits, FruitsActiveModel, Suppliers, SuppliersActiveModel};
+use crate::{Fruits, FruitsActiveModel};
 use sea_orm::{DatabaseConnection, EntityTrait, Set};
 
 // Insert suppliers in the `suppliers` table
 pub async fn insert_fruits(db: &DatabaseConnection) -> anyhow::Result<()> {
-
     let apple = FruitsActiveModel {
         fruit_name: Set("Apple".to_owned()),
         ..Default::default()
@@ -282,6 +228,7 @@ pub async fn insert_fruits(db: &DatabaseConnection) -> anyhow::Result<()> {
 
     Ok(())
 }
+
 ```
 
 Here, `ActiveModel` is used to prepare the data for insertion into the database using `Entity::insert()` .
@@ -298,7 +245,6 @@ async fn main() -> anyhow::Result<()> {
     // --- code snippet ---
     
 +	 insert_fruits(&db).await?;
-+    insert_suppliers(&db).await?;
     
      Ok(())
 }

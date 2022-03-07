@@ -1,5 +1,4 @@
 use crate::{Fruits, FruitsActiveModel};
-
 use sea_orm::{DatabaseConnection, EntityTrait, Set};
 
 // Insert suppliers in the `suppliers` table

@@ -9,11 +9,6 @@ pub struct Store {
     todo_list: String,
 }
 
-#[derive(Deserialize, Debug)]
-pub struct GetUser {
-    username: String,
-}
-
 pub async fn root() -> &'static str {
     "Remote PostgreSQL Server Online!"
 }
@@ -33,25 +28,6 @@ pub async fn get_fruits() -> impl IntoResponse {
         Err(error) => (
             StatusCode::INTERNAL_SERVER_ERROR,
             Json(vec![error.to_string()]),
-        ),
-    }
-}
-
-pub async fn get_user(Json(payload): Json<GetUser>) -> impl IntoResponse {
-    let db = DATABASE_CONNECTION.get().unwrap();
-
-    match Todos::find()
-        .filter(TodosColumn::Username.contains(&payload.username))
-        .one(db)
-        .await
-    {
-        Ok(user_model) => match user_model {
-            Some(user_found) => (StatusCode::ACCEPTED, Json(user_found.todo_list)),
-            None => (StatusCode::NO_CONTENT, Json(None)),
-        },
-        Err(error) => (
-            StatusCode::INTERNAL_SERVER_ERROR,
-            Json(Some(error.to_string())),
         ),
     }
 }

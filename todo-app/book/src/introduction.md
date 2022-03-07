@@ -22,32 +22,44 @@ This will make it easier to visualize changes to a file
 
 First, install PostgreSQL and SQLite and ensure PostgreSQL server is running.
 
+### Initializing the project directory
 
+A cargo workspace make development easier and share the building environment. The `HTTP` TODO client will be called `client` and the `HTTP server` will be called `server`.
 
-#### Create a cargo workspace for the server and frontend 
+#### Initialize the `client` and `server`
 
-1. Create a new directory `SeaORM-TODO-App`, a `Cargo.toml` file, a `TODO-Server` and a `TODO-Client`. The `TODO-Server` will contain the source code for the TCP server while the `TODO-Client` will contain the source code for the front-end.
+Create the workspace directory `todo-app`
 
-   ```sh
-   $ mkdir SeaORM-TODO-App
-   
-   $ cd SeaORM-TODO-App
-   
-   $ cargo new TODO-Server --name todo-server
-   
-   $ cargo new TODO-Client --name todo-client
-   ```
+```sh
+$ mkdir todo-app
+```
 
-   Then register the cargo projects with the `cargo workspace` by creating a workspace file in the current directory.
+Then switch to the workspace directory
 
-   **File**:*SeaORM-TODO-App/Cargo.toml* file
-   
-   ```TOML
-   [workspace]
-   members = [
-   	"TODO-Server",
-   	"TODO-Client",
-   ]
-   ```
+```sh
+$ cd todo-app
+```
 
-Next, we will build the TCP server
+Create the `client` and `server` projects
+
+```sh
+$ cargo new client
+```
+
+```sh
+$ cargo new server
+```
+
+Create a `Cargo.toml` in the root of the workspace directory to register the two projects
+
+`File: todo-app/Cargo.toml`
+
+```toml
+[workspace]
+members = [
+	"client",
+	"server",
+]
+```
+
+Next up is building the TCP server.
