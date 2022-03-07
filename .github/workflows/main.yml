@@ -18,10 +18,10 @@ jobs:
       - name: Install mdbook
         run: (test -x $HOME/.cargo/bin/mdbook || cargo install --debug --vers "^0.4" mdbook)
 
-      # Build SimpleCRUD mdbook
-      - name: Build SimpleCRUD mdbook
-        run: mdbook build SimpleCRUD/book
+      # Build simple-crud mdbook
+      - name: Build simple-crud mdbook
+        run: mdbook build simple-crud/book
 
-      # Build SeaORM-TODO-App mdbook
-      - name: Build SeaORM-TODO-App mdbook
-        run: mdbook build SeaORM-TODO-App/book
+      # Build todo-app mdbook
+      - name: Build todo-app mdbook
+        run: mdbook build todo-app/book

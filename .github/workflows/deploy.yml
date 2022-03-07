@@ -19,29 +19,29 @@ jobs:
       - name: Install static-sitemap-cli
         run: npm install static-sitemap-cli
 
-      # Build SimpleCRUD mdbook
-      - name: Build SimpleCRUD mdbook
-        run: mdbook build SimpleCRUD/book -d ../../gh-pages
-      - name: Generate SimpleCRUD sitemap
+      # Build simple-crud mdbook
+      - name: Build simple-crud mdbook
+        run: mdbook build simple-crud/book -d ../../gh-pages
+      - name: Generate simple-crud sitemap
         run: |
           cd gh-pages
           npx sscli --base https://www.sea-ql.org/sea-orm-tutorial
 
-      # Build SimpleCRUD mdbook
-      - name: Build SimpleCRUD mdbook
-        run: mdbook build SimpleCRUD/book -d ../../gh-pages/SimpleCRUD
-      - name: Generate SimpleCRUD sitemap
+      # Build simple-crud mdbook
+      - name: Build simple-crud mdbook
+        run: mdbook build simple-crud/book -d ../../gh-pages/simple-crud
+      - name: Generate simple-crud sitemap
         run: |
-          cd gh-pages/SimpleCRUD
-          npx sscli --base https://www.sea-ql.org/sea-orm-tutorial/SimpleCRUD
+          cd gh-pages/simple-crud
+          npx sscli --base https://www.sea-ql.org/sea-orm-tutorial/simple-crud
 
-      # Build SeaORM-TODO-App mdbook
-      - name: Build SeaORM-TODO-App mdbook
-        run: mdbook build SeaORM-TODO-App/book -d ../../gh-pages/SeaORM-TODO-App
-      - name: Generate SeaORM-TODO-App sitemap
+      # Build todo-app mdbook
+      - name: Build todo-app mdbook
+        run: mdbook build todo-app/book -d ../../gh-pages/todo-app
+      - name: Generate todo-app sitemap
         run: |
-          cd gh-pages/SeaORM-TODO-App
-          npx sscli --base https://www.sea-ql.org/sea-orm-tutorial/SeaORM-TODO-App
+          cd gh-pages/todo-app
+          npx sscli --base https://www.sea-ql.org/sea-orm-tutorial/todo-app
 
       # Deploy GitHub Pages
       - name: Deploy GitHub Pages
