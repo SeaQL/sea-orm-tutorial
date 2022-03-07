@@ -2,7 +2,7 @@ use crate::{
     format_todos, MemDB, ADD_COMMAND, DONE_COMMAND, EDIT_COMMAND, EXIT_COMMAND, NUMBER, TITLE,
     UNDO_COMMAND,
 };
-use async_std::io;
+use std::io;
 
 pub async fn read_line(
     buffer: &mut String,
@@ -34,7 +34,7 @@ pub async fn read_line(
 
     println!("Enter a fruit that is available.",);
     let stdin = io::stdin(); // We get `Stdin` here.
-    stdin.read_line(buffer).await?;
+    stdin.read_line(buffer)?;
 
     Ok(buffer.to_owned())
 }

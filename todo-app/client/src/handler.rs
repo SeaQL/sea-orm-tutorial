@@ -2,15 +2,15 @@ use crate::{
     convert_case, done, edit, get_fruits, load_sqlite_cache, loading, read_line, split_words,
     store, synching, undo, update_remote_storage, MemDB,
 };
-use async_std::io;
 use sea_orm::DatabaseConnection;
 use std::collections::HashMap;
+use std::io;
 
 pub async fn input_handler(db: &DatabaseConnection) -> anyhow::Result<()> {
     let mut username_buffer = String::default();
     println!("What is Your Username...",);
     let stdin = io::stdin(); // We get `Stdin` here.
-    stdin.read_line(&mut username_buffer).await?;
+    stdin.read_line(&mut username_buffer)?;
     let username = username_buffer.trim().to_string();
 
     let fruits_list: Vec<String> = get_fruits().await?;

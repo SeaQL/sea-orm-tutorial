@@ -1,39 +1,40 @@
 # Remote Database Operations
 
-To persist data remotely in the PostgreSQL database, modify the `src/db_ops.rs` file and add thew following code
+### Data Persistence to the local database
+
+First, import necessary dependencies
 
 `File: src/db_ops.rs`
 
 ```rust,no_run,noplayground
-// -- code snippet --
-use crate::{
-    synching_to_server, Command, MemDB, MyTodos, MyTodosActiveModel, MyTodosModel, TodoList,
-};
++ use serde::{Serialize, Deserialize};
++ use crate::{synching_to_server, MemDB, MyTodos, MyTodosActiveModel, MyTodosModel};
 
+```
+
+#### Fetching the fruits
+
+The `get_fruits()` function fetches the list of fruits from the remote PostgreSQL database using HTTP at the `/fruits` route. The response `response.as_str()?` is serialized using `serde_json` to reate the `fruits` list.
+
+`File: src/db_ops.rs`
+
+```rust,no_run,noplayground
 pub async fn get_fruits() -> anyhow::Result<Vec<String>> {
-    // Get the fruits first
-    let get_fruits = Command::ListFruits;
-    let serialized_command = bincode::serialize(&get_fruits)?;
-    let mut fruits_list: Vec<String>;
+    let response = minreq::get("http://127.0.0.1:8080/fruits").send()?;
 
-    let mut stream = TcpStream::connect("127.0.0.1:8080").await?;
-    stream.write_all(&serialized_command).await?;
-
-    let mut fruits_buf = vec![0u8; 4096];
-    loop {
-        let n = stream.read(&mut fruits_buf).await?;
-        let rx: Vec<_> = bincode::deserialize(&fruits_buf).unwrap();
-
-        fruits_list = rx;
-
-        if n != 0 {
-            break;
-        }
-    }
+    let fruits_list: Vec<String> = serde_json::from_str(&response.as_str()?)?;
 
     Ok(fruits_list)
 }
+```
 
+#### Storing the fruits in local cache
+
+The `store()` function takes a `DatabaseConnection` , `quantity` and `todo_name` as arguments and creates an `ActiveModel` as defined by `MyTodosActiveModel` which is then inserted into the SQLite cache using`MyTodos::insert()`.
+
+`File: src/db_ops.rs`
+
+```rust,no_run,noplayground
 pub async fn store(db: &DatabaseConnection, quantity: &str, todo_name: &str) -> anyhow::Result<()> {
     let my_todo = MyTodosActiveModel {
         todo_name: Set(todo_name.to_owned()),
@@ -46,11 +47,27 @@ pub async fn store(db: &DatabaseConnection, quantity: &str, todo_name: &str) -> 
 
     Ok(())
 }
+```
 
+#### Fetching the TODO Models from the local SQLite cache
+
+`get()` function fetches all the `TODO` models using `MyTodos::find().all()` returning all the fetched Models as `Vec<Model>`
+
+`File: src/db_ops.rs`
+
+```rust,no_run,noplayground
 pub async fn get(db: &DatabaseConnection) -> Result<Vec<MyTodosModel>, sea_orm::DbErr> {
     MyTodos::find().all(db).await
 }
+```
 
+#### Performing modifications on the local SQLite cache
+
+The `edit()` , `done()` and `undo()` functions perform modifications to the SQLite data. The `edit()` function modifies a TODO in the queue by changing it's `quantity`. The `done()` function moves an incomplete todo from the `queued` field of the `TodoList` struct into the `completed` field of the `TodoList` struct while the `undo()` function does the opposite, moving a TODO from the `completed` field to the `queued` field of the `TodoList` struct.
+
+`File: src/db_ops.rs`
+
+```rust,no_run,noplayground
 pub async fn edit(
     db: &DatabaseConnection,
     todo_model: &MyTodosModel,
@@ -81,7 +98,13 @@ pub async fn undo(
 
     Ok(todos_active_model.update(db).await?)
 }
+```
 
+#### Initializing the In-memory database with the SQLite cache
+
+Sometimes the `client` might not exit gracefully using the `EXIT` command, this prevents the `client` from syncing the cache with the remote database. The `load_sqlite_cache()` function loads the SQLite cache into in-memory database `MemDB`. It iterates the result of the `get()` function and uses the `todo_name` field of the `MyTodosModel` as the `key` of the `MemDB`.
+
+```rust,no_run,noplayground
 pub(crate) async fn load_sqlite_cache(
     db: &DatabaseConnection,
     memdb: &mut MemDB,
@@ -97,7 +120,13 @@ pub(crate) async fn load_sqlite_cache(
 
     Ok(())
 }
+```
 
+#### Updating the remote database on graceful exit.
+
+The `update_remote_storage()` uses the `username` and contents of the `MemDB` to update the remote database over HTTP protocol. The `TodoList` struct is first initialized and the contents of the `MemDB` are sorted into `queued` and `completed` TODOs and then converted into JSON string. The `username` and this JSON string are also converted into JSON using the `json` crate and then sent to the remote server using `minreq` at the `/update_todo` route. If the HTTP response status code is   `500` and the matching body data is `ome("MODEL_NOT_FOUND")`, then another request is made to the `/store` route where a new `username` is created and the `todo_list` added under that username.
+
+```rust,no_run,noplayground
 pub async fn update_remote_storage(memdb: &MemDB, username: &str) -> anyhow::Result<()> {
     let mut temp_list = TodoList::default();
     memdb.lock().await.values().for_each(|todo| {
@@ -108,70 +137,42 @@ pub async fn update_remote_storage(memdb: &MemDB, username: &str) -> anyhow::Res
         }
     });
 
+    let todo_list = serde_json::to_string(&temp_list)?;
+
     synching_to_server();
 
-    // Update a todo_list
-    let update_todo = Command::UpdateTodoList {
-        username: username.to_owned(),
-        todo_list: serde_json::to_string(&temp_list)?,
-    };
-    let serialized_command = bincode::serialize(&update_todo)?;
+    let response = minreq::post("http://127.0.0.1:8080/update_todo")
+        .with_header("Content-Type", "application/json")
+        .with_body(
+            json::object! {
+                username: username,
+                todo_list: todo_list.clone(),
+            }
+            .dump(),
+        )
+        .send()?;
 
-    let mut stream = TcpStream::connect("127.0.0.1:8080").await?;
-    stream.write_all(&serialized_command).await?;
-
-    let mut buffer = vec![0u8; 4096];
-    stream.read(&mut buffer).await?;
-
-    bincode::deserialize::<String>(&buffer)?;
+    if response.status_code == 500 {
+        let body = serde_json::from_str::<Option<String>>(&response.as_str()?)?;
+        if body == Some("MODEL_NOT_FOUND".to_owned()) {
+            minreq::post("http://127.0.0.1:8080/store")
+                .with_header("Content-Type", "application/json")
+                .with_body(
+                    json::object! {
+                        username: username,
+                        todo_list: todo_list,
+                    }
+                    .dump(),
+                )
+                .send()?;
+        }
+    }
 
     Ok(())
 }
 
-pub async fn get_user_remote_storage(username: &str) -> anyhow::Result<Option<String>> {
-    let get_user = Command::Get(username.to_owned());
-    let serialized_command = bincode::serialize(&get_user)?;
-
-    let mut stream = TcpStream::connect("127.0.0.1:8080").await?;
-    stream.write_all(&serialized_command).await?;
-
-    let mut buffer = vec![0u8; 4096];
-    stream.read(&mut buffer).await?;
-
-    Ok(bincode::deserialize::<Option<String>>(&buffer)?)
-}
-
-pub async fn create_new_user(username: &str) -> anyhow::Result<String> {
-    let create_user = Command::CreateUser(username.to_owned());
-    let serialized_command = bincode::serialize(&create_user)?;
-
-    let mut stream = TcpStream::connect("127.0.0.1:8080").await?;
-    stream.write_all(&serialized_command).await?;
-
-    let mut buffer = vec![0u8; 4096];
-    stream.read(&mut buffer).await?;
-
-    Ok(bincode::deserialize::<String>(&buffer)?)
-}
-
 ```
 
-`get_fruits()` queries the list of fruits from the remote database.
 
-`store()` will persist the contents of the in-memory database to local SQLite cache.
-
-`load_sqlite_cache()` queries the local database a list of TODOs. This is useful when the client starts, since it fetches the cached TODOs and loads them into the in-memory database `MemDB`.
-
-`edit()` persists the edits to the TODOs to the SQLite cache.
-
-`done()` persists the state of the in-memory database with the `completed` TODOs in the SQLite cache.
-
-`undo()` persists the state of the in-memory database with the `queued` TODOs in the SQLite cache reflecting the TODOs which have been moved from the `completed` Vector to the `queued` Vector.
-
-`update_remote_storage()` updates the remote PostgreSQL database with the new changes in the TODO list.
-
-`get_user_remote_storage()` checks if the username provided is in the remote PostgreSQL database.
-
-`create_new_user()` creates a new user in the remote PostgreSQL database with the given `username`.
 
 Up next is reading from the terminal and performing database operations bases on the command.

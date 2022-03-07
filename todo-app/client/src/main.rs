@@ -1,11 +1,9 @@
-mod common;
 mod db_ops;
 mod handler;
 mod todo_list_table;
 mod user_input;
 mod utils;
 
-pub use common::*;
 pub use db_ops::*;
 pub use handler::*;
 pub use todo_list_table::prelude::*;
@@ -15,7 +13,7 @@ pub use utils::*;
 use dotenv::dotenv;
 use sea_orm::Database;
 
-#[async_std::main]
+#[tokio::main]
 async fn main() -> anyhow::Result<()> {
     dotenv().ok();
 

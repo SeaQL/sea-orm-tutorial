@@ -9,7 +9,7 @@ use crate::{
     format_todos, MemDB, ADD_COMMAND, DONE_COMMAND, EDIT_COMMAND, EXIT_COMMAND, NUMBER, TITLE,
     UNDO_COMMAND,
 };
-use async_std::io;
+use std::io;
 
 pub async fn read_line(
     buffer: &mut String,
@@ -41,7 +41,7 @@ pub async fn read_line(
 
     println!("Enter a fruit that is available.",);
     let stdin = io::stdin(); // We get `Stdin` here.
-    stdin.read_line(buffer).await?;
+    stdin.read_line(buffer)?;
 
     Ok(buffer.to_owned())
 }
@@ -58,11 +58,10 @@ To handle the input create a file in the `src` directory called `handler.rs`
 
 ```rust,no_run,noplayground
 use crate::{
-    convert_case, create_new_user, done, edit, get_fruits, get_user_remote_storage,
-    load_sqlite_cache, loading, read_line, split_words, store, synching, undo,
-    update_remote_storage, MemDB,
+    convert_case, done, edit, get_fruits, load_sqlite_cache, loading, read_line, split_words,
+    store, synching, undo, update_remote_storage, MemDB,
 };
-use async_std::io;
+use std::io;
 use sea_orm::DatabaseConnection;
 use std::collections::HashMap;
 
@@ -70,7 +69,7 @@ pub async fn input_handler(db: &DatabaseConnection) -> anyhow::Result<()> {
     let mut username_buffer = String::default();
     println!("What is Your Username...",);
     let stdin = io::stdin(); // We get `Stdin` here.
-    stdin.read_line(&mut username_buffer).await?;
+    stdin.read_line(&mut username_buffer)?;
     let username = username_buffer.trim().to_string();
 
     let fruits_list: Vec<String> = get_fruits().await?;
@@ -80,13 +79,6 @@ pub async fn input_handler(db: &DatabaseConnection) -> anyhow::Result<()> {
     let mut memdb = MemDB::new(HashMap::default());
     loading();
     load_sqlite_cache(db, &mut memdb).await?;
-
-    let remote_result = get_user_remote_storage(&username).await?;
-    if let Some(result_data) = remote_result {
-        if result_data == "USER_NOT_FOUND" {
-            create_new_user(&username).await?;
-        }
-    }
 
     loop {
         read_line(&mut buffer, fruits_list.as_ref(), &memdb).await?;
@@ -172,17 +164,17 @@ pub async fn input_handler(db: &DatabaseConnection) -> anyhow::Result<()> {
 
 The code block above is nested and there are comments to help understanding it. Simply, it:
 
-	1. reads the `username`
-	1. looks up the `username` from the remote PostgreSQL database
-	1. Loads the local TODO list cache from the local SQLite database
-	1. Stores the loaded local TODO list cache into `MemDB` in-memory database
-	1. reads `stdin` for user input into a `buffer`
-	1. splits the buffer into individual constituents and stores them in an array
-	1. reads the first index of the array to get the command
-	1. performs conditional operations on the command and performs the necessary database operations
-	1. If the command it not available it exits the program
-	1. If the fruit provided is not available, it clears the buffer and reads `stdin` again
-	1. if the command is `EXIT` , it syncs the local SQLite cache with the remote PostgreSQL database and exits.
+- reads the `username`
+- looks up the `username` from the remote PostgreSQL database
+- Loads the local TODO list cache from the local SQLite database
+- Stores the loaded local TODO list cache into `MemDB` in-memory database
+- reads `stdin` for user input into a `buffer`
+- splits the buffer into individual constituents and stores them in an array
+- reads the first index of the array to get the command
+- performs conditional operations on the command and performs the necessary database operations
+- If the command it not available it exits the program
+- If the fruit provided is not available, it clears the buffer and reads `stdin` again
+- if the command is `EXIT` , it syncs the local SQLite cache with the remote PostgreSQL database and exits.
 
 Lastly, import the modules into `src/main.rs`
 
@@ -208,7 +200,7 @@ async fn main() -> anyhow::Result<()> {
     let db = database_config().await?;
     create_todo_table(&db).await?;
 
-+	input_handler(&db).await?;
++   input_handler(&db).await?;
 
     Ok(())
 }
@@ -588,5 +580,7 @@ Enter a fruit that is available.
 ```
 
 
+
+All the source code for the program can be found at [https://github.com/SeaQL/sea-orm-tutorial/tree/master/todo-app](https://github.com/SeaQL/sea-orm-tutorial/tree/master/todo-app).
 
 That's it for this tutorial. :)

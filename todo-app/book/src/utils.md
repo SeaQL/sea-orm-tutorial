@@ -10,7 +10,7 @@ Create a `utils.rs` file which will hold the utilities and add the following cod
 
 ```rust,no_run,noplayground
 use crate::MyTodosModel;
-use async_std::sync::Mutex;
+use tokio::sync::Mutex;
 use std::collections::HashMap;
 
 pub(crate) const TITLE: &str = "FRUITS AVAILABLE";

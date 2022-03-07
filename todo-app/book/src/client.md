@@ -1,31 +1,35 @@
-# Building The TODO TCP Client
+# Building The HTTP Client
 
-This chapter focuses on creating the TCP client. Switch to the `TODO-Client` directory in the workspace.
+This chapter focuses on creating the TCP client. Switch to the `client` directory in the workspace.
 
 #### Configuration
 
 Add the necessary dependencies to create the client.
 
 ```sh
-$ cargo add async-std --features attributes
+$ cargo add tokio --features full
 
 $ cargo add anyhow
-
-$ cargo add bincode
 
 $ cargo add serde --features derive
 
 $ cargo add serde_json
+
+$ cargo add minreq
+
+$ cargo add dotenv
+
+$ cargo add json
 ```
 
-`bincode` crate will be used to prepare the bytes of  `Command` to send over the wire. `serde_json` crate will serialize the TODO list data structure that contains queued and completed TODOs into a JSON string for remote storage in the PostgreSQL database.
+`serde_json` crate will deserialize the TODO list data structure that contains queued and completed TODOs into a JSON string for remote storage in the PostgreSQL database. The `json` crate will serialize JSON data to be sent over HTTP using the `minreq` crate.
 
-The TCP client will also store local cache, simulating a real world setup especially for a desktop or mobile client. SQLite will be the preferred database for this tutorial due to it's popularity. A command line frontend and a TCP stream will be used to keep the tutorial simple and easy to port to other domains like mobile device connection, desktop clients or HTTP clients if you wish to explore other domains.
+The todo client will also store local cache, simulating a real world setup especially for a desktop or mobile client. SQLite will be the preferred database for this tutorial due to it's popularity. A command line frontend  will be used to keep the tutorial simple and easy to port to other domains like mobile device frameworks, desktop clients.
 
-Add `sea-orm` crate with the SQLite features enabled for the local persistent cache. The  runtime features `runtime-async-std-rustls` are used since the async library for this client is `async-std` crate.
+Add `sea-orm` crate with the SQLite features enabled for the local persistent cache. The  runtime features `runtime-tokio-rustls` are used since the async library for this client is `tokio` crate.
 
 ```sh
-$ cargo add sea-orm  --features "runtime-async-std-rustls sqlx-sqlite macros" --no-default-features
+$ cargo add sea-orm  --features "runtime-tokio-rustls sqlx-sqlite macros" --no-default-features
 ```
 
 Modify the main function in  `src/main.rs` to use async-std
@@ -35,7 +39,7 @@ Modify the main function in  `src/main.rs` to use async-std
 -     println!("Hello, world!");
 - }
 
-+ #[async_std::main]
++ #[tokio::main]
 + async fn main() -> anyhow::Result<()>{
 +     Ok(())
 + }
@@ -61,27 +65,38 @@ The `"VACUUM;"` part of the command will ensure the created database is not just
 
 #### Local SQLite Database Operations
 
-Create a file `src/db_ops.rs` which will contain functions to perform database operations.
+Top perform local database operations, create a file `src/db_ops.rs` which will contain functions to perform database operations. 
+
+To serialize and deserialize the SQLite cache for the in-memory database, the struct `TodoList` is used:
 
 ```rust,no_run,noplayground
-use async_std::{
-    io::{ReadExt, WriteExt},
-    net::TcpStream,
-};
+//  The structure for a TodoList
+#[derive(Debug, Serialize, Default, Deserialize)]
+pub struct TodoList {
+    pub queued: Vec<MyTodosModel>,
+    pub completed: Vec<MyTodosModel>,
+}
+```
+
+This data structure holds the completed TODOs in the `completed` field and the incompleted TODOs in the `queued` field. Both of this fields hold a `Vec<MyTodosModel` which ensures that no database fetch requests are necessary to make modifications savingon I/O operations that would otherwise have to fetch the `Model` before converting the `Model` into an `ActiveModel` and doing modifications.
+
+The function `create_todo_table()` when invoked will create a new `todo_list` table in the local SQLite database specified by the URL.
+
+`File: client/src/db_ops.rs`
+
+```rust,no_run,noplayground
+
 use sea_orm::{
     sea_query::{Alias, ColumnDef, Table},
     ActiveModelTrait, ConnectionTrait, Database, DatabaseConnection, EntityTrait, Set,
 };
+use serde::{Serialize, Deserialize};
 
-pub async fn database_config() -> Result<DatabaseConnection, sea_orm::DbErr> {
-    // Read the database environment from the `.env` file
-    let env_database_url = include_str!("../.env").trim();
-    // Split the env url
-    let split_url: Vec<&str> = env_database_url.split("=").collect();
-    // Get item with the format `database_backend://username:password@localhost/database`
-    let database_url = split_url[1];
-
-    Database::connect(database_url).await
+//  The structure for a TodoList
+#[derive(Debug, Serialize, Default, Deserialize)]
+pub struct TodoList {
+    pub queued: Vec<MyTodosModel>,
+    pub completed: Vec<MyTodosModel>,
 }
 
 
@@ -125,19 +140,43 @@ pub async fn create_todo_table(db: &DatabaseConnection) -> anyhow::Result<()> {
 
 ```
 
-`database_config()` reads the `.env` file and parses the database URL, creates a database connection with the URL using `Database::connect()` and then returns a `DatabaseConnection`.
+To use the `dotenv` crate to read the `DATABASE_URL` environment variable, add the following code to `src/main.rs`.
 
-`create_todo_table()` when invoked will create a new `todo_list` table in the local SQLite database specified by the URL.
+`File: client/src/main.rs`
 
-Import the `db_ops` module into `src/main.rs`	 and call both functions.
+```rust,no_run.noplayground
++ use dotenv::dotenv;
++ use sea_orm::Database;
+
+// -- code snippet --
+#[tokio::main]
+async fn main() -> anyhow::Result<()>{
+	
++	dotenv().ok();
+
+    // Read the database environment from the `.env` file
++	let database_url = dotenv::var("DATABASE_URL")?;
++	let db = Database::connect(database_url).await?;
+	Ok(())
+}
+```
+
+Then import the `db_ops` module into `src/main.rs`	 and call both functions.
 
 ```rust,no_run,noplayground
+// -- code snippet --
+
 + mod db_ops;
 + pub use db_ops::*;
 
 #[async_std::main]
 async fn main() -> anyhow::Result<()> {
-+	let db = database_config().await?;
+	// -- code snippet --
+
+    // Read the database environment from the `.env` file
+ 	let database_url = dotenv::var("DATABASE_URL")?;
+ 	let db = Database::connect(database_url).await?;
+
 +	create_todo_table(&db).await?;
     
     Ok(())
@@ -185,61 +224,4 @@ async fn main() -> anyhow::Result<()> {
 
     Ok(())
 }
-
-```
-
-
-
-#### Common Data Structures
-
-To perform more database operations, create a `common.rs`  file in the `src` directory. This file will contain common data structures for use throughout database operations and TCP connections.
-
-`File: src/common.rs`
-
-```rust,no_run,noplayground
-use crate::MyTodosModel;
-use serde::{Deserialize, Serialize}; // The commands to use to perform CRUD operations on PostgreSQL
-
-// The commands to use to perform CRUD operations on PostgreSQL
-#[derive(Debug, Serialize, Deserialize)]
-pub enum Command {
-    Store { username: String, todo_list: String },
-    UpdateTodoList { username: String, todo_list: String },
-    Get(String),
-    CreateUser(String),
-    ListFruits,
-}
-
-//  The structure for a TodoList
-#[derive(Debug, Serialize, Default, Deserialize)]
-pub struct TodoList {
-    pub queued: Vec<MyTodosModel>,
-    pub completed: Vec<MyTodosModel>,
-}
-
-```
-
-The enum `Command` mirrors the `Command` created in the previous chapter in the `TODO-Server/src/tcp_api.rs` file.
-
-The `TodoList` struct contains the `Model`s `MyTodoModel` sorted either as `queued` which are TODOs not done or `completed` which are `TODO`s that are done.
-
-Import this file to the `src/main.rs` file
-
-```rust,no_run,noplayground
-+ mod common;
-  mod db_ops;
-  mod todo_list_table;
-
-+ pub use common::*;
-  pub use db_ops::*;
-  pub use todo_list_table::prelude::*;
-
-#[async_std::main]
-async fn main() -> anyhow::Result<()> {
-    let db = database_config().await?;
-    create_todo_table(&db).await?;
-
-    Ok(())
-}
-
 ```

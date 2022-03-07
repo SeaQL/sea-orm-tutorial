@@ -1,6 +1,6 @@
 use crate::MyTodosModel;
-use async_std::sync::Mutex;
 use std::collections::HashMap;
+use tokio::sync::Mutex;
 
 pub(crate) const TITLE: &str = "FRUITS AVAILABLE";
 pub(crate) const NUMBER: &str = "No.";
@@ -25,7 +25,6 @@ pub fn synching() {
     println!("SYNCING TO DATABASE...");
 }
 pub fn synching_to_server() {
-    clear_terminal();
     println!("SYNCING TO SERVER...");
 }
 

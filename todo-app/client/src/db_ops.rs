@@ -1,8 +1,16 @@
-use crate::{synching_to_server, MemDB, MyTodos, MyTodosActiveModel, MyTodosModel, TodoList};
+use crate::{synching_to_server, MemDB, MyTodos, MyTodosActiveModel, MyTodosModel};
 use sea_orm::{
     sea_query::{Alias, ColumnDef, Table},
     ActiveModelTrait, ConnectionTrait, DatabaseConnection, EntityTrait, Set,
 };
+use serde::{Deserialize, Serialize};
+
+//  The structure for a TodoList
+#[derive(Debug, Serialize, Default, Deserialize)]
+pub struct TodoList {
+    pub queued: Vec<MyTodosModel>,
+    pub completed: Vec<MyTodosModel>,
+}
 
 pub async fn create_todo_table(db: &DatabaseConnection) -> anyhow::Result<()> {
     let database_backend = db.get_database_backend();
