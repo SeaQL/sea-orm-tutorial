@@ -1,4 +1,4 @@
 /target
 Cargo.lock
 .vscode
-postgresql_config.env
+.env
