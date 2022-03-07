@@ -1,7 +1,6 @@
 use crate::{
-    convert_case, create_new_user, done, edit, get_fruits, get_user_remote_storage,
-    load_sqlite_cache, loading, read_line, split_words, store, synching, undo,
-    update_remote_storage, MemDB,
+    convert_case, done, edit, get_fruits, load_sqlite_cache, loading, read_line, split_words,
+    store, synching, undo, update_remote_storage, MemDB,
 };
 use async_std::io;
 use sea_orm::DatabaseConnection;
@@ -21,13 +20,6 @@ pub async fn input_handler(db: &DatabaseConnection) -> anyhow::Result<()> {
     let mut memdb = MemDB::new(HashMap::default());
     loading();
     load_sqlite_cache(db, &mut memdb).await?;
-
-    let remote_result = get_user_remote_storage(&username).await?;
-    if let Some(result_data) = remote_result {
-        if result_data == "USER_NOT_FOUND" {
-            create_new_user(&username).await?;
-        }
-    }
 
     loop {
         read_line(&mut buffer, fruits_list.as_ref(), &memdb).await?;

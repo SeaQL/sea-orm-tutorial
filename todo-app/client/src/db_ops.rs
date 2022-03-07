@@ -1,25 +1,8 @@
-use crate::{
-    synching_to_server, Command, MemDB, MyTodos, MyTodosActiveModel, MyTodosModel, TodoList,
-};
-use async_std::{
-    io::{ReadExt, WriteExt},
-    net::TcpStream,
-};
+use crate::{synching_to_server, MemDB, MyTodos, MyTodosActiveModel, MyTodosModel, TodoList};
 use sea_orm::{
     sea_query::{Alias, ColumnDef, Table},
-    ActiveModelTrait, ConnectionTrait, Database, DatabaseConnection, EntityTrait, Set,
+    ActiveModelTrait, ConnectionTrait, DatabaseConnection, EntityTrait, Set,
 };
-
-pub async fn database_config() -> Result<DatabaseConnection, sea_orm::DbErr> {
-    // Read the database environment from the `.env` file
-    let env_database_url = include_str!("../.env").trim();
-    // Split the env url
-    let split_url: Vec<&str> = env_database_url.split("=").collect();
-    // Get item with the format `database_backend://username:password@localhost/database`
-    let database_url = split_url[1];
-
-    Database::connect(database_url).await
-}
 
 pub async fn create_todo_table(db: &DatabaseConnection) -> anyhow::Result<()> {
     let database_backend = db.get_database_backend();
@@ -59,25 +42,9 @@ pub async fn create_todo_table(db: &DatabaseConnection) -> anyhow::Result<()> {
 }
 
 pub async fn get_fruits() -> anyhow::Result<Vec<String>> {
-    // Get the fruits first
-    let get_fruits = Command::ListFruits;
-    let serialized_command = bincode::serialize(&get_fruits)?;
-    let mut fruits_list: Vec<String>;
+    let response = minreq::get("http://127.0.0.1:8080/fruits").send()?;
 
-    let mut stream = TcpStream::connect("127.0.0.1:8080").await?;
-    stream.write_all(&serialized_command).await?;
-
-    let mut fruits_buf = vec![0u8; 4096];
-    loop {
-        let n = stream.read(&mut fruits_buf).await?;
-        let rx: Vec<_> = bincode::deserialize(&fruits_buf).unwrap();
-
-        fruits_list = rx;
-
-        if n != 0 {
-            break;
-        }
-    }
+    let fruits_list: Vec<String> = serde_json::from_str(&response.as_str()?)?;
 
     Ok(fruits_list)
 }
@@ -156,48 +123,36 @@ pub async fn update_remote_storage(memdb: &MemDB, username: &str) -> anyhow::Res
         }
     });
 
+    let todo_list = serde_json::to_string(&temp_list)?;
+
     synching_to_server();
 
-    // Update a todo_list
-    let update_todo = Command::UpdateTodoList {
-        username: username.to_owned(),
-        todo_list: serde_json::to_string(&temp_list)?,
-    };
-    let serialized_command = bincode::serialize(&update_todo)?;
+    let response = minreq::post("http://127.0.0.1:8080/update_todo")
+        .with_header("Content-Type", "application/json")
+        .with_body(
+            json::object! {
+                username: username,
+                todo_list: todo_list.clone(),
+            }
+            .dump(),
+        )
+        .send()?;
 
-    let mut stream = TcpStream::connect("127.0.0.1:8080").await?;
-    stream.write_all(&serialized_command).await?;
-
-    let mut buffer = vec![0u8; 4096];
-    stream.read(&mut buffer).await?;
-
-    bincode::deserialize::<String>(&buffer)?;
+    if response.status_code == 500 {
+        let body = serde_json::from_str::<Option<String>>(&response.as_str()?)?;
+        if body == Some("MODEL_NOT_FOUND".to_owned()) {
+            minreq::post("http://127.0.0.1:8080/store")
+                .with_header("Content-Type", "application/json")
+                .with_body(
+                    json::object! {
+                        username: username,
+                        todo_list: todo_list,
+                    }
+                    .dump(),
+                )
+                .send()?;
+        }
+    }
 
     Ok(())
-}
-
-pub async fn get_user_remote_storage(username: &str) -> anyhow::Result<Option<String>> {
-    let get_user = Command::Get(username.to_owned());
-    let serialized_command = bincode::serialize(&get_user)?;
-
-    let mut stream = TcpStream::connect("127.0.0.1:8080").await?;
-    stream.write_all(&serialized_command).await?;
-
-    let mut buffer = vec![0u8; 4096];
-    stream.read(&mut buffer).await?;
-
-    Ok(bincode::deserialize::<Option<String>>(&buffer)?)
-}
-
-pub async fn create_new_user(username: &str) -> anyhow::Result<String> {
-    let create_user = Command::CreateUser(username.to_owned());
-    let serialized_command = bincode::serialize(&create_user)?;
-
-    let mut stream = TcpStream::connect("127.0.0.1:8080").await?;
-    stream.write_all(&serialized_command).await?;
-
-    let mut buffer = vec![0u8; 4096];
-    stream.read(&mut buffer).await?;
-
-    Ok(bincode::deserialize::<String>(&buffer)?)
 }
