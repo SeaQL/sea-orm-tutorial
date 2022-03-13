@@ -62,4 +62,4 @@ members = [
 ]
 ```
 
-Next up is building the TCP server.
+Next up is building the Web Server.

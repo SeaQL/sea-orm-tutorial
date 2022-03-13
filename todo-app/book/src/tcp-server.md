@@ -1,4 +1,4 @@
-# Building The TCP Server
+# Building The Web Server
 
 ### HTTP as the Protocol
 
@@ -6,7 +6,7 @@ The client and server need a structured way to communicate with each other. HTTP
 
 ## Install necessary dependencies
 
-   - Switch to the `todo-app/server` directory to build the TCP server
+   - Switch to the `todo-app/server` directory to build the Web Server
 
        ```sh
        $ cd server
