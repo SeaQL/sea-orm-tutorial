@@ -1,24 +1,6 @@
-# Introduction
+# Chapter 2 - A Command-line TODO app
 
 A simple TODO app that demostrates using SeaORM, SQLite and Postgres to build a simple TODO application. This tutorial will simulate building an app with a local SQLite cache and remote storage of the contents of the cache using a HTTP server with a PostgreSQL backend.
-
-Let's get started.
-
-#### Symbols Used
-
-To show added or removed code from files, we will use comments or 
-
-`+` to show added code
-
-`-` to show removed code
-
-`...` is used to show only part of the existing code instead of rewriting already existing code in the examples.
-
-`$ ` shows an operation is done on the console/shell 
-
-`postgres=#` shows a postgres prompt
-
-This will make it easier to visualize changes to a file
 
 First, install PostgreSQL and SQLite and ensure PostgreSQL server is running.
 

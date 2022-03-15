@@ -3,13 +3,13 @@ authors = ["Charles Chege"]
 language = "en"
 multilingual = false
 src = "src"
-title = "Sea-ORM Simple CRUD Operations"
+title = "SeaORM Tutorials"
 
 [output.html]
 mathjax-support = true
 default-theme = "navy"
 preferred-dark-theme = "navy"
 site-url = "/sea-orm-tutorial/"
-git-repository-url = "https://github.com/SeaQL/sea-orm-tutorial"
+git-repository-url = "https://github.com/SeaQL/sea-orm-tutorial/"
 git-repository-icon = "fa-github"
-edit-url-template = "https://github.com/SeaQL/sea-orm-tutorial/edit/master/SimpleCRUD/book/{path}"
+edit-url-template = "https://github.com/SeaQL/sea-orm-tutorial/edit/master/tutorials_book/{path}"

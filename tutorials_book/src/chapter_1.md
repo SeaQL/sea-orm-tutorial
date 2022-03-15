@@ -1,6 +1,6 @@
-# Introduction
+# Chapter 1 - Simple CRUD Operations
 
-Sea-ORM is an amazing ORM that aims to be a write code once and run on any popular Relational Database with current support for MySQL, PostgreSQL, MariaDB and SQLite. In this tutorial, SeaORM with be used with `async-std` as the async runtime, `rustls` for database TLS connections and `sqlx-mysql` for the MySQL database backend.
+ In this tutorial, SeaORM is used with `async-std` as the async runtime, `rustls` for database TLS connections and `sqlx-mysql` for the MySQL database backend.
 
 ### Installation of dependencies and tools
 
@@ -78,23 +78,4 @@ Sea-ORM is an amazing ORM that aims to be a write code once and run on any popul
    ```
 
 We are all set to perform CRUD operations from the MySQL database side.
-
-
-
-### Symbols Used
-
-To show added or removed code from files, we will use comments or 
-
-`+` to show added code
-
-`-` to show removed code
-
-`...` is used to show only part of the existing code instead of rewriting already existing code in the examples.
-
-`$ ` shows an operation is done on the console/shell 
-
-This will make it easier to visualize changes to a file
-
-
-In the next chapter, we will create simple CRUD operations.
 
