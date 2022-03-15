@@ -1,6 +1,6 @@
 # Building The HTTP Client
 
-This chapter focuses on creating the TCP client. Switch to the `client` directory in the workspace.
+This chapter focuses on creating the HTTP client. Switch to the `client` directory in the workspace.
 
 #### Configuration
 

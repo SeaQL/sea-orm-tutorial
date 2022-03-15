@@ -92,7 +92,7 @@ A number of functions are presented in the code block above:
 
 `synching()` is used to show that the TODO list is being synced to the local SQLite database cache.
 
-`synching_to_server()`  is used to show that the TODO list is being synced to the remote PostgreSQL database using the TCP API built in the previous chapter.
+`synching_to_server()`  is used to show that the TODO list is being synced to the remote PostgreSQL database using the HTTP API built in the previous chapter.
 
 `loading()` is used to show that information about the user is being fetched from the remote PostgreSQL database.
 

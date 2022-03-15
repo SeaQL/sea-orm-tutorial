@@ -1,6 +1,6 @@
 # Introduction
 
-A simple TODO app that demostrates using SeaORM, SQLite and Postgres to build a simple TODO application. TCP connections are used instead of web frameworks for simplicity due to the APIs being available in the standard library, which is mirrored by async-std async library. 
+A simple TODO app that demostrates using SeaORM, SQLite and Postgres to build a simple TODO application. This tutorial will simulate building an app with a local SQLite cache and remote storage of the contents of the cache using a HTTP server with a PostgreSQL backend.
 
 Let's get started.
 
