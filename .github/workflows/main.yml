@@ -18,10 +18,6 @@ jobs:
       - name: Install mdbook
         run: (test -x $HOME/.cargo/bin/mdbook || cargo install --debug --vers "^0.4" mdbook)
 
-      # Build simple-crud mdbook
-      - name: Build simple-crud mdbook
-        run: mdbook build simple-crud/book
-
-      # Build todo-app mdbook
-      - name: Build todo-app mdbook
-        run: mdbook build todo-app/book
+      # Build tutorials_book mdbook
+      - name: Build tutorials_book mdbook
+        run: mdbook build tutorials_book/book
