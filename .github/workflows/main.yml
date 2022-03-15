@@ -20,4 +20,4 @@ jobs:
 
       # Build tutorials_book mdbook
       - name: Build tutorials_book mdbook
-        run: mdbook build tutorials_book/book
+        run: mdbook build tutorials_book/

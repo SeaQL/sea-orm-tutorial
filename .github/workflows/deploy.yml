@@ -21,7 +21,7 @@ jobs:
 
       # Build simple-crud mdbook
       - name: Build tutorials_book mdbook
-        run: mdbook build tutorials_book/book -d ../../gh-pages
+        run: mdbook build tutorials_book/ -d ../../gh-pages
       - name: Generate tutorials_book sitemap
         run: |
           cd gh-pages
