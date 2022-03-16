@@ -1,5 +1,5 @@
 [book]
-authors = ["Charles Chege"]
+authors = ["Charles Chege <charleschege@protonmail.ch>"]
 language = "en"
 multilingual = false
 src = "src"
