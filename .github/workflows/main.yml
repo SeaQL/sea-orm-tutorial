@@ -25,5 +25,5 @@ jobs:
       # Try to build mdbooks
       - name: Install mdbook
         run: (test -x $HOME/.cargo/bin/mdbook || cargo install --debug --vers "^0.4" mdbook)
-      - name: Build tutorials_book mdbook
-        run: mdbook build tutorials_book
+      - name: Build tutorials-book mdbook
+        run: mdbook build tutorials-book

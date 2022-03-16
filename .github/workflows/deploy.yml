@@ -19,10 +19,10 @@ jobs:
       - name: Install static-sitemap-cli
         run: npm install static-sitemap-cli
 
-      # Build tutorials_book mdbook
-      - name: Build tutorials_book mdbook
-        run: mdbook build tutorials_book -d ../gh-pages
-      - name: Generate tutorials_book sitemap
+      # Build tutorials-book mdbook
+      - name: Build tutorials-book mdbook
+        run: mdbook build tutorials-book -d ../gh-pages
+      - name: Generate tutorials-book sitemap
         run: |
           cd gh-pages
           npx sscli --base https://www.sea-ql.org/sea-orm-tutorial
