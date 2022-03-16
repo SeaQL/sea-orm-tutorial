@@ -15,9 +15,15 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+
+      # Try to build all examples
+      - name: Build simple-crud example
+        run: cargo build --manifest-path simple-crud/Cargo.toml
+      - name: Build todo-app example
+        run: cargo build --manifest-path todo-app/Cargo.toml
+
+      # Try to build mdbooks
       - name: Install mdbook
         run: (test -x $HOME/.cargo/bin/mdbook || cargo install --debug --vers "^0.4" mdbook)
-
-      # Build tutorials_book mdbook
       - name: Build tutorials_book mdbook
-        run: mdbook build tutorials_book/
+        run: mdbook build tutorials_book
