@@ -7,7 +7,7 @@ title = "SeaORM Tutorials"
 
 [output.html]
 mathjax-support = true
-default-theme = "navy"
+default-theme = "rust"
 preferred-dark-theme = "navy"
 site-url = "/sea-orm-tutorial/"
 git-repository-url = "https://github.com/SeaQL/sea-orm-tutorial/"
