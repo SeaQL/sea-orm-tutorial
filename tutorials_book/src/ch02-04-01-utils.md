@@ -1,4 +1,4 @@
-# Formating Utilities
+# Formatting Utilities
 
 To create a better user experience, data will be formatted before it is displayed to the command line on `stdout`.
 
