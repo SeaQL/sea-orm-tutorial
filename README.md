@@ -38,7 +38,7 @@ $ cargo install mdbook
 Then switch to the book folder in the current tutorial directory
 
 ```sh
-$ cd tutorial_folder_name/book/
+$ cd tutorials_book/
 ```
 
 Then run mdbook
