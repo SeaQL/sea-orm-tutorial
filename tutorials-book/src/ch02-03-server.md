@@ -4,7 +4,7 @@ Create a new file in the `src` folder called `routing.rs`.
 
 Then register the module to the `src.main.rs` file
 
-```
+```rust,no_run,noplayground
 // -- code snippet --
 
 mod routing;
