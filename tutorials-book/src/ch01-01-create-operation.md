@@ -152,7 +152,9 @@ pub mod fruits;
 
 
 
-Add code to perform execution
+Add code to perform execution:
+
+**FILE:** *SimpleCRUD/src/main.rs*
 
 ```rust,no_run
 // Code snippet
