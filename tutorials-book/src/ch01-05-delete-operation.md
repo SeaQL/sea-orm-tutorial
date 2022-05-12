@@ -18,9 +18,9 @@ async fn main() -> Result<()> {
     
     ...
 
-   // Delete the `mango` row
+    // Delete the `mango` row
 
-+  let find_mango = Fruits::find()
++   let find_mango = Fruits::find()
 +       .filter(FruitsColumn::Name.contains("mango"))
 +       .one(&db)
 +       .await;

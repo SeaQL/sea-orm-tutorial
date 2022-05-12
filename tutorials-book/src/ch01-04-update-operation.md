@@ -19,25 +19,25 @@ async fn main() -> Result<()> {
     
     ...
 
-   let find_pineapple = Fruits::find()
+    let find_pineapple = Fruits::find()
     	.filter(FruitsColumn::Name.contains("pineapple"))
     	.one(&db)
     	.await?;
--  println!("{:?}", find_pineapple?);
-+  println!("{:?}", find_pineapple.as_ref()); // Reference the `Model` instead of owning it
+-   println!("{:?}", find_pineapple?);
++   println!("{:?}", find_pineapple.as_ref()); // Reference the `Model` instead of owning it
     
-   // Update the `pineapple` column with a new unit price
-+  if let Some(pineapple_model) = find_pineapple {
-+      let mut pineapple_active_model: FruitsActiveModel = pineapple_model.into();
-+      pineapple_active_model.unit_price = Set(10);
+    // Update the `pineapple` column with a new unit price
++   if let Some(pineapple_model) = find_pineapple {
++       let mut pineapple_active_model: FruitsActiveModel = pineapple_model.into();
++       pineapple_active_model.unit_price = Set(10);
 
-+      let updated_pineapple_model: FruitsModel =
++       let updated_pineapple_model: FruitsModel =
 +          pineapple_active_model.update(&db).await?;
 
-+      println!("UPDATED PRICE: {:?}", updated_pineapple_model);
-+  } else {
-+      println!("`Pineapple` column not found");
-+  }
++       println!("UPDATED PRICE: {:?}", updated_pineapple_model);
++   } else {
++       println!("`Pineapple` column not found");
++   }
 
     Ok(())
 }

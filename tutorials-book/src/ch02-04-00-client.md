@@ -151,13 +151,13 @@ To use the `dotenv` crate to read the `DATABASE_URL` environment variable, add t
 // -- code snippet --
 #[tokio::main]
 async fn main() -> anyhow::Result<()>{
-	
-+	dotenv().ok();
+
++   dotenv().ok();
 
     // Read the database environment from the `.env` file
-+	let database_url = dotenv::var("DATABASE_URL")?;
-+	let db = Database::connect(database_url).await?;
-	Ok(())
++   let database_url = dotenv::var("DATABASE_URL")?;
++   let db = Database::connect(database_url).await?;
+    Ok(())
 }
 ```
 
@@ -171,14 +171,14 @@ Then import the `db_ops` module into `src/main.rs`	 and call both functions.
 
 #[async_std::main]
 async fn main() -> anyhow::Result<()> {
-	// -- code snippet --
+    // -- code snippet --
 
     // Read the database environment from the `.env` file
- 	let database_url = dotenv::var("DATABASE_URL")?;
- 	let db = Database::connect(database_url).await?;
+    let database_url = dotenv::var("DATABASE_URL")?;
+    let db = Database::connect(database_url).await?;
 
-+	create_todo_table(&db).await?;
-    
++   create_todo_table(&db).await?;
+
     Ok(())
 }
 
