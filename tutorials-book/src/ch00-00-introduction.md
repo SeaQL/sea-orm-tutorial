@@ -1,6 +1,6 @@
 # Introduction
 
-SeaORM is the most feature rich async ORM for integrating a Rust code base with relational databases aiming to be a write code once and run on any popular Relational Database with current support for MySQL, PostgreSQL, MariaDB and SQLite. The tutorials in this book are a gentle introduction to using the `sea-orm` crate and it's cli tool `sea-orm-cli`.
+SeaORM is the most feature rich async ORM for integrating a Rust code base with relational databases aiming to be a write code once and run on any popular Relational Database with current support for MySQL, PostgreSQL, MariaDB and SQLite. The tutorials in this book are a gentle introduction to using the `sea-orm` crate and its cli tool `sea-orm-cli`.
 
 #### Symbols Used
 
@@ -20,9 +20,8 @@ To show added or removed code from files, we will use comments or
 
 #### Chapters
 
-Each tutorial is contained in it's own chapter and each chapter has subsections that walk you though the steps of each tutorial.
+In the first chapter, we will learn how to build a backend application with SeaORM. It will be compatible with different database implementations.
 
-- Chapter 1  - This chapter illustrates doing `Create`, `Read`, `Update` and `Delete` `(CRUD)`operations using a MySQL database.
-- Chapter 2 - This chapter simulates a real world application combining an in-memory cache, a local application SQLite cache and a remote HTTP API with a PostgreSQL backend used for persistence of data.
+In the subsequent chapters, we will explore the process of building other applications that integrate with a SeaORM-powered backend. In particular, we will be looking at how to build Rocket and GraphQL applications that interact with the backend we created in the first chapter.
 
 Let's get started.
