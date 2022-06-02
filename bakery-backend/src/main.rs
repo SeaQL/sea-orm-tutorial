@@ -1,5 +1,8 @@
+mod migrator;
+
 use futures::executor::block_on;
 use sea_orm::{ConnectionTrait, Database, DbBackend, DbErr, Statement};
+use sea_orm_migration::prelude::*;
 
 const DATABASE_URL: &str = "mysql://root:root@localhost:3306";
 
@@ -35,6 +38,7 @@ async fn run() -> Result<(), DbErr> {
         }
         DbBackend::Sqlite => db,
     };
+    let schema_manager = SchemaManager::new(db); // To investigate the schema
 
     Ok(())
 }
