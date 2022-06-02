@@ -19,7 +19,7 @@ However, depending on the database of your choice, you need to pay attention to 
 | :----------------: | :-----------------------:             |
 | MySQL              | `mysql://root:root@localhost:3306`    |
 | PostgreSQL         | `postgres://root:root@localhost:5432` |
-| SQLite (in files)  | `sqlite:./sqlite/`                    |
+| SQLite (in file)   | `sqlite:./sqlite.db?mode=rwc`         |
 | SQLite (in memory) | `sqlite::memory:`                     |
 
 We will showcase exactly how to how and where to use them in the next section.
