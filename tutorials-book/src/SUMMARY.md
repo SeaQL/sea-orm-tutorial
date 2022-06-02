@@ -4,8 +4,8 @@
 
 ## Chapter 1 - Building a Backend with SeaORM
 
-    - [Project Setup]()
 - [Chapter 1 - Building a Backend with SeaORM](ch01-00-build-backend-getting-started.md)
+    - [Project Setup](ch01-01-project-setup.md)
     - [Migration]()
     - [Entity Generation using sea-orm-cli]()
     - [Basic CRUD Operations]()

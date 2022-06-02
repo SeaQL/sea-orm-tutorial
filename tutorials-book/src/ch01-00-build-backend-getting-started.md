@@ -13,9 +13,9 @@ SeaORM itself is agnostic to different database implementations, including MySQL
 However, depending on the database of your choice, you need to pay attention to the following:
 
 - The appropriate [DB driver feature](https://www.sea-ql.org/SeaORM/docs/install-and-config/database-and-async-runtime#database_driver) should be enabled.
-- A valid connection string should be used:
+- A valid database URL should be used:
 
-| Database           | Example Connection String             |
+| Database           | Example Database URL                  |
 | :----------------: | :-----------------------:             |
 | MySQL              | `mysql://root:root@localhost:3306`    |
 | PostgreSQL         | `postgres://root:root@localhost:5432` |
