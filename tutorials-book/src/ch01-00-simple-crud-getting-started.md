@@ -48,7 +48,7 @@
     ```toml
     sea-orm = { version = "0.5", features = [ "runtime-async-std-rustls", "sqlx-mysql", "macros" ], default-features = false}
     anyhow = "1"
-    async-std = "1"
+    async-std = { version = "1", features = [ "attributes" ] }
     ```
 
     
