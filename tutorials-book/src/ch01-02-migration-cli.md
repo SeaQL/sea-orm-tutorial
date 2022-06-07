@@ -1,5 +1,7 @@
 # Migration (CLI)
 
+*This and the next sections concern those who are getting a taste of SeaORM by creating a new, toy database schema. If you already have an existing database schema, feel free to skip over to [Section 1.4](ch01-04-entity-generation.md).*
+
 In this section, we define the following simple schema with migrations.
 
 ![ER diagram of two entities, Bakery and Baker. Baker has a foreign key referencing Bakery.](./assets/er_diagram.png)

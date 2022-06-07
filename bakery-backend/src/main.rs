@@ -1,9 +1,12 @@
+mod entities;
 mod migrator;
 
 use futures::executor::block_on;
 use migrator::Migrator;
 use sea_orm::{ConnectionTrait, Database, DbBackend, DbErr, Statement};
 use sea_orm_migration::prelude::*;
+
+use entities::prelude::*; // Bring the entities `Baker` and `Bakery` into scope
 
 const DATABASE_URL: &str = "mysql://root:root@localhost:3306";
 
@@ -40,9 +43,6 @@ async fn run() -> Result<(), DbErr> {
         DbBackend::Sqlite => db,
     };
     let schema_manager = SchemaManager::new(db); // To investigate the schema
-
-    Migrator::install(db).await?;
-    assert!(schema_manager.has_table("seaql_migrations").await?);
 
     Migrator::refresh(db).await?;
     assert!(schema_manager.has_table("bakery").await?);
