@@ -1,54 +1,64 @@
-# Migration (CLI)
+# Migration (API)
 
-In this section, we define the following simple schema with migrations.
+If you prefer to set up and run the migrations programmatically, we provide the `Migrator` API for that.
 
-![ER diagram of two entities, Bakery and Baker. Baker has a foreign key referencing Bakery.](./assets/er_diagram.png)
+This section covers how to perform migrations without the need to install and use the CLI tool.
 
-## Initialize using `sea-orm-cli`
+## Preparation
 
-For beginners, it is recommended to use `sea-orm-cli` to define and run the migrations.
+Add the cargo dependency `sea-orm-migration`:
 
-```sh
-$ cargo install sea-orm-cli
-$ sea-orm-cli migrate -h
+```diff
+
+...
+
+[dependencies]
+futures = "0.3.21"
+sea-orm = { version = "0.8.0", features = [ "sqlx-mysql", "runtime-async-std-native-tls", "macros" ] }
++ sea-orm-migration = "0.8.3"
+
+...
+
 ```
 
-Initialize the `migration` folder:
+Create a module named `migrator`:
 
-```sh
-$ sea-orm-cli migrate init
+```rust, no_run
+// src/main.rs
 
-# The folder structure will be as follows:
++ mod migrator;
 
-bakery-backend
-│   ...  
-│
-└─── migration
-│   │   Cargo.toml
-│   │   README.md
-│   │
-│   └─── src
-│       │   lib.rs
-│       │   m20220101_000001_create_table.rs
-│       │   main.rs
+use futures::executor::block_on;
+use sea_orm::{ConnectionTrait, Database, DbBackend, DbErr, Statement};
+
+...
+```
+
+```rust, no_run
+// src/migrator/mod.rs (create new file)
+
+use sea_orm_migration::prelude::*;
+
+pub struct Migrator;
+
+#[async_trait::async_trait]
+impl MigratorTrait for Migrator {
+    fn migrations() -> Vec<Box<dyn MigrationTrait>> {
+        vec![]
+    }
+}
 ```
 
 ## Define the migrations
 
-Update the migration files to define the `Bakery` and `Baker` tables:
+Define a `Migration` in a file and include it in `migrator/mod.rs`:
 
 The filename must follow the format `m<date>_<6-digit-index>_<description>.rs`.
 
 For more information about defining migrations, read the documentation of [`SchemaManager`](https://docs.rs/sea-orm-migration/0.8.3/sea_orm_migration/manager/struct.SchemaManager.html).
 
-```diff
-- m20220101_000001_create_table.rs
-+ m20220101_000001_create_bakery_table.rs
-+ m20220101_000002_create_baker_table.rs
-```
-
 ```rust, no_run
-// m20220101_000001_create_bakery_table.rs
+// src/migrator/m20220602_000001_create_bakery_table.rs (create new file)
 
 use sea_orm_migration::prelude::*;
 
@@ -56,7 +66,7 @@ pub struct Migration;
 
 impl MigrationName for Migration {
     fn name(&self) -> &str {
-        "m20220101_000001_create_bakery_table" // Make sure this matches with the file name
+        "m_20220602_000001_create_bakery_table"
     }
 }
 
@@ -100,17 +110,17 @@ pub enum Bakery {
 ```
 
 ```rust, no_run
-// m20220101_000002_create_baker_table.rs
+// src/migrator/m20220602_000002_create_baker_table.rs (create new file)
 
 use sea_orm_migration::prelude::*;
 
-use super::m20220101_000001_create_bakery_table::Bakery;
+use super::m20220602_000001_create_bakery_table::Bakery;
 
 pub struct Migration;
 
 impl MigrationName for Migration {
     fn name(&self) -> &str {
-        "m_20220101_000002_create_baker_table" // Make sure this matches with the file name
+        "m_20220602_000002_create_baker_table"
     }
 }
 
@@ -151,7 +161,6 @@ impl MigrationTrait for Migration {
     }
 }
 
-// For ease of access
 #[derive(Iden)]
 pub enum Baker {
     Table,
@@ -163,13 +172,12 @@ pub enum Baker {
 ```
 
 ```rust, no_run
-// migration/src/lib.rs
+// src/migrator/mod.rs
 
-pub use sea_orm_migration::prelude::*;
+use sea_orm_migration::prelude::*;
 
-// Add each migration file as a module
-mod m20220101_000001_create_bakery_table;
-mod m20220101_000002_create_baker_table;
++ mod m20220602_000001_create_bakery_table;
++ mod m20220602_000002_create_baker_table;
 
 pub struct Migrator;
 
@@ -177,35 +185,41 @@ pub struct Migrator;
 impl MigratorTrait for Migrator {
     fn migrations() -> Vec<Box<dyn MigrationTrait>> {
         vec![
-            // Define the order of migrations.
-            Box::new(m20220101_000001_create_bakery_table::Migration),
-            Box::new(m20220101_000002_create_baker_table::Migration),
++           Box::new(m20220602_000001_create_bakery_table::Migration),
++           Box::new(m20220602_000002_create_baker_table::Migration),
         ]
     }
 }
 ```
 
-**Important**: Make sure the following features are enabled in the `migration` crate. The database driver feature must match the database being used.
+## Perform the migrations
 
-```diff
-# migration/Cargo.toml
+Use the [`MigratorTrait API`](https://docs.rs/sea-orm-migration/0.8.3/sea_orm_migration/migrator/trait.MigratorTrait.html) to perform the migrations. Verify the correctness of the database schema with [`SchemaManager`](https://docs.rs/sea-orm-migration/0.8.3/sea_orm_migration/manager/struct.SchemaManager.html).
+
+```rust, no_run
+// src/main.rs
 
 ...
 
-[dependencies.sea-orm-migration]
-version = "^0.8.0"
-features = [
-+   "sqlx-mysql",
-+   "runtime-async-std-native-tls",
-]
-```
++ use sea_orm_migration::prelude::*;
 
-## Perform the migrations
+...
 
-Perform all the migrations through `sea-orm-cli`:
+async fn run() -> Result<(), DbErr> {
 
-```sh
-# Change the value of DATABASE_URL according to your database implementation.
-# Make sure the database name is also supplied for MySQL or PostgreSQL.
-$ DATABASE_URL="mysql://root:root@localhost:3306/bakeries_db" sea-orm-cli migrate refresh
+    ...
+
++   let schema_manager = SchemaManager::new(db); // To investigate the schema
+
++   Migrator::install(db).await?;
++   assert!(schema_manager.has_table("seaql_migrations").await?);
+
++   Migrator::refresh(db).await?;
++   assert!(schema_manager.has_table("bakery").await?);
++   assert!(schema_manager.has_table("baker").await?);
+
+    Ok(())
+}
+
+...
 ```

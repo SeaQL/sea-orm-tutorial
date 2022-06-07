@@ -7,7 +7,7 @@
 - [Chapter 1 - Building a Backend with SeaORM](ch01-00-build-backend-getting-started.md)
     - [Project Setup](ch01-01-project-setup.md)
     - [Migration (CLI)](ch01-02-migration-cli.md)
-    - [Migration (API)](ch01-02-migration-api.md)
+    - [Migration (API)](ch01-03-migration-api.md)
     - [Optional: Generate Entity from Existing Database]()
     - [Basic CRUD Operations]()
     - [Relational Select]()

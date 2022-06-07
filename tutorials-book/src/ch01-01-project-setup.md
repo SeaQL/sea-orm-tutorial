@@ -48,6 +48,8 @@ sea-orm = { version = "0.8.0", features = [ "sqlx-mysql", "runtime-async-std-nat
 Connect to the database server:
 
 ```rust, no_run
+// main.rs
+
 use futures::executor::block_on;
 use sea_orm::{Database, DbErr};
 
@@ -79,6 +81,9 @@ If it hangs, it could be that the database is not up and running.
 For MySQL and PostgreSQL, we can create a specific database instance. Let's call it `bakeries_db`.
 
 ```rust, no_run
+...
+// main.rs
+
 ...
 
 async fn run() -> Result<(), DbErr> {
