@@ -206,6 +206,8 @@ features = [
 
 Perform all the migrations through `sea-orm-cli`:
 
+*Make sure you are running this command at the project root.*
+
 ```sh
 # Change the value of DATABASE_URL according to your database implementation.
 # Make sure the database name is also supplied for MySQL or PostgreSQL.
