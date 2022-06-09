@@ -72,4 +72,23 @@ let john = baker::ActiveModel {
 Baker::insert(john).exec(db).await?;
 ```
 
+## Find (single entity)
 
+We can find all or some of the bakeries in the database as follows:
+
+```rust, no_run
+// Finding all is built-in
+let bakeries: Vec<bakery::Model> = Bakery::find().all(db).await?;
+assert_eq!(bakeries.len(), 1);
+
+// Finding by id is built-in
+let sad_bakery: Option<bakery::Model> = Bakery::find_by_id(1).one(db).await?;
+assert_eq!(sad_bakery.unwrap().name, "Sad Bakery");
+
+// Finding by arbitrary column with `filter()`
+let sad_bakery: Option<bakery::Model> = Bakery::find()
+    .filter(bakery::Column::Name.eq("Sad Bakery"))
+    .one(db)
+    .await?;
+assert_eq!(sad_bakery.unwrap().id, 1);
+```

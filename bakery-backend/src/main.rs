@@ -71,6 +71,23 @@ async fn run() -> Result<(), DbErr> {
         Baker::insert(john).exec(db).await?;
     }
 
+    // Read
+    {
+        let bakeries: Vec<bakery::Model> = Bakery::find().all(db).await?;
+        assert_eq!(bakeries.len(), 1);
+
+        // Finding by id is built-in
+        let sad_bakery: Option<bakery::Model> = Bakery::find_by_id(1).one(db).await?;
+        assert_eq!(sad_bakery.unwrap().name, "Sad Bakery");
+
+        // Finding by arbitrary column with `filter()`
+        let sad_bakery: Option<bakery::Model> = Bakery::find()
+            .filter(bakery::Column::Name.eq("Sad Bakery"))
+            .one(db)
+            .await?;
+        assert_eq!(sad_bakery.unwrap().id, 1);
+    }
+
     Ok(())
 }
 
