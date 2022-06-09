@@ -88,6 +88,24 @@ async fn run() -> Result<(), DbErr> {
         assert_eq!(sad_bakery.unwrap().id, 1);
     }
 
+    // Delete
+    {
+        let john = baker::ActiveModel {
+            id: ActiveValue::Set(1), // The primary must be set
+            ..Default::default()
+        };
+        john.delete(db).await?;
+
+        let sad_bakery = bakery::ActiveModel {
+            id: ActiveValue::Set(1), // The primary must be set
+            ..Default::default()
+        };
+        sad_bakery.delete(db).await?;
+
+        let bakeries: Vec<bakery::Model> = Bakery::find().all(db).await?;
+        assert!(bakeries.is_empty());
+    }
+
     Ok(())
 }
 

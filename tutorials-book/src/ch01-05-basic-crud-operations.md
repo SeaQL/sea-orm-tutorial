@@ -92,3 +92,26 @@ let sad_bakery: Option<bakery::Model> = Bakery::find()
     .await?;
 assert_eq!(sad_bakery.unwrap().id, 1);
 ```
+
+## Delete
+
+Sadly, *Sad Bakery* is unable to survive in the rapidly changing economy; it has been forced to liquidate!
+
+We have no choice but to remove its entry in our database:
+
+```rust, no_run
+let john = baker::ActiveModel {
+    id: ActiveValue::Set(1), // The primary must be set
+    ..Default::default()
+};
+john.delete(db).await?;
+
+let sad_bakery = bakery::ActiveModel {
+    id: ActiveValue::Set(1), // The primary must be set
+    ..Default::default()
+};
+sad_bakery.delete(db).await?;
+
+let bakeries: Vec<bakery::Model> = Bakery::find().all(db).await?;
+assert!(bakeries.is_empty());
+```
