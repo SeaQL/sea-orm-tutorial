@@ -10,7 +10,7 @@
     - [Migration (API)](ch01-03-migration-api.md)
     - [Generate Entity from Database](ch01-04-entity-generation.md)
     - [Basic CRUD Operations](ch01-05-basic-crud-operations.md)
-    - [Relational Select]()
+    - [Relational Select](ch01-06-relational-select.md)
     - [Testing with Mock Interface]()
     - [Optional: Building SQL Queries with SeaQuery]()
 

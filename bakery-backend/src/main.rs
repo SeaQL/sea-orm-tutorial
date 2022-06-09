@@ -106,6 +106,37 @@ async fn run() -> Result<(), DbErr> {
         assert!(bakeries.is_empty());
     }
 
+    // Relational Select
+    {
+        let la_boulangerie = bakery::ActiveModel {
+            name: ActiveValue::Set("La Boulangerie".to_owned()),
+            profit_margin: ActiveValue::Set(0.0),
+            ..Default::default()
+        };
+        let bakery_res = Bakery::insert(la_boulangerie).exec(db).await?;
+
+        for baker_name in ["Jolie", "Charles", "Madeleine", "Frederic"] {
+            let baker = baker::ActiveModel {
+                name: ActiveValue::Set(baker_name.to_owned()),
+                bakery_id: ActiveValue::Set(bakery_res.last_insert_id),
+                ..Default::default()
+            };
+            Baker::insert(baker).exec(db).await?;
+        }
+
+        // First find *La Boulangerie* as a Model
+        let la_boulangerie: bakery::Model = Bakery::find_by_id(bakery_res.last_insert_id)
+            .one(db)
+            .await?
+            .unwrap();
+
+        let bakers: Vec<baker::Model> = la_boulangerie.find_related(Baker).all(db).await?;
+        let mut baker_names: Vec<String> = bakers.into_iter().map(|b| b.name).collect();
+        baker_names.sort_unstable();
+
+        assert_eq!(baker_names, ["Charles", "Frederic", "Jolie", "Madeleine"]);
+    }
+
     Ok(())
 }
 

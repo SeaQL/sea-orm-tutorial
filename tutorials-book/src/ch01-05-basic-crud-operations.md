@@ -93,6 +93,8 @@ let sad_bakery: Option<bakery::Model> = Bakery::find()
 assert_eq!(sad_bakery.unwrap().id, 1);
 ```
 
+For relational select on multiple entities, visit the next [section](ch01-06-relational-select.md).
+
 ## Delete
 
 Sadly, *Sad Bakery* is unable to survive in the rapidly changing economy; it has been forced to liquidate!
