@@ -137,6 +137,130 @@ async fn run() -> Result<(), DbErr> {
         assert_eq!(baker_names, ["Charles", "Frederic", "Jolie", "Madeleine"]);
     }
 
+    // Mock Testing
+    {
+        let db = &MockDatabase::new(DatabaseBackend::MySql)
+            .append_query_results(vec![
+                // First query result
+                vec![bakery::Model {
+                    id: 1,
+                    name: "Happy Bakery".to_owned(),
+                    profit_margin: 0.0,
+                }],
+                // Second query result
+                vec![
+                    bakery::Model {
+                        id: 1,
+                        name: "Happy Bakery".to_owned(),
+                        profit_margin: 0.0,
+                    },
+                    bakery::Model {
+                        id: 2,
+                        name: "Sad Bakery".to_owned(),
+                        profit_margin: 100.0,
+                    },
+                    bakery::Model {
+                        id: 3,
+                        name: "La Boulangerie".to_owned(),
+                        profit_margin: 17.89,
+                    },
+                ],
+            ])
+            .append_query_results(vec![
+                // Third query result
+                vec![
+                    baker::Model {
+                        id: 1,
+                        name: "Jolie".to_owned(),
+                        contact_details: None,
+                        bakery_id: 3,
+                    },
+                    baker::Model {
+                        id: 2,
+                        name: "Charles".to_owned(),
+                        contact_details: None,
+                        bakery_id: 3,
+                    },
+                    baker::Model {
+                        id: 3,
+                        name: "Madeleine".to_owned(),
+                        contact_details: None,
+                        bakery_id: 3,
+                    },
+                    baker::Model {
+                        id: 4,
+                        name: "Frederic".to_owned(),
+                        contact_details: None,
+                        bakery_id: 3,
+                    },
+                ],
+            ])
+            .into_connection();
+
+        let happy_bakery: Option<bakery::Model> = Bakery::find().one(db).await?;
+        assert_eq!(
+            happy_bakery.unwrap(),
+            bakery::Model {
+                id: 1,
+                name: "Happy Bakery".to_owned(),
+                profit_margin: 0.0,
+            }
+        );
+
+        let all_bakeries: Vec<bakery::Model> = Bakery::find().all(db).await?;
+        assert_eq!(
+            all_bakeries,
+            vec![
+                bakery::Model {
+                    id: 1,
+                    name: "Happy Bakery".to_owned(),
+                    profit_margin: 0.0,
+                },
+                bakery::Model {
+                    id: 2,
+                    name: "Sad Bakery".to_owned(),
+                    profit_margin: 100.0,
+                },
+                bakery::Model {
+                    id: 3,
+                    name: "La Boulangerie".to_owned(),
+                    profit_margin: 17.89,
+                },
+            ]
+        );
+
+        let la_boulangerie_bakers: Vec<baker::Model> = Baker::find().all(db).await?;
+        assert_eq!(
+            la_boulangerie_bakers,
+            vec![
+                baker::Model {
+                    id: 1,
+                    name: "Jolie".to_owned(),
+                    contact_details: None,
+                    bakery_id: 3,
+                },
+                baker::Model {
+                    id: 2,
+                    name: "Charles".to_owned(),
+                    contact_details: None,
+                    bakery_id: 3,
+                },
+                baker::Model {
+                    id: 3,
+                    name: "Madeleine".to_owned(),
+                    contact_details: None,
+                    bakery_id: 3,
+                },
+                baker::Model {
+                    id: 4,
+                    name: "Frederic".to_owned(),
+                    contact_details: None,
+                    bakery_id: 3,
+                },
+            ]
+        );
+    }
+
     Ok(())
 }
 

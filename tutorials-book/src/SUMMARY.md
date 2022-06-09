@@ -11,7 +11,7 @@
     - [Generate Entity from Database](ch01-04-entity-generation.md)
     - [Basic CRUD Operations](ch01-05-basic-crud-operations.md)
     - [Relational Select](ch01-06-relational-select.md)
-    - [Testing with Mock Interface]()
+    - [Testing with Mock Interface](ch01-07-mock-testing.md)
     - [Optional: Building SQL Queries with SeaQuery]()
 
 ## Chapter 2 - Integration with Rocket
