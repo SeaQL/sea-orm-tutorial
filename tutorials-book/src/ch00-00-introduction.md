@@ -16,8 +16,6 @@ To show added or removed code from files, we will use comments or
 
 `$ ` shows an operation is done on the console/shell 
 
-`postgres=#` shows a PostgreSQL prompt.
-
 #### Chapters
 
 In the first chapter, we will learn how to build a backend application with SeaORM. It will be compatible with different database implementations.
