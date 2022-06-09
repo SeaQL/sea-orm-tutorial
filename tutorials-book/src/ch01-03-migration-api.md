@@ -9,6 +9,7 @@ This section covers how to perform migrations without the need to install and us
 Add the cargo dependency `sea-orm-migration`:
 
 ```diff
+// Cargo.toml
 
 ...
 
