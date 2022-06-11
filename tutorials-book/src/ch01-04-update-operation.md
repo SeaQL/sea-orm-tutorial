@@ -2,7 +2,7 @@
 
 
 
-To perform an update in SeaORM, first, fetch the row to perform the operation using `Model` convert it into an `ActiveModel` by calling the `into()` methof on the `Model` , perform the operation on the field on the `ActiveModel` and then and then call the `.update()` method on the `ActiveModel`. The executed result returns the  `Model` that was updated if successful.
+To perform an update in SeaORM, first, fetch the row to perform the operation using `Model` convert it into an `ActiveModel` by calling the `into()` methof on the `Model` , perform the operation on the field on the `ActiveModel` and then call the `.update()` method on the `ActiveModel`. The executed result returns the  `Model` that was updated if successful.
 
 ```rust,no_run
 //-- snippet --
@@ -36,7 +36,7 @@ async fn main() -> Result<()> {
 
 +       println!("UPDATED PRICE: {:?}", updated_pineapple_model);
 +   } else {
-+       println!("`Pineapple` column not found");
++       println!("`Pineapple` fruit not found");
 +   }
 
     Ok(())
