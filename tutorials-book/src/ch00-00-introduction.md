@@ -1,6 +1,6 @@
 # Introduction
 
-SeaORM is the most feature rich async ORM for integrating a Rust code base with relational databases aiming to be a write code once and run on any popular Relational Database with current support for MySQL, PostgreSQL, MariaDB and SQLite. The tutorials in this book are a gentle introduction to using the `sea-orm` crate and its cli tool `sea-orm-cli`.
+SeaORM is a feature rich async ORM for integrating a Rust code base with relational databases aiming to be a write code once and run on any popular Relational Database with current support for MySQL, PostgreSQL, MariaDB and SQLite. The tutorials in this book are a gentle introduction to using the `sea-orm` crate and its cli tool `sea-orm-cli`.
 
 #### Symbols Used
 
