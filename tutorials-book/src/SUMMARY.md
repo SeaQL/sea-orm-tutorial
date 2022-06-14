@@ -12,7 +12,7 @@
     - [Basic CRUD Operations](ch01-05-basic-crud-operations.md)
     - [Relational Select](ch01-06-relational-select.md)
     - [Testing with Mock Interface](ch01-07-mock-testing.md)
-    - [Optional: Building SQL Queries with SeaQuery]()
+    - [Optional: Building SQL Queries with SeaQuery](ch01-08-sql-with-sea-query.md)
 
 ## Chapter 2 - Integration with Rocket
 
