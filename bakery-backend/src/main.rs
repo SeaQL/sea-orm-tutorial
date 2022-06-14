@@ -9,6 +9,11 @@ use sea_orm_migration::prelude::*;
 
 const DATABASE_URL: &str = "mysql://root:root@localhost:3306";
 
+#[derive(FromQueryResult)]
+struct BakerNameResult {
+    name: String,
+}
+
 async fn run() -> Result<(), DbErr> {
     let db = Database::connect(DATABASE_URL).await?;
 
@@ -258,6 +263,50 @@ async fn run() -> Result<(), DbErr> {
                     bakery_id: 3,
                 },
             ]
+        );
+    }
+
+    // SeaQuery insert
+    {
+        let columns: Vec<Alias> = ["name", "profit_margin"]
+            .into_iter()
+            .map(Alias::new)
+            .collect();
+
+        let mut stmt = Query::insert();
+        stmt.into_table(bakery::Entity).columns(columns);
+
+        stmt.values_panic(["SQL Bakery".into(), (-100.0).into()]);
+
+        let builder = db.get_database_backend();
+        db.execute(builder.build(&stmt)).await?;
+    }
+
+    // SeaQuery select
+    {
+        let column = (baker::Entity, Alias::new("name"));
+
+        let mut stmt = Query::select();
+        stmt.column(column.clone())
+            .from(baker::Entity)
+            .join(
+                JoinType::Join,
+                bakery::Entity,
+                Expr::tbl(baker::Entity, Alias::new("bakery_id"))
+                    .equals(bakery::Entity, Alias::new("id")),
+            )
+            .order_by(column, Order::Asc);
+
+        let builder = db.get_database_backend();
+        let baker = BakerNameResult::find_by_statement(builder.build(&stmt))
+            .all(db)
+            .await?;
+
+        let baker_names = baker.into_iter().map(|b| b.name).collect::<Vec<_>>();
+
+        assert_eq!(
+            baker_names,
+            vec!["Charles", "Frederic", "Jolie", "Madeleine"]
         );
     }
 
