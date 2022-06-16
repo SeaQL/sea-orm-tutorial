@@ -3,8 +3,10 @@ mod migrator;
 mod setup;
 
 use entities::{prelude::*, *};
+use migrator::Migrator;
 use rocket::{serde::json::Json, *};
 use sea_orm::*;
+use sea_orm_migration::MigratorTrait;
 use setup::set_up_db;
 
 #[get("/")]
@@ -62,6 +64,13 @@ async fn new_bakery(
     Ok(())
 }
 
+#[post("/reset")]
+async fn reset(db: &State<DatabaseConnection>) -> Result<(), ErrorResponder> {
+    Migrator::refresh(db).await.map_err(Into::into)?;
+
+    Ok(())
+}
+
 #[launch]
 async fn rocket() -> _ {
     let db = match set_up_db().await {
@@ -69,9 +78,10 @@ async fn rocket() -> _ {
         Err(err) => panic!("{}", err),
     };
 
-    rocket::build()
-        .manage(db)
-        .mount("/", routes![index, bakeries, bakery_by_id, new_bakery])
+    rocket::build().manage(db).mount(
+        "/",
+        routes![index, bakeries, bakery_by_id, new_bakery, reset],
+    )
 }
 
 #[derive(Responder)]
