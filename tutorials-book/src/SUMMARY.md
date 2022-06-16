@@ -16,7 +16,11 @@
 
 ## Chapter 2 - Integration with Rocket
 
-- [Chapter 2 - Integration with Rocket]()
+- [Chapter 2 - Integration with Rocket](ch02-00-integration-with-rocket.md)
+    - [Project Setup](#)
+    - [Fetch from Database](#)
+    - [Error Handling](#)
+    - [Web API Integration](#)
 
 ## Chapter 3 - Integration with GraphQL
 
