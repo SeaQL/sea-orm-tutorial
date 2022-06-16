@@ -18,7 +18,7 @@
 
 - [Chapter 2 - Integration with Rocket](ch02-00-integration-with-rocket.md)
     - [Project Setup](#)
-    - [Fetch from Database](#)
+    - [Connect to Database](#)
     - [Error Handling](#)
     - [Web API Integration](#)
 
