@@ -1,0 +1,38 @@
+{% extends "base" %} {% block content %}
+<div class="row">
+  <h4>New Bakery</h4>
+  <form action="/bakeries" method="get">
+    <div class="twelve columns">
+      <input
+        type="text"
+        placeholder="enter bakery name"
+        name="name"
+        id="name"
+        value=""
+        autofocus
+        class="u-full-width"
+      />
+      <input
+        type="text"
+        placeholder="enter profit margin, or leave it empty"
+        name="profit_margin"
+        id="profit_margin"
+        value=""
+        autofocus
+        class="u-full-width"
+      />
+    </div>
+    <div class="twelve columns">
+      <div class="two columns">
+        <a href="/">
+          <input type="button" value="Cancel" />
+        </a>
+      </div>
+      <div class="eight columns"></div>
+      <div class="two columns">
+        <input type="submit" value="Register" />
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock content %}

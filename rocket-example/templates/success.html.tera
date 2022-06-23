@@ -1,0 +1,20 @@
+{% extends "base" %} {% block content %}
+<h1>{{ name }} is successfully registered!</h1>
+
+<div class="twelve columns">
+    Profit margin: {{ profit_margin }}
+</div>
+
+<div class="twelve columns">
+    <a href="/new">
+        <input type="button" value="Back" />
+    </a>
+</div>
+
+<div class="twelve columns">
+    <a href="/">
+        <input type="button" value="Top" />
+    </a>
+</div>
+
+{% endblock content %}

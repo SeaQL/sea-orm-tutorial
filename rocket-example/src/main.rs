@@ -4,55 +4,74 @@ mod setup;
 
 use entities::{prelude::*, *};
 use migrator::Migrator;
-use rocket::{serde::json::Json, *};
+use rocket::{
+    fs::{relative, FileServer},
+    *,
+};
+use rocket_dyn_templates::Template;
 use sea_orm::*;
 use sea_orm_migration::MigratorTrait;
+use serde_json::json;
 use setup::set_up_db;
 
 #[get("/")]
-async fn index() -> &'static str {
-    "Hello, bakeries!"
+fn index() -> Template {
+    Template::render("index", json!({}))
 }
 
 #[get("/bakeries")]
-async fn bakeries(db: &State<DatabaseConnection>) -> Result<Json<Vec<String>>, ErrorResponder> {
+async fn bakeries(db: &State<DatabaseConnection>) -> Result<Template, ErrorResponder> {
     let db = db as &DatabaseConnection;
 
-    let bakery_names = Bakery::find()
+    let bakeries = Bakery::find()
         .all(db)
         .await
         .map_err(Into::into)?
         .into_iter()
-        .map(|b| b.name)
-        .collect::<Vec<String>>();
+        .map(|b| json!({ "name": b.name, "id": b.id }))
+        .collect::<Vec<_>>();
 
-    Ok(Json(bakery_names))
+    Ok(Template::render(
+        "bakeries",
+        json!({ "bakeries": bakeries, "num_bakeries": bakeries.len() }),
+    ))
 }
 
 #[get("/bakeries/<id>")]
-async fn bakery_by_id(db: &State<DatabaseConnection>, id: i32) -> Result<String, ErrorResponder> {
+async fn bakery_by_id(db: &State<DatabaseConnection>, id: i32) -> Result<Template, ErrorResponder> {
     let db = db as &DatabaseConnection;
 
     let bakery = Bakery::find_by_id(id).one(db).await.map_err(Into::into)?;
 
     Ok(if let Some(bakery) = bakery {
-        bakery.name
+        Template::render(
+            "bakery",
+            json!({ "id": bakery.id, "name": bakery.name, "profit_margin": bakery.profit_margin }),
+        )
     } else {
         return Err(format!("No bakery with id {id} is found.").into());
     })
 }
 
-#[post("/bakeries/<name>?<profit_margin>")]
+#[get("/new")]
+fn new() -> Template {
+    Template::render("new", json!({}))
+}
+
+// Use `GET` to support query parameters to simplify things
+#[get("/bakeries?<name>&<profit_margin>")]
 async fn new_bakery(
     db: &State<DatabaseConnection>,
     name: &str,
     profit_margin: Option<f64>,
-) -> Result<(), ErrorResponder> {
+) -> Result<Template, ErrorResponder> {
     let db = db as &DatabaseConnection;
+
+    let profit_margin = profit_margin.unwrap_or_default();
 
     let new_bakery = bakery::ActiveModel {
         name: ActiveValue::Set(name.to_owned()),
-        profit_margin: ActiveValue::Set(profit_margin.unwrap_or_default()),
+        profit_margin: ActiveValue::Set(profit_margin),
         ..Default::default()
     };
 
@@ -61,7 +80,10 @@ async fn new_bakery(
         .await
         .map_err(Into::into)?;
 
-    Ok(())
+    Ok(Template::render(
+        "success",
+        json!({ "name": name, "profit_margin": profit_margin}),
+    ))
 }
 
 #[post("/reset")]
@@ -78,9 +100,24 @@ async fn rocket() -> _ {
         Err(err) => panic!("{}", err),
     };
 
-    rocket::build().manage(db).mount(
-        "/",
-        routes![index, bakeries, bakery_by_id, new_bakery, reset],
+    rocket::build()
+        .manage(db)
+        .mount("/", FileServer::from(relative!("/static")))
+        .mount(
+            "/",
+            routes![index, bakeries, bakery_by_id, new, new_bakery, reset],
+        )
+        .register("/", catchers![not_found])
+        .attach(Template::fairing())
+}
+
+#[catch(404)]
+pub fn not_found(req: &Request<'_>) -> Template {
+    Template::render(
+        "error/404",
+        json! ({
+            "uri": req.uri()
+        }),
     )
 }
 

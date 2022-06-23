@@ -1,0 +1,16 @@
+{% extends "base" %} {% block content %}
+<h1>Hello, BakeriesDB!</h1>
+
+<div class="twelve columns">
+    <a href="/bakeries">
+        <input type="button" value="Check all bakeries" />
+    </a>
+</div>
+
+<div class="twelve columns">
+    <a href="/new">
+        <input type="button" value="Register a new bakery" />
+    </a>
+</div>
+
+{% endblock content %}
