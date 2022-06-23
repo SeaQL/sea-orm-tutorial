@@ -21,6 +21,7 @@
     - [Connect to Database](ch02-02-connect-to-database.md)
     - [Error Handling]()
     - [Web API Integration]()
+    - [Optional: Simple Frontend Using Templates]()
 
 ## Chapter 3 - Integration with GraphQL
 
