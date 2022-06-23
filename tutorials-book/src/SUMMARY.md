@@ -20,7 +20,7 @@
     - [Project Setup](ch02-01-project-setup.md)
     - [Connect to Database](ch02-02-connect-to-database.md)
     - [Error Handling](ch02-03-error-handling.md)
-    - [Web API Integration]()
+    - [Web API Integration](ch02-04-web-api-integration.md)
     - [Optional: Simple Frontend Using Templates]()
 
 ## Chapter 3 - Integration with GraphQL
