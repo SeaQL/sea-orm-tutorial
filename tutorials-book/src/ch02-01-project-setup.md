@@ -44,6 +44,10 @@ fn rocket() -> _ {
 
 To verify it works:
 
+```sh
+$ cargo run
+```
+
 ```
 GET localhost:8000/
 
