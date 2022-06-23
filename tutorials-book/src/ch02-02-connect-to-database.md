@@ -91,6 +91,21 @@ async fn bakeries(db: &State<DatabaseConnection>) -> Json<Vec<String>> {
 
     Json(bakery_names)
 }
+
+...
+
+#[launch]
+fn rocket() -> _ {
+   rocket::build()
+    .mount(
+        "/",
+        // Don't forget to mount the new endpoint handlers
+        routes![
+            index,
++           bakeries
+        ]
+    )
+}
 ```
 
 To verify it works:
