@@ -37,7 +37,7 @@ async fn index() -> &'static str {
 
 #[launch] // The "main" function of the program
 fn rocket() -> _ {
-    rocket::build().mount("/", routes![index, bakeries])
+    rocket::build().mount("/", routes![index])
 }
 
 ```
