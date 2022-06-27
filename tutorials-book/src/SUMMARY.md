@@ -25,4 +25,4 @@
 
 ## Chapter 3 - Integration with GraphQL
 
-- [Chapter 3 - Integration with GraphQL]()
+- [Chapter 3 - Integration with GraphQL](ch03-00-integration-with-graphql.md)
