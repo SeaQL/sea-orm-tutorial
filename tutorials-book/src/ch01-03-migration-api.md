@@ -212,9 +212,6 @@ async fn run() -> Result<(), DbErr> {
 
 +   let schema_manager = SchemaManager::new(db); // To investigate the schema
 
-+   Migrator::install(db).await?;
-+   assert!(schema_manager.has_table("seaql_migrations").await?);
-
 +   Migrator::refresh(db).await?;
 +   assert!(schema_manager.has_table("bakery").await?);
 +   assert!(schema_manager.has_table("baker").await?);

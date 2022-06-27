@@ -15,6 +15,8 @@ INSERT INTO `bakery` (`name`, `profit_margin`) VALUES ('SQL Bakery', -100)
 SeaQuery:
 
 ```rust, no_run
+use sea_query::{Alias, Query};
+
 let columns: Vec<Alias> = ["name", "profit_margin"]
     .into_iter()
     .map(Alias::new)
@@ -47,6 +49,8 @@ If all columns are of interest, then the generated `Model` structs (e.g. `baker:
 The fields of the struct must match the column names of the query result.
 
 ```rust, no_run
+use sea_query::{Alias, Expr, JoinType, Order, Query};
+
 #[derive(FromQueryResult)]
 struct BakerNameResult {
     name: String,

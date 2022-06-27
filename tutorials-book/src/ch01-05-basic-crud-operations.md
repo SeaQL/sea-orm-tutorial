@@ -103,13 +103,13 @@ We have no choice but to remove its entry in our database:
 
 ```rust, no_run
 let john = baker::ActiveModel {
-    id: ActiveValue::Set(1), // The primary must be set
+    id: ActiveValue::Set(1), // The primary key must be set
     ..Default::default()
 };
 john.delete(db).await?;
 
 let sad_bakery = bakery::ActiveModel {
-    id: ActiveValue::Set(1), // The primary must be set
+    id: ActiveValue::Set(1), // The primary key must be set
     ..Default::default()
 };
 sad_bakery.delete(db).await?;

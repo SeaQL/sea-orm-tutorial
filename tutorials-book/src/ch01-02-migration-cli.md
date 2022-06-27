@@ -11,7 +11,10 @@ In this section, we define the following simple schema with migrations.
 For beginners, it is recommended to use `sea-orm-cli` to define and run the migrations.
 
 ```sh
+# Install `sea-orm-cli`
 $ cargo install sea-orm-cli
+
+# List all available migration commands that are supported by `sea-orm-cli`
 $ sea-orm-cli migrate -h
 ```
 

@@ -28,7 +28,6 @@ bakery-backend
 │       │   bakery.rs
 │       │   mod.rs
 │       │   prelude.rs
-│       │   seaql_migrations.rs
 ```
 
 Put the focus on `baker.rs` and `bakery.rs`, they are the entities representing the tables `Baker` and `Bakery`, respectively.

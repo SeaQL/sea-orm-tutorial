@@ -2,4 +2,3 @@
 
 pub use super::baker::Entity as Baker;
 pub use super::bakery::Entity as Bakery;
-pub use super::seaql_migrations::Entity as SeaqlMigrations;

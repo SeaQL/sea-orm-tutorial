@@ -22,6 +22,6 @@ However, depending on the database of your choice, you need to pay attention to 
 | SQLite (in file)   | `sqlite:./sqlite.db?mode=rwc`         |
 | SQLite (in memory) | `sqlite::memory:`                     |
 
-We will showcase exactly how to how and where to use them in the next section.
+We will showcase exactly how to and where to use them in the next section.
 
 Once the database is ready, we can proceed to [set up the project](ch01-01-project-setup.md).
