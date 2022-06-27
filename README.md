@@ -1,13 +1,13 @@
 # SeaORM Tutorials
 
-This repository contains step-by-step tutorials on how to use SeaORM to do CRUD operations from simple ones to very complex online applications in Rust Language.
+This repository contains step-by-step tutorials on how to use SeaORM to do CRUD operations on databases in the Rust Language.
 
-The tutorial is based on a software system for managing fruits in a fruit market.
+The tutorial is based on a software system for managing a simple database to store information of bakeries.
 
-The tutorials are
+The tutorials contain the following chapters:
 
-1. [**Simple CRUD operations**](https://www.sea-ql.org/sea-orm-tutorial/ch01-00-simple-crud-getting-started.html) - This tutorials explains how to use SeaORM to do basic tasks like create a table in a database, insert a row into the table, update a column, delete operations and logging the results to the console. The database used is MySQL
-2. [**TODO Application**](https://www.sea-ql.org/sea-orm-tutorial/ch02-00-todo-app-getting-started.html) - This tutorial shows how to use SeaORM, SQLite and PostgreSQL to create a realtime sync TODO application where a user can buy fruits from the mango market.
+1. [**Bakery Backend**](https://www.sea-ql.org/sea-orm-tutorial/ch01-00-build-backend-getting-started.html) - This chapter covers the basics of using SeaORM to interact with the database (a MySQL database is used for illustration). On top of this backend you can build any interface you need.
+2. [**Rocket Integration**](https://www.sea-ql.org/sea-orm-tutorial/ch02-00-integration-with-rocket.html) - This chapter explains how to integrate the SeaORM backend into the Rocket framework to create a web application that provides a web API or even a simple frontend.
 
 [![Discord](https://img.shields.io/discord/873880840487206962?label=Discord)](https://discord.com/invite/uCPdDXzbdv)
 
@@ -15,7 +15,7 @@ For additional help on **SeaORM** specific questions, join the support Discord c
 
 ## Running the tutorials
 
-To run the tutorial code, switch to the directory of the turorial and run cargo
+To run the tutorial code, switch to the directory of the tutorial and run cargo
 
 ```sh
 # Switch to tutorial directory
