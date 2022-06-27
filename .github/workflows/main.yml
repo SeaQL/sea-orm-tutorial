@@ -17,10 +17,10 @@ jobs:
           toolchain: stable
 
       # Try to build all examples
-      - name: Build simple-crud example
-        run: cargo build --manifest-path simple-crud/Cargo.toml
-      - name: Build todo-app example
-        run: cargo build --manifest-path todo-app/Cargo.toml
+      - name: Build bakery-backend example
+        run: cargo build --manifest-path bakery-backend/Cargo.toml
+      - name: Build rocket-example
+        run: cargo build --manifest-path rocket-example/Cargo.toml
 
       # Try to build mdbooks
       - name: Install mdbook

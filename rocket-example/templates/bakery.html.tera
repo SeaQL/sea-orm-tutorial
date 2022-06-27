@@ -1,0 +1,15 @@
+{% extends "base" %} {% block content %}
+<h1>{{ name }}</h1>
+
+<div class="twelve columns">
+    <a href="/bakeries">
+        <input type="button" value="Back" />
+    </a>
+</div>
+
+<div class="twelve columns">
+    <p>id: {{ id }}</p>
+    <p>profit margin: {{ profit_margin }}</p>
+</div>
+
+{% endblock content %}

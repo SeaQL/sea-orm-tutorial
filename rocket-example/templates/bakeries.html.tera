@@ -1,0 +1,22 @@
+{% extends "base" %} {% block content %}
+<h1>All Bakeries</h1>
+
+<div class="twelve columns">
+    <a href="/">
+        <input type="button" value="Back" />
+    </a>
+</div>
+
+<div class="twelve columns">
+    {% if num_bakeries == 0 %} No bakeries {% else %}
+    <ul>
+        {% for bakery in bakeries %}
+        <li>
+            <a href="/bakeries/{{ bakery.id }}">{{ bakery.name }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+
+{% endblock content %}
