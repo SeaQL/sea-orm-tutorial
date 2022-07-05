@@ -1,2 +1,2 @@
 [workspace]
-members = ["bakery-backend", "rocket-example"]
+members = ["bakery-backend", "graphql-example", "rocket-example"]
