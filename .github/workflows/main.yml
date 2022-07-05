@@ -21,6 +21,8 @@ jobs:
         run: cargo build --manifest-path bakery-backend/Cargo.toml
       - name: Build rocket-example
         run: cargo build --manifest-path rocket-example/Cargo.toml
+      - name: Build graphql-example
+        run: cargo build --manifest-path graphql-example/Cargo.toml
 
       # Try to build mdbooks
       - name: Install mdbook
