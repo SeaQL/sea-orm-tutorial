@@ -28,4 +28,4 @@
 - [Chapter 3 - Integration with GraphQL](ch03-00-integration-with-graphql.md)
     - [Project Setup](ch03-01-project-setup.md)
     - [Query](ch03-02-query.md)
-    - [Mutation]()
+    - [Mutation](ch03-03-mutation.md)
