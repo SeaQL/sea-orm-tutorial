@@ -3,9 +3,12 @@ mod migrator;
 mod schema;
 mod setup;
 
-use async_graphql::{EmptySubscription, Schema};
+use async_graphql::{
+    http::{playground_source, GraphQLPlaygroundConfig},
+    EmptySubscription, Schema,
+};
 use async_graphql_rocket::*;
-use rocket::*;
+use rocket::{response::content, *};
 use schema::*;
 use sea_orm::DbErr;
 use setup::set_up_db;
@@ -15,6 +18,11 @@ type SchemaType = Schema<QueryRoot, MutationRoot, EmptySubscription>;
 #[get("/")]
 fn index() -> String {
     "Hello, bakeries!".to_owned()
+}
+
+#[rocket::get("/graphql")]
+fn graphql_playground() -> content::RawHtml<String> {
+    content::RawHtml(playground_source(GraphQLPlaygroundConfig::new("/graphql")))
 }
 
 #[rocket::post("/graphql", data = "<request>", format = "application/json")]
@@ -35,7 +43,7 @@ async fn rocket() -> _ {
 
     rocket::build()
         .manage(schema)
-        .mount("/", routes![index, graphql_request])
+        .mount("/", routes![index, graphql_playground, graphql_request])
         .register("/", catchers![not_found])
 }
 
