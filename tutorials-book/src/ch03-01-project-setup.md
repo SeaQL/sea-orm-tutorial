@@ -125,6 +125,8 @@ To verify it works:
 $ cargo run
 ```
 
+For debugging, GraphQL requests can be sent via the [GraphQL Playground](ch03-05-graphql-playground.md).
+
 ```
 GraphQL Request:
 {
