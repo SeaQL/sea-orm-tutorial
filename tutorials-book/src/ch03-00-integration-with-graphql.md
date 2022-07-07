@@ -1,5 +1,7 @@
 # Chapter 3 - Integration with GraphQL
 
+*Full source code available on [GitHub](https://github.com/SeaQL/sea-orm-tutorial/tree/master/graphql-example).*
+
 We've created a web application with Rocket in Chapter 2, but you may notice that the RESTful API of the application lacks flexibility.
 
 For example, a `GET` request to the endpoint `/bakeries`, if successful, always gives us an array of names of the bakeries in the database. This is a toy implementation to demonstrate how things *could* work, but in reality we also need to provide ways for getting other attributes (e.g. *profit_margin*).
