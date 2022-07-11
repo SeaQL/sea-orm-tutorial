@@ -55,7 +55,9 @@ use sea_orm::{Database, DbErr};
 
 // Change this according to your database implementation,
 // or supply it as an environment variable.
-const DATABASE_URL: &str = "mysql://root:root@localhost:3306";
+// the database URL string follows the following format:
+// "protocol://username:password@host:port/database"
+const DATABASE_URL: &str = "mysql://root:password@localhost:3306";
 
 async fn run() -> Result<(), DbErr> {
     let db = Database::connect(DATABASE_URL).await?;
