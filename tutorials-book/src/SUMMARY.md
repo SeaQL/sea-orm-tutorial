@@ -29,5 +29,4 @@
     - [Project Setup](ch03-01-project-setup.md)
     - [Query](ch03-02-query.md)
     - [Mutation](ch03-03-mutation.md)
-    - [Subscription](ch03-04-subscription.md)
-    - [Optional: GraphQL Playground](ch03-05-graphql-playground.md)
+    - [Optional: GraphQL Playground](ch03-04-graphql-playground.md)
