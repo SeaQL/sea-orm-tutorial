@@ -44,7 +44,7 @@ Update the migration files to define the `Bakery` and `Baker` tables:
 
 The filename must follow the format `m<date>_<6-digit-index>_<description>.rs`.
 
-For more information about defining migrations, read the documentation of [`SchemaManager`](https://docs.rs/sea-orm-migration/0.8.3/sea_orm_migration/manager/struct.SchemaManager.html).
+For more information about defining migrations, read the documentation of [`SchemaManager`](https://docs.rs/sea-orm-migration/*/sea_orm_migration/manager/struct.SchemaManager.html).
 
 ```diff
 - m20220101_000001_create_table.rs
@@ -198,7 +198,7 @@ impl MigratorTrait for Migrator {
 ...
 
 [dependencies.sea-orm-migration]
-version = "^0.8.0"
+version = "^0.9.0"
 features = [
 +   "sqlx-mysql",
 +   "runtime-async-std-native-tls",

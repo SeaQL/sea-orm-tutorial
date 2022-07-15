@@ -16,7 +16,7 @@ $ cargo init bakery-backend
 ...
 
 [dependencies]
-+ sea-orm = { version = "0.8.0", features = [ "sqlx-mysql", "runtime-async-std-native-tls", "macros" ] }
++ sea-orm = { version = "^0.9.0", features = [ "sqlx-mysql", "runtime-async-std-native-tls", "macros" ] }
 
 ...
 
@@ -39,7 +39,7 @@ We add `futures` as a dependency so that we can make use of asynchronous program
 
 [dependencies]
 + futures = "0.3.21"
-sea-orm = { version = "0.8.0", features = [ "sqlx-mysql", "runtime-async-std-native-tls", "macros" ] }
+sea-orm = { version = "^0.9.0", features = [ "sqlx-mysql", "runtime-async-std-native-tls", "macros" ] }
 
 ...
 
