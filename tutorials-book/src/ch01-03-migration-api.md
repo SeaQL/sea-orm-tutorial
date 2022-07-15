@@ -15,8 +15,8 @@ Add the cargo dependency `sea-orm-migration`:
 
 [dependencies]
 futures = "0.3.21"
-sea-orm = { version = "0.8.0", features = [ "sqlx-mysql", "runtime-async-std-native-tls", "macros" ] }
-+ sea-orm-migration = "0.8.3"
+sea-orm = { version = "^0.9.0", features = [ "sqlx-mysql", "runtime-async-std-native-tls", "macros" ] }
++ sea-orm-migration = "^0.9.0"
 
 ...
 
@@ -56,7 +56,7 @@ Define a `Migration` in a file and include it in `migrator/mod.rs`:
 
 The filename must follow the format `m<date>_<6-digit-index>_<description>.rs`.
 
-For more information about defining migrations, read the documentation of [`SchemaManager`](https://docs.rs/sea-orm-migration/0.8.3/sea_orm_migration/manager/struct.SchemaManager.html).
+For more information about defining migrations, read the documentation of [`SchemaManager`](https://docs.rs/sea-orm-migration/*/sea_orm_migration/manager/struct.SchemaManager.html).
 
 ```rust, no_run
 // src/migrator/m20220602_000001_create_bakery_table.rs (create new file)
@@ -195,7 +195,7 @@ impl MigratorTrait for Migrator {
 
 ## Perform the migrations
 
-Use the [`MigratorTrait API`](https://docs.rs/sea-orm-migration/0.8.3/sea_orm_migration/migrator/trait.MigratorTrait.html) to perform the migrations. Verify the correctness of the database schema with [`SchemaManager`](https://docs.rs/sea-orm-migration/0.8.3/sea_orm_migration/manager/struct.SchemaManager.html).
+Use the [`MigratorTrait API`](https://docs.rs/sea-orm-migration/*/sea_orm_migration/migrator/trait.MigratorTrait.html) to perform the migrations. Verify the correctness of the database schema with [`SchemaManager`](https://docs.rs/sea-orm-migration/*/sea_orm_migration/manager/struct.SchemaManager.html).
 
 ```rust, no_run
 // src/main.rs
