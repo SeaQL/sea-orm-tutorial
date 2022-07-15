@@ -26,3 +26,7 @@
 ## Chapter 3 - Integration with GraphQL
 
 - [Chapter 3 - Integration with GraphQL](ch03-00-integration-with-graphql.md)
+    - [Project Setup](ch03-01-project-setup.md)
+    - [Query](ch03-02-query.md)
+    - [Mutation](ch03-03-mutation.md)
+    - [Optional: GraphQL Playground](ch03-04-graphql-playground.md)

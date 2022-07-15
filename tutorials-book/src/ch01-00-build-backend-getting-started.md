@@ -1,5 +1,7 @@
 # Chapter 1 - Building a Backend with SeaORM
 
+*Full source code available on [GitHub](https://github.com/SeaQL/sea-orm-tutorial/tree/master/bakery-backend).*
+
 In this chapter, we will build a backend application with SeaORM. It will act as a layer of communication with the database.
 
 The application will simulate the interface of a database of bakeries. For simplicity, there will be only two entities, `Bakery` and `Baker`. We will explore the schema later on.

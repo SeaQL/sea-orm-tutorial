@@ -1,5 +1,7 @@
 # Chapter 2 - Integration with Rocket
 
+*Full source code available on [GitHub](https://github.com/SeaQL/sea-orm-tutorial/tree/master/rocket-example).*
+
 In Chapter 1, we've explored how to interact with a database in Rust.
 
 In real applications, however, we'd probably want to expose those operations in a Web API for generic usage.
