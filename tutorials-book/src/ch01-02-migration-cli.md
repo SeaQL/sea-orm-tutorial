@@ -24,18 +24,17 @@ Initialize the `migration` folder:
 $ sea-orm-cli migrate init
 
 # The folder structure will be as follows:
-
-bakery-backend
-│   ...  
-│
-└─── migration
-│   │   Cargo.toml
-│   │   README.md
-│   │
-│   └─── src
-│       │   lib.rs
-│       │   m20220101_000001_create_table.rs
-│       │   main.rs
+.
+├── Cargo.toml
+├── migration
+│   ├── Cargo.toml
+│   ├── README.md
+│   └── src
+│       ├── lib.rs
+│       ├── m20220101_000001_create_table.rs
+│       └── main.rs
+└── src
+    └── main.rs
 ```
 
 ## Define the migrations
@@ -214,5 +213,5 @@ Perform all the migrations through `sea-orm-cli`:
 ```sh
 # Change the value of DATABASE_URL according to your database implementation.
 # Make sure the database name is also supplied for MySQL or PostgreSQL.
-$ DATABASE_URL="mysql://root:root@localhost:3306/bakeries_db" sea-orm-cli migrate refresh
+$ DATABASE_URL="mysql://root:password@localhost:3306/bakeries_db" sea-orm-cli migrate refresh
 ```

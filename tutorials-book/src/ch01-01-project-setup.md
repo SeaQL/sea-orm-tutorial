@@ -85,6 +85,8 @@ For MySQL and PostgreSQL, we can create a specific database instance. Let's call
 ```rust, no_run
 ...
 // main.rs
+- use sea_orm::{Database, DbErr};
++ use sea_orm::{ConnectionTrait, Database, DbBackend, DbErr, Statement};
 
 ...
 
