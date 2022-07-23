@@ -13,8 +13,6 @@ The entities are the Rust representation of the tables in the database. SeaORM e
 
 ...
 
-+ use entities::*;
-
 + use entities::{prelude::*, *};
 
 ...
@@ -31,7 +29,8 @@ Let's insert a new bakery called *Happy Bakery* into our `Bakery` table.
 
 ...
 
-use sea_orm::*;
+- use sea_orm::{ConnectionTrait, Database, DbBackend, DbErr, Statement};
++ use sea_orm::*;
 
 ...
 
