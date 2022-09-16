@@ -17,16 +17,16 @@ let la_boulangerie = bakery::ActiveModel {
 let bakery_res = Bakery::insert(la_boulangerie).exec(db).await?;
 
 for baker_name in ["Jolie", "Charles", "Madeleine", "Frederic"] {
-    let baker = baker::ActiveModel {
+    let chef = chef::ActiveModel {
         name: ActiveValue::Set(baker_name.to_owned()),
         bakery_id: ActiveValue::Set(bakery_res.last_insert_id),
         ..Default::default()
     };
-    Baker::insert(baker).exec(db).await?;
+    Chef::insert(chef).exec(db).await?;
 }
 ```
 
-There are 4 bakers working at the bakery *La Boulangerie*, and we can find them later on as follows:
+There are 4 bakers working at the bakery _La Boulangerie_, and we can find them later on as follows:
 
 ```rust, no_run
 // First find *La Boulangerie* as a Model
@@ -35,7 +35,7 @@ let la_boulangerie: bakery::Model = Bakery::find_by_id(bakery_res.last_insert_id
     .await?
     .unwrap();
 
-let bakers: Vec<baker::Model> = la_boulangerie.find_related(Baker).all(db).await?;
+let bakers: Vec<chef::Model> = la_boulangerie.find_related(Chef).all(db).await?;
 let mut baker_names: Vec<String> = bakers.into_iter().map(|b| b.name).collect();
 baker_names.sort_unstable();
 

@@ -74,16 +74,16 @@ impl MutationRoot {
             .map(|b| b.unwrap())
     }
 
-    // For inserting a baker
+    // For inserting a chef
     async fn add_baker(
         &self,
         ctx: &Context<'_>,
         name: String,
         bakery_id: i32,
-    ) -> Result<baker::Model, DbErr> {
+    ) -> Result<chef::Model, DbErr> {
         let db = ctx.data::<DatabaseConnection>().unwrap();
 
-        let res = Baker::insert(baker::ActiveModel {
+        let res = Chef::insert(chef::ActiveModel {
             name: ActiveValue::Set(name),
             bakery_id: ActiveValue::Set(bakery_id),
             ..Default::default()
@@ -91,7 +91,7 @@ impl MutationRoot {
         .exec(db)
         .await?;
 
-        Baker::find_by_id(res.last_insert_id)
+        Chef::find_by_id(res.last_insert_id)
             .one(db)
             .await
             .map(|b| b.unwrap())

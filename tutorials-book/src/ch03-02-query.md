@@ -80,7 +80,7 @@ Response:
 }
 ```
 
-*If `name` is replaced by other fields of `bakery::Model`, the requests will automatically be supported. This is because `bakery::Model` derives from `async_graphql::SimpleObject` in the previous section.*
+_If `name` is replaced by other fields of `bakery::Model`, the requests will automatically be supported. This is because `bakery::Model` derives from `async_graphql::SimpleObject` in the previous section._
 
 ## Relational Query
 
@@ -109,10 +109,10 @@ pub struct Model {
 
 + #[ComplexObject]
 + impl bakery::Model {
-+   async fn bakers(&self, ctx: &Context<'_>) -> Result<Vec<baker::Model>, DbErr> {
++   async fn bakers(&self, ctx: &Context<'_>) -> Result<Vec<chef::Model>, DbErr> {
 +       let db = ctx.data::<DatabaseConnection>().unwrap();
 +
-+       self.find_related(Baker).all(db).await
++       self.find_related(Chef).all(db).await
 +   }
 + }
 ```

@@ -24,30 +24,30 @@ impl QueryRoot {
         Bakery::find_by_id(id).one(db).await
     }
 
-    async fn bakers(&self, ctx: &Context<'_>) -> Result<Vec<baker::Model>, DbErr> {
+    async fn bakers(&self, ctx: &Context<'_>) -> Result<Vec<chef::Model>, DbErr> {
         let db = ctx.data::<DatabaseConnection>().unwrap();
 
-        Baker::find().all(db).await
+        Chef::find().all(db).await
     }
 
-    async fn baker(&self, ctx: &Context<'_>, id: i32) -> Result<Option<baker::Model>, DbErr> {
+    async fn chef(&self, ctx: &Context<'_>, id: i32) -> Result<Option<chef::Model>, DbErr> {
         let db = ctx.data::<DatabaseConnection>().unwrap();
 
-        Baker::find_by_id(id).one(db).await
+        Chef::find_by_id(id).one(db).await
     }
 }
 
 #[ComplexObject]
 impl bakery::Model {
-    async fn bakers(&self, ctx: &Context<'_>) -> Result<Vec<baker::Model>, DbErr> {
+    async fn bakers(&self, ctx: &Context<'_>) -> Result<Vec<chef::Model>, DbErr> {
         let db = ctx.data::<DatabaseConnection>().unwrap();
 
-        self.find_related(Baker).all(db).await
+        self.find_related(Chef).all(db).await
     }
 }
 
 #[ComplexObject]
-impl baker::Model {
+impl chef::Model {
     async fn bakery(&self, ctx: &Context<'_>) -> Result<bakery::Model, DbErr> {
         let db = ctx.data::<DatabaseConnection>().unwrap();
 
@@ -79,10 +79,10 @@ impl MutationRoot {
         ctx: &Context<'_>,
         name: String,
         bakery_id: i32,
-    ) -> Result<baker::Model, DbErr> {
+    ) -> Result<chef::Model, DbErr> {
         let db = ctx.data::<DatabaseConnection>().unwrap();
 
-        let res = Baker::insert(baker::ActiveModel {
+        let res = Chef::insert(chef::ActiveModel {
             name: ActiveValue::Set(name),
             bakery_id: ActiveValue::Set(bakery_id),
             ..Default::default()
@@ -90,7 +90,7 @@ impl MutationRoot {
         .exec(db)
         .await?;
 
-        Baker::find_by_id(res.last_insert_id)
+        Chef::find_by_id(res.last_insert_id)
             .one(db)
             .await
             .map(|b| b.unwrap())

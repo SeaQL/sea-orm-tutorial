@@ -25,14 +25,14 @@ Add the crates as dependencies:
 Make sure the entities are generated ([Section 1.4](ch01-04-entity-generation.md)), and extend them to support basic GraphQL queries by attributes:
 
 ```rust, no_run
-// src/entities/baker.rs
+// src/entities/chef.rs
 
 + use async_graphql::SimpleObject;
 use sea_orm::entity::prelude::*;
 
 - #[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
 + #[derive(Clone, Debug, PartialEq, DeriveEntityModel, SimpleObject)]
-#[sea_orm(table_name = "baker")]
+#[sea_orm(table_name = "chef")]
 pub struct Model {
 
 ...

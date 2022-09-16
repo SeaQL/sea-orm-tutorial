@@ -127,26 +127,26 @@ impl MigrationName for Migration {
 
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
-    // Define how to apply this migration: Create the Baker table.
+    // Define how to apply this migration: Create the Chef table.
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
             .create_table(
                 Table::create()
-                    .table(Baker::Table)
+                    .table(Chef::Table)
                     .col(
-                        ColumnDef::new(Baker::Id)
+                        ColumnDef::new(Chef::Id)
                             .integer()
                             .not_null()
                             .auto_increment()
                             .primary_key(),
                     )
-                    .col(ColumnDef::new(Baker::Name).string().not_null())
-                    .col(ColumnDef::new(Baker::ContactDetails).json())
-                    .col(ColumnDef::new(Baker::BakeryId).integer().not_null())
+                    .col(ColumnDef::new(Chef::Name).string().not_null())
+                    .col(ColumnDef::new(Chef::ContactDetails).json())
+                    .col(ColumnDef::new(Chef::BakeryId).integer().not_null())
                     .foreign_key(
                         ForeignKey::create()
-                            .name("fk-baker-bakery_id")
-                            .from(Baker::Table, Baker::BakeryId)
+                            .name("fk-chef-bakery_id")
+                            .from(Chef::Table, Chef::BakeryId)
                             .to(Bakery::Table, Bakery::Id),
                     )
                     .to_owned(),
@@ -154,16 +154,16 @@ impl MigrationTrait for Migration {
             .await
     }
 
-    // Define how to rollback this migration: Drop the Baker table.
+    // Define how to rollback this migration: Drop the Chef table.
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
-            .drop_table(Table::drop().table(Baker::Table).to_owned())
+            .drop_table(Table::drop().table(Chef::Table).to_owned())
             .await
     }
 }
 
 #[derive(Iden)]
-pub enum Baker {
+pub enum Chef {
     Table,
     Id,
     Name,
@@ -214,7 +214,7 @@ async fn run() -> Result<(), DbErr> {
 
 +   Migrator::refresh(db).await?;
 +   assert!(schema_manager.has_table("bakery").await?);
-+   assert!(schema_manager.has_table("baker").await?);
++   assert!(schema_manager.has_table("chef").await?);
 
     Ok(())
 }

@@ -2,5 +2,5 @@
 
 pub mod prelude;
 
-pub mod baker;
 pub mod bakery;
+pub mod chef;
