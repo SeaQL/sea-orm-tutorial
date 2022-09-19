@@ -4,9 +4,9 @@ In the previous section, we explored how to [perform select on a single entity](
 
 However, relational databases are known for connecting entities with relations, such that we can perform queries **across different entities**.
 
-For example, given a bakery, we can find all the bakers working there.
+For example, given a bakery, we can find all the chefs working there.
 
-Suppose the following code were run before, inserting the bakery and the bakers it employed into the database.
+Suppose the following code were run before, inserting the bakery and the chefs it employed into the database.
 
 ```rust, no_run
 let la_boulangerie = bakery::ActiveModel {
@@ -16,9 +16,9 @@ let la_boulangerie = bakery::ActiveModel {
 };
 let bakery_res = Bakery::insert(la_boulangerie).exec(db).await?;
 
-for baker_name in ["Jolie", "Charles", "Madeleine", "Frederic"] {
+for chef_name in ["Jolie", "Charles", "Madeleine", "Frederic"] {
     let chef = chef::ActiveModel {
-        name: ActiveValue::Set(baker_name.to_owned()),
+        name: ActiveValue::Set(chef_name.to_owned()),
         bakery_id: ActiveValue::Set(bakery_res.last_insert_id),
         ..Default::default()
     };
@@ -26,7 +26,7 @@ for baker_name in ["Jolie", "Charles", "Madeleine", "Frederic"] {
 }
 ```
 
-There are 4 bakers working at the bakery _La Boulangerie_, and we can find them later on as follows:
+There are 4 chefs working at the bakery _La Boulangerie_, and we can find them later on as follows:
 
 ```rust, no_run
 // First find *La Boulangerie* as a Model
@@ -35,11 +35,11 @@ let la_boulangerie: bakery::Model = Bakery::find_by_id(bakery_res.last_insert_id
     .await?
     .unwrap();
 
-let bakers: Vec<chef::Model> = la_boulangerie.find_related(Chef).all(db).await?;
-let mut baker_names: Vec<String> = bakers.into_iter().map(|b| b.name).collect();
-baker_names.sort_unstable();
+let chefs: Vec<chef::Model> = la_boulangerie.find_related(Chef).all(db).await?;
+let mut chef_names: Vec<String> = chefs.into_iter().map(|b| b.name).collect();
+chef_names.sort_unstable();
 
-assert_eq!(baker_names, ["Charles", "Frederic", "Jolie", "Madeleine"]);
+assert_eq!(chef_names, ["Charles", "Frederic", "Jolie", "Madeleine"]);
 ```
 
 For more advanced usage, visit the [documentation](https://www.sea-ql.org/SeaORM/docs/basic-crud/select/#find-related-models).

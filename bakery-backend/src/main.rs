@@ -10,7 +10,7 @@ use sea_orm_migration::prelude::*;
 const DATABASE_URL: &str = "mysql://root:root@localhost:3306";
 
 #[derive(FromQueryResult)]
-struct BakerNameResult {
+struct ChefNameResult {
     name: String,
 }
 
@@ -120,9 +120,9 @@ async fn run() -> Result<(), DbErr> {
         };
         let bakery_res = Bakery::insert(la_boulangerie).exec(db).await?;
 
-        for baker_name in ["Jolie", "Charles", "Madeleine", "Frederic"] {
+        for chef_name in ["Jolie", "Charles", "Madeleine", "Frederic"] {
             let chef = chef::ActiveModel {
-                name: ActiveValue::Set(baker_name.to_owned()),
+                name: ActiveValue::Set(chef_name.to_owned()),
                 bakery_id: ActiveValue::Set(bakery_res.last_insert_id),
                 ..Default::default()
             };
@@ -135,11 +135,11 @@ async fn run() -> Result<(), DbErr> {
             .await?
             .unwrap();
 
-        let bakers: Vec<chef::Model> = la_boulangerie.find_related(Chef).all(db).await?;
-        let mut baker_names: Vec<String> = bakers.into_iter().map(|b| b.name).collect();
-        baker_names.sort_unstable();
+        let chefs: Vec<chef::Model> = la_boulangerie.find_related(Chef).all(db).await?;
+        let mut chef_names: Vec<String> = chefs.into_iter().map(|b| b.name).collect();
+        chef_names.sort_unstable();
 
-        assert_eq!(baker_names, ["Charles", "Frederic", "Jolie", "Madeleine"]);
+        assert_eq!(chef_names, ["Charles", "Frederic", "Jolie", "Madeleine"]);
     }
 
     // Mock Testing
@@ -234,9 +234,9 @@ async fn run() -> Result<(), DbErr> {
             ]
         );
 
-        let la_boulangerie_bakers: Vec<chef::Model> = Chef::find().all(db).await?;
+        let la_boulangerie_chefs: Vec<chef::Model> = Chef::find().all(db).await?;
         assert_eq!(
-            la_boulangerie_bakers,
+            la_boulangerie_chefs,
             vec![
                 chef::Model {
                     id: 1,
@@ -298,14 +298,14 @@ async fn run() -> Result<(), DbErr> {
             .order_by(column, Order::Asc);
 
         let builder = db.get_database_backend();
-        let chef = BakerNameResult::find_by_statement(builder.build(&stmt))
+        let chef = ChefNameResult::find_by_statement(builder.build(&stmt))
             .all(db)
             .await?;
 
-        let baker_names = chef.into_iter().map(|b| b.name).collect::<Vec<_>>();
+        let chef_names = chef.into_iter().map(|b| b.name).collect::<Vec<_>>();
 
         assert_eq!(
-            baker_names,
+            chef_names,
             vec!["Charles", "Frederic", "Jolie", "Madeleine"]
         );
     }

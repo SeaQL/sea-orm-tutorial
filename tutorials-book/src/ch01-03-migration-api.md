@@ -111,7 +111,7 @@ pub enum Bakery {
 ```
 
 ```rust, no_run
-// src/migrator/m20220602_000002_create_baker_table.rs (create new file)
+// src/migrator/m20220602_000002_create_chef_table.rs (create new file)
 
 use sea_orm_migration::prelude::*;
 
@@ -121,7 +121,7 @@ pub struct Migration;
 
 impl MigrationName for Migration {
     fn name(&self) -> &str {
-        "m_20220602_000002_create_baker_table"
+        "m_20220602_000002_create_chef_table"
     }
 }
 
@@ -178,7 +178,7 @@ pub enum Chef {
 use sea_orm_migration::prelude::*;
 
 + mod m20220602_000001_create_bakery_table;
-+ mod m20220602_000002_create_baker_table;
++ mod m20220602_000002_create_chef_table;
 
 pub struct Migrator;
 
@@ -187,7 +187,7 @@ impl MigratorTrait for Migrator {
     fn migrations() -> Vec<Box<dyn MigrationTrait>> {
         vec![
 +           Box::new(m20220602_000001_create_bakery_table::Migration),
-+           Box::new(m20220602_000002_create_baker_table::Migration),
++           Box::new(m20220602_000002_create_chef_table::Migration),
         ]
     }
 }

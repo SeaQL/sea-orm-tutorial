@@ -86,7 +86,7 @@ _If `name` is replaced by other fields of `bakery::Model`, the requests will aut
 
 One of the most appealing features of GraphQL is its convenient support for relational queries.
 
-Recall that a Bakery may hire many Bakers. We can give `bakery::Model` ComplexObject support to allow for this relational query.
+Recall that a Bakery may hire many chefs. We can give `bakery::Model` ComplexObject support to allow for this relational query.
 
 ```rust, no_run
 // src/entities/bakery.rs
@@ -109,7 +109,7 @@ pub struct Model {
 
 + #[ComplexObject]
 + impl bakery::Model {
-+   async fn bakers(&self, ctx: &Context<'_>) -> Result<Vec<chef::Model>, DbErr> {
++   async fn chefs(&self, ctx: &Context<'_>) -> Result<Vec<chef::Model>, DbErr> {
 +       let db = ctx.data::<DatabaseConnection>().unwrap();
 +
 +       self.find_related(Chef).all(db).await
@@ -124,7 +124,7 @@ GraphQL Request:
 {
   bakery(id: 1) {
     name,
-    bakers {
+    chefs {
       name
     }
   }
@@ -135,7 +135,7 @@ Response:
   "data": {
     "bakery": {
       "name": "ABC Bakery",
-      "bakers": [
+      "chefs": [
         {
           "name": "Sanford"
         },
