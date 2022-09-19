@@ -124,9 +124,9 @@ assert_eq!(
     ]
 );
 
-let la_boulangerie_bakers: Vec<chef::Model> = Chef::find().all(db).await?;
+let la_boulangerie_chefs: Vec<chef::Model> = Chef::find().all(db).await?;
 assert_eq!(
-    la_boulangerie_bakers,
+    la_boulangerie_chefs,
     vec![
         chef::Model {
             id: 1,

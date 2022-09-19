@@ -52,7 +52,7 @@ The fields of the struct must match the column names of the query result.
 use sea_query::{Alias, Expr, JoinType, Order, Query};
 
 #[derive(FromQueryResult)]
-struct BakerNameResult {
+struct ChefNameResult {
     name: String,
 }
 
@@ -72,14 +72,14 @@ stmt.column(column.clone()) // Use `expr_as` instead of `column` if renaming is 
     .order_by(column, Order::Asc);
 
 let builder = db.get_database_backend();
-let chef = BakerNameResult::find_by_statement(builder.build(&stmt))
+let chef = ChefNameResult::find_by_statement(builder.build(&stmt))
     .all(db)
     .await?;
 
-let baker_names = chef.into_iter().map(|b| b.name).collect::<Vec<_>>();
+let chef_names = chef.into_iter().map(|b| b.name).collect::<Vec<_>>();
 
 assert_eq!(
-    baker_names,
+    chef_names,
     vec!["Charles", "Frederic", "Jolie", "Madeleine"]
 );
 ```

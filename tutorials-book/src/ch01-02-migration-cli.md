@@ -48,7 +48,7 @@ For more information about defining migrations, read the documentation of [`Sche
 ```diff
 - m20220101_000001_create_table.rs
 + m20220101_000001_create_bakery_table.rs
-+ m20220101_000002_create_baker_table.rs
++ m20220101_000002_create_chef_table.rs
 ```
 
 ```rust, no_run
@@ -104,7 +104,7 @@ pub enum Bakery {
 ```
 
 ```rust, no_run
-// m20220101_000002_create_baker_table.rs
+// m20220101_000002_create_chef_table.rs
 
 use sea_orm_migration::prelude::*;
 
@@ -114,7 +114,7 @@ pub struct Migration;
 
 impl MigrationName for Migration {
     fn name(&self) -> &str {
-        "m_20220101_000002_create_baker_table" // Make sure this matches with the file name
+        "m_20220101_000002_create_chef_table" // Make sure this matches with the file name
     }
 }
 
@@ -173,7 +173,7 @@ pub use sea_orm_migration::prelude::*;
 
 // Add each migration file as a module
 mod m20220101_000001_create_bakery_table;
-mod m20220101_000002_create_baker_table;
+mod m20220101_000002_create_chef_table;
 
 pub struct Migrator;
 
@@ -183,7 +183,7 @@ impl MigratorTrait for Migrator {
         vec![
             // Define the order of migrations.
             Box::new(m20220101_000001_create_bakery_table::Migration),
-            Box::new(m20220101_000002_create_baker_table::Migration),
+            Box::new(m20220101_000002_create_chef_table::Migration),
         ]
     }
 }

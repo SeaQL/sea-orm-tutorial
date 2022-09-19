@@ -24,7 +24,7 @@ impl QueryRoot {
         Bakery::find_by_id(id).one(db).await
     }
 
-    async fn bakers(&self, ctx: &Context<'_>) -> Result<Vec<chef::Model>, DbErr> {
+    async fn chefs(&self, ctx: &Context<'_>) -> Result<Vec<chef::Model>, DbErr> {
         let db = ctx.data::<DatabaseConnection>().unwrap();
 
         Chef::find().all(db).await
@@ -39,7 +39,7 @@ impl QueryRoot {
 
 #[ComplexObject]
 impl bakery::Model {
-    async fn bakers(&self, ctx: &Context<'_>) -> Result<Vec<chef::Model>, DbErr> {
+    async fn chefs(&self, ctx: &Context<'_>) -> Result<Vec<chef::Model>, DbErr> {
         let db = ctx.data::<DatabaseConnection>().unwrap();
 
         self.find_related(Chef).all(db).await
@@ -74,7 +74,7 @@ impl MutationRoot {
             .map(|b| b.unwrap())
     }
 
-    async fn add_baker(
+    async fn add_chef(
         &self,
         ctx: &Context<'_>,
         name: String,

@@ -75,7 +75,7 @@ impl MutationRoot {
     }
 
     // For inserting a chef
-    async fn add_baker(
+    async fn add_chef(
         &self,
         ctx: &Context<'_>,
         name: String,
@@ -104,7 +104,7 @@ Examples:
 ```
 GraphQL Request:
 mutation {
-  addBakery(name: "Excellent Bakery") {
+  addChefy(name: "Excellent Bakery") {
     id,
     name,
     profitMargin
@@ -114,7 +114,7 @@ mutation {
 Response:
 {
   "data": {
-    "addBakery": {
+    "addChefy": {
       "id": 4,
       "name": "Excellent Bakery",
       "profitMargin": 0
@@ -126,11 +126,11 @@ Response:
 ```
 GraphQL Request:
 mutation {
-  addBaker(name: "Chris", bakeryId: 1) {
+  addChef(name: "Chris", bakeryId: 1) {
     id,
     name,
     bakery {
-      bakers {
+      chefs {
         name
       }
     }
@@ -140,11 +140,11 @@ mutation {
 Response:
 {
   "data": {
-    "addBaker": {
+    "addChef": {
       "id": 3,
       "name": "Chris",
       "bakery": {
-        "bakers": [
+        "chefs": [
           {
             "name": "Sanford"
           },
