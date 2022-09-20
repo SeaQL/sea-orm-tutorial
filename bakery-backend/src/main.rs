@@ -10,7 +10,7 @@ use sea_orm_migration::prelude::*;
 const DATABASE_URL: &str = "mysql://root:root@localhost:3306";
 
 #[derive(FromQueryResult)]
-struct BakerNameResult {
+struct ChefNameResult {
     name: String,
 }
 
@@ -50,7 +50,7 @@ async fn run() -> Result<(), DbErr> {
 
     Migrator::refresh(db).await?;
     assert!(schema_manager.has_table("bakery").await?);
-    assert!(schema_manager.has_table("baker").await?);
+    assert!(schema_manager.has_table("chef").await?);
 
     // Insert and Update
     {
@@ -68,12 +68,12 @@ async fn run() -> Result<(), DbErr> {
         };
         sad_bakery.update(db).await?;
 
-        let john = baker::ActiveModel {
+        let john = chef::ActiveModel {
             name: ActiveValue::Set("John".to_owned()),
             bakery_id: ActiveValue::Set(res.last_insert_id),
             ..Default::default()
         };
-        Baker::insert(john).exec(db).await?;
+        Chef::insert(john).exec(db).await?;
     }
 
     // Read
@@ -95,7 +95,7 @@ async fn run() -> Result<(), DbErr> {
 
     // Delete
     {
-        let john = baker::ActiveModel {
+        let john = chef::ActiveModel {
             id: ActiveValue::Set(1), // The primary must be set
             ..Default::default()
         };
@@ -120,13 +120,13 @@ async fn run() -> Result<(), DbErr> {
         };
         let bakery_res = Bakery::insert(la_boulangerie).exec(db).await?;
 
-        for baker_name in ["Jolie", "Charles", "Madeleine", "Frederic"] {
-            let baker = baker::ActiveModel {
-                name: ActiveValue::Set(baker_name.to_owned()),
+        for chef_name in ["Jolie", "Charles", "Madeleine", "Frederic"] {
+            let chef = chef::ActiveModel {
+                name: ActiveValue::Set(chef_name.to_owned()),
                 bakery_id: ActiveValue::Set(bakery_res.last_insert_id),
                 ..Default::default()
             };
-            Baker::insert(baker).exec(db).await?;
+            Chef::insert(chef).exec(db).await?;
         }
 
         // First find *La Boulangerie* as a Model
@@ -135,11 +135,11 @@ async fn run() -> Result<(), DbErr> {
             .await?
             .unwrap();
 
-        let bakers: Vec<baker::Model> = la_boulangerie.find_related(Baker).all(db).await?;
-        let mut baker_names: Vec<String> = bakers.into_iter().map(|b| b.name).collect();
-        baker_names.sort_unstable();
+        let chefs: Vec<chef::Model> = la_boulangerie.find_related(Chef).all(db).await?;
+        let mut chef_names: Vec<String> = chefs.into_iter().map(|b| b.name).collect();
+        chef_names.sort_unstable();
 
-        assert_eq!(baker_names, ["Charles", "Frederic", "Jolie", "Madeleine"]);
+        assert_eq!(chef_names, ["Charles", "Frederic", "Jolie", "Madeleine"]);
     }
 
     // Mock Testing
@@ -174,25 +174,25 @@ async fn run() -> Result<(), DbErr> {
             .append_query_results(vec![
                 // Third query result
                 vec![
-                    baker::Model {
+                    chef::Model {
                         id: 1,
                         name: "Jolie".to_owned(),
                         contact_details: None,
                         bakery_id: 3,
                     },
-                    baker::Model {
+                    chef::Model {
                         id: 2,
                         name: "Charles".to_owned(),
                         contact_details: None,
                         bakery_id: 3,
                     },
-                    baker::Model {
+                    chef::Model {
                         id: 3,
                         name: "Madeleine".to_owned(),
                         contact_details: None,
                         bakery_id: 3,
                     },
-                    baker::Model {
+                    chef::Model {
                         id: 4,
                         name: "Frederic".to_owned(),
                         contact_details: None,
@@ -234,29 +234,29 @@ async fn run() -> Result<(), DbErr> {
             ]
         );
 
-        let la_boulangerie_bakers: Vec<baker::Model> = Baker::find().all(db).await?;
+        let la_boulangerie_chefs: Vec<chef::Model> = Chef::find().all(db).await?;
         assert_eq!(
-            la_boulangerie_bakers,
+            la_boulangerie_chefs,
             vec![
-                baker::Model {
+                chef::Model {
                     id: 1,
                     name: "Jolie".to_owned(),
                     contact_details: None,
                     bakery_id: 3,
                 },
-                baker::Model {
+                chef::Model {
                     id: 2,
                     name: "Charles".to_owned(),
                     contact_details: None,
                     bakery_id: 3,
                 },
-                baker::Model {
+                chef::Model {
                     id: 3,
                     name: "Madeleine".to_owned(),
                     contact_details: None,
                     bakery_id: 3,
                 },
-                baker::Model {
+                chef::Model {
                     id: 4,
                     name: "Frederic".to_owned(),
                     contact_details: None,
@@ -284,28 +284,28 @@ async fn run() -> Result<(), DbErr> {
 
     // SeaQuery select
     {
-        let column = (baker::Entity, Alias::new("name"));
+        let column = (chef::Entity, Alias::new("name"));
 
         let mut stmt = Query::select();
         stmt.column(column.clone())
-            .from(baker::Entity)
+            .from(chef::Entity)
             .join(
                 JoinType::Join,
                 bakery::Entity,
-                Expr::tbl(baker::Entity, Alias::new("bakery_id"))
+                Expr::tbl(chef::Entity, Alias::new("bakery_id"))
                     .equals(bakery::Entity, Alias::new("id")),
             )
             .order_by(column, Order::Asc);
 
         let builder = db.get_database_backend();
-        let baker = BakerNameResult::find_by_statement(builder.build(&stmt))
+        let chef = ChefNameResult::find_by_statement(builder.build(&stmt))
             .all(db)
             .await?;
 
-        let baker_names = baker.into_iter().map(|b| b.name).collect::<Vec<_>>();
+        let chef_names = chef.into_iter().map(|b| b.name).collect::<Vec<_>>();
 
         assert_eq!(
-            baker_names,
+            chef_names,
             vec!["Charles", "Frederic", "Jolie", "Madeleine"]
         );
     }

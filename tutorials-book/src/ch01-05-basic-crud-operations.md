@@ -22,7 +22,7 @@ The entities are the Rust representation of the tables in the database. SeaORM e
 
 Insert and update operations can be performed using `ActiveModel` of the entities.
 
-Let's insert a new bakery called *Happy Bakery* into our `Bakery` table.
+Let's insert a new bakery called _Happy Bakery_ into our `Bakery` table.
 
 ```rust, no_run
 // src/main.rs
@@ -35,7 +35,7 @@ Let's insert a new bakery called *Happy Bakery* into our `Bakery` table.
 ...
 
 async fn run() -> Result<(), DbErr> {
-    
+
     ...
 
     let happy_bakery = bakery::ActiveModel {
@@ -47,7 +47,7 @@ async fn run() -> Result<(), DbErr> {
 }
 ```
 
-Suppose, later on, the owner of *Happy Bakery* adopts a brand new perspective of life, and renames it to *Sad Bakery*.
+Suppose, later on, the owner of _Happy Bakery_ adopts a brand new perspective of life, and renames it to _Sad Bakery_.
 
 We can perform the update as follows:
 
@@ -60,15 +60,15 @@ let sad_bakery = bakery::ActiveModel {
 sad_bakery.update(db).await?;
 ```
 
-Let's welcome John, the first employee of *Sad Bakery*!
+Let's welcome John, the first employee of _Sad Bakery_!
 
 ```rust, no_run
-let john = baker::ActiveModel {
+let john = chef::ActiveModel {
     name: ActiveValue::Set("John".to_owned()),
     bakery_id: ActiveValue::Set(res.last_insert_id), // a foreign key
     ..Default::default()
 };
-Baker::insert(john).exec(db).await?;
+Chef::insert(john).exec(db).await?;
 ```
 
 ## Find (single entity)
@@ -96,12 +96,12 @@ For relational select on multiple entities, visit the next [section](ch01-06-rel
 
 ## Delete
 
-Sadly, *Sad Bakery* is unable to survive in the rapidly changing economy; it has been forced to liquidate!
+Sadly, _Sad Bakery_ is unable to survive in the rapidly changing economy; it has been forced to liquidate!
 
 We have no choice but to remove its entry in our database:
 
 ```rust, no_run
-let john = baker::ActiveModel {
+let john = chef::ActiveModel {
     id: ActiveValue::Set(1), // The primary key must be set
     ..Default::default()
 };

@@ -74,16 +74,16 @@ impl MutationRoot {
             .map(|b| b.unwrap())
     }
 
-    // For inserting a baker
-    async fn add_baker(
+    // For inserting a chef
+    async fn add_chef(
         &self,
         ctx: &Context<'_>,
         name: String,
         bakery_id: i32,
-    ) -> Result<baker::Model, DbErr> {
+    ) -> Result<chef::Model, DbErr> {
         let db = ctx.data::<DatabaseConnection>().unwrap();
 
-        let res = Baker::insert(baker::ActiveModel {
+        let res = Chef::insert(chef::ActiveModel {
             name: ActiveValue::Set(name),
             bakery_id: ActiveValue::Set(bakery_id),
             ..Default::default()
@@ -91,7 +91,7 @@ impl MutationRoot {
         .exec(db)
         .await?;
 
-        Baker::find_by_id(res.last_insert_id)
+        Chef::find_by_id(res.last_insert_id)
             .one(db)
             .await
             .map(|b| b.unwrap())
@@ -104,7 +104,7 @@ Examples:
 ```
 GraphQL Request:
 mutation {
-  addBakery(name: "Excellent Bakery") {
+  addChefy(name: "Excellent Bakery") {
     id,
     name,
     profitMargin
@@ -114,7 +114,7 @@ mutation {
 Response:
 {
   "data": {
-    "addBakery": {
+    "addChefy": {
       "id": 4,
       "name": "Excellent Bakery",
       "profitMargin": 0
@@ -126,11 +126,11 @@ Response:
 ```
 GraphQL Request:
 mutation {
-  addBaker(name: "Chris", bakeryId: 1) {
+  addChef(name: "Chris", bakeryId: 1) {
     id,
     name,
     bakery {
-      bakers {
+      chefs {
         name
       }
     }
@@ -140,11 +140,11 @@ mutation {
 Response:
 {
   "data": {
-    "addBaker": {
+    "addChef": {
       "id": 3,
       "name": "Chris",
       "bakery": {
-        "bakers": [
+        "chefs": [
           {
             "name": "Sanford"
           },

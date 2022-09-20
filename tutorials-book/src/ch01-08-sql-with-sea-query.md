@@ -37,14 +37,14 @@ db.execute(builder.build(&stmt)).await?;
 Raw SQL:
 
 ```sql
-SELECT `baker`.`name` FROM `baker` JOIN `bakery` ON `baker`.`bakery_id` = `bakery`.`id` ORDER BY `baker`.`name` ASC
+SELECT `chef`.`name` FROM `chef` JOIN `bakery` ON `chef`.`bakery_id` = `bakery`.`id` ORDER BY `chef`.`name` ASC
 ```
 
 SeaQuery:
 
 If you are only interested in some of the columns, define a struct to hold the query result. It has to derive from the trait `FromQueryResult`.
 
-If all columns are of interest, then the generated `Model` structs (e.g. `baker::Model`) can be used.
+If all columns are of interest, then the generated `Model` structs (e.g. `chef::Model`) can be used.
 
 The fields of the struct must match the column names of the query result.
 
@@ -52,34 +52,34 @@ The fields of the struct must match the column names of the query result.
 use sea_query::{Alias, Expr, JoinType, Order, Query};
 
 #[derive(FromQueryResult)]
-struct BakerNameResult {
+struct ChefNameResult {
     name: String,
 }
 
 ...
 
-let column = (baker::Entity, Alias::new("name"));
+let column = (chef::Entity, Alias::new("name"));
 
 let mut stmt = Query::select();
 stmt.column(column.clone()) // Use `expr_as` instead of `column` if renaming is necessary
-    .from(baker::Entity)
+    .from(chef::Entity)
     .join(
         JoinType::Join,
         bakery::Entity,
-        Expr::tbl(baker::Entity, Alias::new("bakery_id"))
+        Expr::tbl(chef::Entity, Alias::new("bakery_id"))
             .equals(bakery::Entity, Alias::new("id")),
     )
     .order_by(column, Order::Asc);
 
 let builder = db.get_database_backend();
-let baker = BakerNameResult::find_by_statement(builder.build(&stmt))
+let chef = ChefNameResult::find_by_statement(builder.build(&stmt))
     .all(db)
     .await?;
 
-let baker_names = baker.into_iter().map(|b| b.name).collect::<Vec<_>>();
+let chef_names = chef.into_iter().map(|b| b.name).collect::<Vec<_>>();
 
 assert_eq!(
-    baker_names,
+    chef_names,
     vec!["Charles", "Frederic", "Jolie", "Madeleine"]
 );
 ```

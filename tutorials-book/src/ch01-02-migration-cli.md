@@ -1,10 +1,10 @@
 # Migration (CLI)
 
-*This and the next sections concern those who are getting a taste of SeaORM by creating a new, toy database schema. If you already have an existing database schema, feel free to skip over to [Section 1.4](ch01-04-entity-generation.md).*
+_This and the next sections concern those who are getting a taste of SeaORM by creating a new, toy database schema. If you already have an existing database schema, feel free to skip over to [Section 1.4](ch01-04-entity-generation.md)._
 
 In this section, we define the following simple schema with migrations.
 
-![ER diagram of two entities, Bakery and Baker. Baker has a foreign key referencing Bakery.](./assets/er_diagram.png)
+![ER diagram of two entities, Bakery and Chef. Chef has a foreign key referencing Bakery.](./assets/er_diagram.png)
 
 ## Initialize using `sea-orm-cli`
 
@@ -39,7 +39,7 @@ $ sea-orm-cli migrate init
 
 ## Define the migrations
 
-Update the migration files to define the `Bakery` and `Baker` tables:
+Update the migration files to define the `Bakery` and `Chef` tables:
 
 The filename must follow the format `m<date>_<6-digit-index>_<description>.rs`.
 
@@ -48,7 +48,7 @@ For more information about defining migrations, read the documentation of [`Sche
 ```diff
 - m20220101_000001_create_table.rs
 + m20220101_000001_create_bakery_table.rs
-+ m20220101_000002_create_baker_table.rs
++ m20220101_000002_create_chef_table.rs
 ```
 
 ```rust, no_run
@@ -104,7 +104,7 @@ pub enum Bakery {
 ```
 
 ```rust, no_run
-// m20220101_000002_create_baker_table.rs
+// m20220101_000002_create_chef_table.rs
 
 use sea_orm_migration::prelude::*;
 
@@ -114,32 +114,32 @@ pub struct Migration;
 
 impl MigrationName for Migration {
     fn name(&self) -> &str {
-        "m_20220101_000002_create_baker_table" // Make sure this matches with the file name
+        "m_20220101_000002_create_chef_table" // Make sure this matches with the file name
     }
 }
 
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
-    // Define how to apply this migration: Create the Baker table.
+    // Define how to apply this migration: Create the Chef table.
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
             .create_table(
                 Table::create()
-                    .table(Baker::Table)
+                    .table(Chef::Table)
                     .col(
-                        ColumnDef::new(Baker::Id)
+                        ColumnDef::new(Chef::Id)
                             .integer()
                             .not_null()
                             .auto_increment()
                             .primary_key(),
                     )
-                    .col(ColumnDef::new(Baker::Name).string().not_null())
-                    .col(ColumnDef::new(Baker::ContactDetails).json())
-                    .col(ColumnDef::new(Baker::BakeryId).integer().not_null())
+                    .col(ColumnDef::new(Chef::Name).string().not_null())
+                    .col(ColumnDef::new(Chef::ContactDetails).json())
+                    .col(ColumnDef::new(Chef::BakeryId).integer().not_null())
                     .foreign_key(
                         ForeignKey::create()
-                            .name("fk-baker-bakery_id")
-                            .from(Baker::Table, Baker::BakeryId)
+                            .name("fk-chef-bakery_id")
+                            .from(Chef::Table, Chef::BakeryId)
                             .to(Bakery::Table, Bakery::Id),
                     )
                     .to_owned(),
@@ -147,17 +147,17 @@ impl MigrationTrait for Migration {
             .await
     }
 
-    // Define how to rollback this migration: Drop the Baker table.
+    // Define how to rollback this migration: Drop the Chef table.
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
-            .drop_table(Table::drop().table(Baker::Table).to_owned())
+            .drop_table(Table::drop().table(Chef::Table).to_owned())
             .await
     }
 }
 
 // For ease of access
 #[derive(Iden)]
-pub enum Baker {
+pub enum Chef {
     Table,
     Id,
     Name,
@@ -173,7 +173,7 @@ pub use sea_orm_migration::prelude::*;
 
 // Add each migration file as a module
 mod m20220101_000001_create_bakery_table;
-mod m20220101_000002_create_baker_table;
+mod m20220101_000002_create_chef_table;
 
 pub struct Migrator;
 
@@ -183,7 +183,7 @@ impl MigratorTrait for Migrator {
         vec![
             // Define the order of migrations.
             Box::new(m20220101_000001_create_bakery_table::Migration),
-            Box::new(m20220101_000002_create_baker_table::Migration),
+            Box::new(m20220101_000002_create_chef_table::Migration),
         ]
     }
 }
@@ -208,7 +208,7 @@ features = [
 
 Perform all the migrations through `sea-orm-cli`:
 
-*Make sure you are running this command at the project root.*
+_Make sure you are running this command at the project root._
 
 ```sh
 # Change the value of DATABASE_URL according to your database implementation.

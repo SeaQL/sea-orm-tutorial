@@ -13,7 +13,7 @@ Also, a real database may not be preferred when we want to maximize the portabil
 
 ...
 
-- sea-orm = { version = "^0.9.0", features = [ ... ] } 
+- sea-orm = { version = "^0.9.0", features = [ ... ] }
 + sea-orm = { version = "^0.9.0", features = [ ... , "mock" ] }
 
 ...
@@ -56,25 +56,25 @@ let db: &DatabaseConnection = &MockDatabase::new(DatabaseBackend::MySql)
     .append_query_results(vec![
         // Third query result
         vec![
-            baker::Model {
+            chef::Model {
                 id: 1,
                 name: "Jolie".to_owned(),
                 contact_details: None,
                 bakery_id: 3,
             },
-            baker::Model {
+            chef::Model {
                 id: 2,
                 name: "Charles".to_owned(),
                 contact_details: None,
                 bakery_id: 3,
             },
-            baker::Model {
+            chef::Model {
                 id: 3,
                 name: "Madeleine".to_owned(),
                 contact_details: None,
                 bakery_id: 3,
             },
-            baker::Model {
+            chef::Model {
                 id: 4,
                 name: "Frederic".to_owned(),
                 contact_details: None,
@@ -85,7 +85,7 @@ let db: &DatabaseConnection = &MockDatabase::new(DatabaseBackend::MySql)
     .into_connection();
 ```
 
-*Note: if a query result contains multiple models (like the second and third ones above) and `Entity::find().one(db)` is called, only the first one will be returned. The rest of the models in the query will be discarded.*
+_Note: if a query result contains multiple models (like the second and third ones above) and `Entity::find().one(db)` is called, only the first one will be returned. The rest of the models in the query will be discarded._
 
 ## Use the returned query results
 
@@ -124,29 +124,29 @@ assert_eq!(
     ]
 );
 
-let la_boulangerie_bakers: Vec<baker::Model> = Baker::find().all(db).await?;
+let la_boulangerie_chefs: Vec<chef::Model> = Chef::find().all(db).await?;
 assert_eq!(
-    la_boulangerie_bakers,
+    la_boulangerie_chefs,
     vec![
-        baker::Model {
+        chef::Model {
             id: 1,
             name: "Jolie".to_owned(),
             contact_details: None,
             bakery_id: 3,
         },
-        baker::Model {
+        chef::Model {
             id: 2,
             name: "Charles".to_owned(),
             contact_details: None,
             bakery_id: 3,
         },
-        baker::Model {
+        chef::Model {
             id: 3,
             name: "Madeleine".to_owned(),
             contact_details: None,
             bakery_id: 3,
         },
-        baker::Model {
+        chef::Model {
             id: 4,
             name: "Frederic".to_owned(),
             contact_details: None,

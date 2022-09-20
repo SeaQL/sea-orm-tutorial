@@ -25,11 +25,11 @@ bakery-backend
 │   └── ...
 └── src
     ├── entities
-    │   ├── baker.rs
+    │   ├── chef.rs
     │   ├── bakery.rs
     │   ├── mod.rs
     │   └── prelude.rs
     └── main.rs
 ```
 
-Put the focus on `baker.rs` and `bakery.rs`, they are the entities representing the tables `Baker` and `Bakery`, respectively.
+Put the focus on `chef.rs` and `bakery.rs`, they are the entities representing the tables `Chef` and `Bakery`, respectively.
