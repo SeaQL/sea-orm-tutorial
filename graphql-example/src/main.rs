@@ -58,25 +58,22 @@ struct ErrorResponder {
     message: String,
 }
 
-#[allow(clippy::from_over_into)]
-impl Into<ErrorResponder> for DbErr {
-    fn into(self) -> ErrorResponder {
+impl From<DbErr> for ErrorResponder {
+    fn from(err: DbErr) -> ErrorResponder {
         ErrorResponder {
-            message: self.to_string(),
+            message: err.to_string(),
         }
     }
 }
 
-#[allow(clippy::from_over_into)]
-impl Into<ErrorResponder> for String {
-    fn into(self) -> ErrorResponder {
-        ErrorResponder { message: self }
+impl From<String> for ErrorResponder {
+    fn from(string: String) -> ErrorResponder {
+        ErrorResponder { message: string }
     }
 }
 
-#[allow(clippy::from_over_into)]
-impl Into<ErrorResponder> for &str {
-    fn into(self) -> ErrorResponder {
-        self.to_owned().into()
+impl From<&str> for ErrorResponder {
+    fn from(str: &str) -> ErrorResponder {
+        str.to_owned().into()
     }
 }

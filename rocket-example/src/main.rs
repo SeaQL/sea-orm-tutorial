@@ -25,8 +25,7 @@ async fn bakeries(db: &State<DatabaseConnection>) -> Result<Template, ErrorRespo
 
     let bakeries = Bakery::find()
         .all(db)
-        .await
-        .map_err(Into::into)?
+        .await?
         .into_iter()
         .map(|b| json!({ "name": b.name, "id": b.id }))
         .collect::<Vec<_>>();
@@ -41,7 +40,7 @@ async fn bakeries(db: &State<DatabaseConnection>) -> Result<Template, ErrorRespo
 async fn bakery_by_id(db: &State<DatabaseConnection>, id: i32) -> Result<Template, ErrorResponder> {
     let db = db as &DatabaseConnection;
 
-    let bakery = Bakery::find_by_id(id).one(db).await.map_err(Into::into)?;
+    let bakery = Bakery::find_by_id(id).one(db).await?;
 
     Ok(if let Some(bakery) = bakery {
         Template::render(
@@ -77,8 +76,7 @@ async fn new_bakery(
 
     Bakery::insert(new_bakery)
         .exec(db)
-        .await
-        .map_err(Into::into)?;
+        .await?;
 
     Ok(Template::render(
         "success",
@@ -88,7 +86,7 @@ async fn new_bakery(
 
 #[post("/reset")]
 async fn reset(db: &State<DatabaseConnection>) -> Result<(), ErrorResponder> {
-    Migrator::refresh(db).await.map_err(Into::into)?;
+    Migrator::refresh(db).await?;
 
     Ok(())
 }
@@ -127,25 +125,22 @@ struct ErrorResponder {
     message: String,
 }
 
-#[allow(clippy::from_over_into)]
-impl Into<ErrorResponder> for DbErr {
-    fn into(self) -> ErrorResponder {
+impl From<DbErr> for ErrorResponder {
+    fn from(err: DbErr) -> ErrorResponder {
         ErrorResponder {
-            message: self.to_string(),
+            message: err.to_string(),
         }
     }
 }
 
-#[allow(clippy::from_over_into)]
-impl Into<ErrorResponder> for String {
-    fn into(self) -> ErrorResponder {
-        ErrorResponder { message: self }
+impl From<String> for ErrorResponder {
+    fn from(string: String) -> ErrorResponder {
+        ErrorResponder { message: string }
     }
 }
 
-#[allow(clippy::from_over_into)]
-impl Into<ErrorResponder> for &str {
-    fn into(self) -> ErrorResponder {
-        self.to_owned().into()
+impl From<&str> for ErrorResponder {
+    fn from(str: &str) -> ErrorResponder {
+        str.to_owned().into()
     }
 }
