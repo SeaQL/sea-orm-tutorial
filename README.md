@@ -9,6 +9,7 @@ The tutorials contain the following chapters:
 1. [**Bakery Backend**](https://www.sea-ql.org/sea-orm-tutorial/ch01-00-build-backend-getting-started.html) - This chapter covers the basics of using SeaORM to interact with the database (a MySQL database is used for illustration). On top of this backend you can build any interface you need.
 2. [**Rocket Integration**](https://www.sea-ql.org/sea-orm-tutorial/ch02-00-integration-with-rocket.html) - This chapter explains how to integrate the SeaORM backend into the Rocket framework to create a web application that provides a web API or even a simple frontend.
 3. [**GraphQL Integration**](https://www.sea-ql.org/sea-orm-tutorial/ch03-00-integration-with-graphql.html) - This chapter extends the RESTful API of the web application in Chapter 2 to a GraphQL API with only one endpoint but enhanced flexibility of query.
+99. [**The SeaORM Cookbook**](https://www.sea-ql.org/sea-orm-tutorial/ch99-00-sea-orm-cookbook.html) - The collection of frequently asked questions and the best practice of SeaORM.
 
 [![Discord](https://img.shields.io/discord/873880840487206962?label=Discord)](https://discord.com/invite/uCPdDXzbdv)
 
