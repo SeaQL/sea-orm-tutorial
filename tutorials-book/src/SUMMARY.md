@@ -30,3 +30,9 @@
     - [Query](ch03-02-query.md)
     - [Mutation](ch03-03-mutation.md)
     - [Optional: GraphQL Playground](ch03-04-graphql-playground.md)
+
+## Appendix
+
+- [Appendix](ch99-00-appendix.md)
+    - [Seaography](ch99-01-seaography.md)
+    - [Cookbook](ch99-02-cookbook.md)
