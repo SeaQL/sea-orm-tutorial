@@ -30,8 +30,3 @@
     - [Query](ch03-02-query.md)
     - [Mutation](ch03-03-mutation.md)
     - [Optional: GraphQL Playground](ch03-04-graphql-playground.md)
-
-## SeaORM Cookbook
-
-- [SeaORM Cookbook](ch99-00-sea-orm-cookbook.md)
-    - [How to load nested relation eagerly?](ch99-01-eager-load-nested-relation.md)
