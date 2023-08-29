@@ -86,6 +86,7 @@ async fn new_bakery(
 
 #[post("/reset")]
 async fn reset(db: &State<DatabaseConnection>) -> Result<(), ErrorResponder> {
+    let db = db as &DatabaseConnection;
     Migrator::refresh(db).await?;
 
     Ok(())

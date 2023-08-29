@@ -13,8 +13,8 @@ Also, a real database may not be preferred when we want to maximize the portabil
 
 ...
 
-- sea-orm = { version = "^0.9.0", features = [ ... ] }
-+ sea-orm = { version = "^0.9.0", features = [ ... , "mock" ] }
+- sea-orm = { version = "^0.12.0", features = [ ... ] }
++ sea-orm = { version = "^0.12.0", features = [ ... , "mock" ] }
 
 ...
 ```

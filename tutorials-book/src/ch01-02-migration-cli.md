@@ -197,7 +197,7 @@ impl MigratorTrait for Migrator {
 ...
 
 [dependencies.sea-orm-migration]
-version = "^0.9.0"
+version = "^0.12.0"
 features = [
 +   "sqlx-mysql",
 +   "runtime-async-std-native-tls",

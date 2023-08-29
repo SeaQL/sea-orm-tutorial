@@ -16,8 +16,8 @@ Add the crates as dependencies:
 ...
 
 [dependencies]
-+ async-graphql = "4.0.4"
-+ async-graphql-rocket = "4.0.4"
++ async-graphql = "6.0.4"
++ async-graphql-rocket = "6.0.4"
 
 ...
 ```
