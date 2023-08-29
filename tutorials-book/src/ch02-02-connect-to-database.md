@@ -85,7 +85,7 @@ async fn bakeries(db: &State<DatabaseConnection>) -> Json<Vec<String>> {
         .await
         .unwrap()
         .into_iter()
-        .map(|b| b.name)
+        .map(|b| b.name.unwrap())
         .collect::<Vec<String>>();
 
     Json(bakery_names)
