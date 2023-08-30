@@ -27,7 +27,7 @@ Note that the function `append_query_results()` takes a vector of vectors, where
 
 ```rust, no_run
 let db: &DatabaseConnection = &MockDatabase::new(DatabaseBackend::MySql)
-    .append_query_results(vec![
+    .append_query_results([
         // First query result
         vec![bakery::Model {
             id: 1,
@@ -53,7 +53,7 @@ let db: &DatabaseConnection = &MockDatabase::new(DatabaseBackend::MySql)
             },
         ],
     ])
-    .append_query_results(vec![
+    .append_query_results([
         // Third query result
         vec![
             chef::Model {

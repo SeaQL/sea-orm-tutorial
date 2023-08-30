@@ -223,7 +223,7 @@ async fn run() -> Result<(), DbErr> {
     // Mock Testing
     {
         let db = &MockDatabase::new(DatabaseBackend::MySql)
-            .append_query_results(vec![
+            .append_query_results([
                 // First query result
                 vec![bakery::Model {
                     id: 1,
@@ -249,7 +249,7 @@ async fn run() -> Result<(), DbErr> {
                     },
                 ],
             ])
-            .append_query_results(vec![
+            .append_query_results([
                 // Third query result
                 vec![
                     chef::Model {
