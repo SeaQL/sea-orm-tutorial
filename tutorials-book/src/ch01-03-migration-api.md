@@ -14,9 +14,9 @@ Add the cargo dependency `sea-orm-migration`:
 ...
 
 [dependencies]
-futures = "0.3.21"
-sea-orm = { version = "^0.9.0", features = [ "sqlx-mysql", "runtime-async-std-native-tls", "macros" ] }
-+ sea-orm-migration = "^0.9.0"
+futures = "0.3.28"
+sea-orm = { version = "^0.12.0", features = [ "sqlx-mysql", "runtime-async-std-native-tls", "macros" ] }
++ sea-orm-migration = "^0.12.0"
 
 ...
 

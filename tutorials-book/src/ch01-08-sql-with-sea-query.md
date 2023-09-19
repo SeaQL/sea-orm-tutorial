@@ -66,8 +66,8 @@ stmt.column(column.clone()) // Use `expr_as` instead of `column` if renaming is 
     .join(
         JoinType::Join,
         bakery::Entity,
-        Expr::tbl(chef::Entity, Alias::new("bakery_id"))
-            .equals(bakery::Entity, Alias::new("id")),
+        Expr::col((chef::Entity, Alias::new("bakery_id")))
+            .equals((bakery::Entity, Alias::new("id"))),
     )
     .order_by(column, Order::Asc);
 

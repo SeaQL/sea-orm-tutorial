@@ -13,8 +13,8 @@ Also, a real database may not be preferred when we want to maximize the portabil
 
 ...
 
-- sea-orm = { version = "^0.9.0", features = [ ... ] }
-+ sea-orm = { version = "^0.9.0", features = [ ... , "mock" ] }
+- sea-orm = { version = "^0.12.0", features = [ ... ] }
++ sea-orm = { version = "^0.12.0", features = [ ... , "mock" ] }
 
 ...
 ```
@@ -27,7 +27,7 @@ Note that the function `append_query_results()` takes a vector of vectors, where
 
 ```rust, no_run
 let db: &DatabaseConnection = &MockDatabase::new(DatabaseBackend::MySql)
-    .append_query_results(vec![
+    .append_query_results([
         // First query result
         vec![bakery::Model {
             id: 1,
@@ -53,7 +53,7 @@ let db: &DatabaseConnection = &MockDatabase::new(DatabaseBackend::MySql)
             },
         ],
     ])
-    .append_query_results(vec![
+    .append_query_results([
         // Third query result
         vec![
             chef::Model {

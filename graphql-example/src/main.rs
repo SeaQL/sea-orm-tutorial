@@ -27,6 +27,8 @@ fn graphql_playground() -> content::RawHtml<String> {
 
 #[rocket::post("/graphql", data = "<request>", format = "application/json")]
 async fn graphql_request(schema: &State<SchemaType>, request: GraphQLRequest) -> GraphQLResponse {
+    let schema = schema as &SchemaType;
+
     request.execute(schema).await
 }
 
