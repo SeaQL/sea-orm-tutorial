@@ -43,7 +43,7 @@ async fn run() -> Result<(), DbErr> {
         profit_margin: ActiveValue::Set(0.0),
         ..Default::default()
     };
-    let res = Bakery::insert(happy_bakery).exec(db).await?;
+    let res = Bakery::insert(happy_bakery).exec(&db).await?;
 }
 ```
 
@@ -57,7 +57,7 @@ let sad_bakery = bakery::ActiveModel {
     name: ActiveValue::Set("Sad Bakery".to_owned()),
     profit_margin: ActiveValue::NotSet,
 };
-sad_bakery.update(db).await?;
+sad_bakery.update(&db).await?;
 ```
 
 Let's welcome John, the first employee of _Sad Bakery_!
@@ -68,7 +68,7 @@ let john = chef::ActiveModel {
     bakery_id: ActiveValue::Set(res.last_insert_id), // a foreign key
     ..Default::default()
 };
-Chef::insert(john).exec(db).await?;
+Chef::insert(john).exec(&db).await?;
 ```
 
 ## Find (single entity)
@@ -77,17 +77,17 @@ We can find all or some of the bakeries in the database as follows:
 
 ```rust, no_run
 // Finding all is built-in
-let bakeries: Vec<bakery::Model> = Bakery::find().all(db).await?;
+let bakeries: Vec<bakery::Model> = Bakery::find().all(&db).await?;
 assert_eq!(bakeries.len(), 1);
 
 // Finding by id is built-in
-let sad_bakery: Option<bakery::Model> = Bakery::find_by_id(1).one(db).await?;
+let sad_bakery: Option<bakery::Model> = Bakery::find_by_id(1).one(&db).await?;
 assert_eq!(sad_bakery.unwrap().name, "Sad Bakery");
 
 // Finding by arbitrary column with `filter()`
 let sad_bakery: Option<bakery::Model> = Bakery::find()
     .filter(bakery::Column::Name.eq("Sad Bakery"))
-    .one(db)
+    .one(&db)
     .await?;
 assert_eq!(sad_bakery.unwrap().id, 1);
 ```
@@ -105,14 +105,14 @@ let john = chef::ActiveModel {
     id: ActiveValue::Set(1), // The primary key must be set
     ..Default::default()
 };
-john.delete(db).await?;
+john.delete(&db).await?;
 
 let sad_bakery = bakery::ActiveModel {
     id: ActiveValue::Set(1), // The primary key must be set
     ..Default::default()
 };
-sad_bakery.delete(db).await?;
+sad_bakery.delete(&db).await?;
 
-let bakeries: Vec<bakery::Model> = Bakery::find().all(db).await?;
+let bakeries: Vec<bakery::Model> = Bakery::find().all(&db).await?;
 assert!(bakeries.is_empty());
 ```
