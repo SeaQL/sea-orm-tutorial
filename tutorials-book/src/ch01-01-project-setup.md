@@ -58,7 +58,7 @@ use sea_orm::{Database, DbErr};
 // the whole database URL string follows the following format:
 // "protocol://username:password@host:port/database"
 // We put the database name (that last bit) in a separate variable simply for convenience.
-const DATABASE_URL: &str = "mysql://root:password@localhost:3306";
+const DATABASE_URL: &str = "mysql://root:root@localhost:3306";
 const DB_NAME: &str = "bakeries_db";
 
 async fn run() -> Result<(), DbErr> {

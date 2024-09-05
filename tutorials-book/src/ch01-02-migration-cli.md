@@ -213,5 +213,5 @@ _Make sure you are running this command at the project root._
 ```sh
 # Change the value of DATABASE_URL according to your database implementation.
 # Make sure the database name is also supplied for MySQL or PostgreSQL.
-$ DATABASE_URL="mysql://root:password@localhost:3306/bakeries_db" sea-orm-cli migrate refresh
+$ DATABASE_URL="mysql://root:root@localhost:3306/bakeries_db" sea-orm-cli migrate refresh
 ```

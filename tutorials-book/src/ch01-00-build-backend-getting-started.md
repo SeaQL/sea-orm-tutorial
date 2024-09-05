@@ -19,8 +19,8 @@ However, depending on the database of your choice, you need to pay attention to 
 
 |      Database      |         Example Database URL          |
 | :----------------: | :-----------------------------------: |
-|       MySQL        |  `mysql://root:password@localhost:3306`   |
-|     PostgreSQL     | `postgres://root:password@localhost:5432` |
+|       MySQL        |  `mysql://root:root@localhost:3306`   |
+|     PostgreSQL     | `postgres://root:root@localhost:5432` |
 |  SQLite (in file)  |     `sqlite:./sqlite.db?mode=rwc`     |
 | SQLite (in memory) |           `sqlite::memory:`           |
 
