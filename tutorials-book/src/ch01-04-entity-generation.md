@@ -12,7 +12,7 @@ $ cargo install sea-orm-cli
 ```sh
 # Generate entity files of database `bakeries_db` to `src/entities`
 $ sea-orm-cli generate entity \
-    -u mysql://root:password@localhost:3306/bakeries_db \
+    -u mysql://root:root@localhost:3306/bakeries_db \
     -o src/entities
 ```
 
