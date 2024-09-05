@@ -1,0 +1,1978 @@
+<!DOCTYPE HTML>
+<html lang="en" class="rust" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>SeaORM Tutorials</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+        <script src="/sea-ql.js"></script>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "rust";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('rust')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="ch00-00-introduction.html">Introduction</a></li><li class="chapter-item expanded "><a href="ch01-00-build-backend-getting-started.html"><strong aria-hidden="true">1.</strong> Chapter 1 - Building a Backend with SeaORM</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch01-01-project-setup.html"><strong aria-hidden="true">1.1.</strong> Project Setup</a></li><li class="chapter-item expanded "><a href="ch01-02-migration-cli.html"><strong aria-hidden="true">1.2.</strong> Migration (CLI)</a></li><li class="chapter-item expanded "><a href="ch01-03-migration-api.html"><strong aria-hidden="true">1.3.</strong> Migration (API)</a></li><li class="chapter-item expanded "><a href="ch01-04-entity-generation.html"><strong aria-hidden="true">1.4.</strong> Generate Entity from Database</a></li><li class="chapter-item expanded "><a href="ch01-05-basic-crud-operations.html"><strong aria-hidden="true">1.5.</strong> Basic CRUD Operations</a></li><li class="chapter-item expanded "><a href="ch01-06-relational-select.html"><strong aria-hidden="true">1.6.</strong> Relational Select</a></li><li class="chapter-item expanded "><a href="ch01-07-mock-testing.html"><strong aria-hidden="true">1.7.</strong> Testing with Mock Interface</a></li><li class="chapter-item expanded "><a href="ch01-08-sql-with-sea-query.html"><strong aria-hidden="true">1.8.</strong> Optional: Building SQL Queries with SeaQuery</a></li></ol></li><li class="chapter-item expanded "><a href="ch02-00-integration-with-rocket.html"><strong aria-hidden="true">2.</strong> Chapter 2 - Integration with Rocket</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch02-01-project-setup.html"><strong aria-hidden="true">2.1.</strong> Project Setup</a></li><li class="chapter-item expanded "><a href="ch02-02-connect-to-database.html"><strong aria-hidden="true">2.2.</strong> Connect to Database</a></li><li class="chapter-item expanded "><a href="ch02-03-error-handling.html"><strong aria-hidden="true">2.3.</strong> Error Handling</a></li><li class="chapter-item expanded "><a href="ch02-04-web-api-integration.html"><strong aria-hidden="true">2.4.</strong> Web API Integration</a></li><li class="chapter-item expanded "><a href="ch02-05-simple-frontend-using-templates.html"><strong aria-hidden="true">2.5.</strong> Optional: Simple Frontend Using Templates</a></li></ol></li><li class="chapter-item expanded "><a href="ch03-00-integration-with-graphql.html"><strong aria-hidden="true">3.</strong> Chapter 3 - Integration with GraphQL</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch03-01-project-setup.html"><strong aria-hidden="true">3.1.</strong> Project Setup</a></li><li class="chapter-item expanded "><a href="ch03-02-query.html"><strong aria-hidden="true">3.2.</strong> Query</a></li><li class="chapter-item expanded "><a href="ch03-03-mutation.html"><strong aria-hidden="true">3.3.</strong> Mutation</a></li><li class="chapter-item expanded "><a href="ch03-04-graphql-playground.html"><strong aria-hidden="true">3.4.</strong> Optional: GraphQL Playground</a></li></ol></li><li class="chapter-item expanded "><a href="ch99-00-appendix.html"><strong aria-hidden="true">4.</strong> Appendix</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch99-01-seaography.html"><strong aria-hidden="true">4.1.</strong> Seaography</a></li><li class="chapter-item expanded "><a href="ch99-02-cookbook.html"><strong aria-hidden="true">4.2.</strong> Cookbook</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SeaORM Tutorials</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/SeaQL/sea-orm-tutorial/" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
+<p>SeaORM is a feature rich async ORM for integrating a Rust code base with relational databases aiming to be a write code once and run on any popular Relational Database with current support for MySQL, PostgreSQL, MariaDB and SQLite. The tutorials in this book are a gentle introduction to using the <code>sea-orm</code> crate and its cli tool <code>sea-orm-cli</code>.</p>
+<h4 id="symbols-used"><a class="header" href="#symbols-used">Symbols Used</a></h4>
+<p>Some symbols used throughout this book make it easier to visualize changes to a file.</p>
+<p>To show added or removed code from files, we will use comments or</p>
+<p><code>+</code> to show added code</p>
+<p><code>-</code> to show removed code</p>
+<p><code>...</code> is used to show only part of the existing code instead of rewriting already existing code in the examples</p>
+<p><code>$</code> shows an operation is done on the console/shell</p>
+<h4 id="chapters"><a class="header" href="#chapters">Chapters</a></h4>
+<p>In the first chapter, we will learn how to build a backend application with SeaORM. It will be compatible with different database implementations.</p>
+<p>In the subsequent chapters, we will explore the process of building other applications that integrate with a SeaORM-powered backend. In particular, we will be looking at how to build Rocket and GraphQL applications that interact with the backend we created in the first chapter.</p>
+<p>Let's get started.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="chapter-1---building-a-backend-with-seaorm"><a class="header" href="#chapter-1---building-a-backend-with-seaorm">Chapter 1 - Building a Backend with SeaORM</a></h1>
+<p><em>Full source code available on <a href="https://github.com/SeaQL/sea-orm-tutorial/tree/master/bakery-backend">GitHub</a>.</em></p>
+<p>In this chapter, we will build a backend application with SeaORM. It will act as a layer of communication with the database.</p>
+<p>The application will simulate the interface of a database of bakeries. For simplicity, there will be only two entities, <code>Bakery</code> and <code>Chef</code>. We will explore the schema later on.</p>
+<h2 id="choosing-a-database"><a class="header" href="#choosing-a-database">Choosing a Database</a></h2>
+<p>Before we start building the backend, we want to make sure that the database is up and running. Setting up the database is beyond the scope of this tutorial.</p>
+<p>SeaORM itself is agnostic to different database implementations, including MySQL, PostgreSQL, and SQLite (in files or in memory).</p>
+<p>However, depending on the database of your choice, you need to pay attention to the following:</p>
+<ul>
+<li>The appropriate <a href="https://www.sea-ql.org/SeaORM/docs/install-and-config/database-and-async-runtime#database_driver">DB driver feature</a> should be enabled.</li>
+<li>A valid database URL should be used:</li>
+</ul>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: center">Database</th><th style="text-align: center">Example Database URL</th></tr></thead><tbody>
+<tr><td style="text-align: center">MySQL</td><td style="text-align: center"><code>mysql://root:root@localhost:3306</code></td></tr>
+<tr><td style="text-align: center">PostgreSQL</td><td style="text-align: center"><code>postgres://root:root@localhost:5432</code></td></tr>
+<tr><td style="text-align: center">SQLite (in file)</td><td style="text-align: center"><code>sqlite:./sqlite.db?mode=rwc</code></td></tr>
+<tr><td style="text-align: center">SQLite (in memory)</td><td style="text-align: center"><code>sqlite::memory:</code></td></tr>
+</tbody></table>
+</div>
+<p>We will showcase exactly how to and where to use them in the next section.</p>
+<p>Once the database is ready, we can proceed to <a href="ch01-01-project-setup.html">set up the project</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="project-setup"><a class="header" href="#project-setup">Project Setup</a></h1>
+<p>In this section, we will set up our project, including the folder structure and crate dependencies.</p>
+<p>We will be using a <strong>MySQL</strong> database throughout the tutorials, but all functionalities of SeaORM are <strong>agnostic to the database implementation</strong>, as mentioned before.</p>
+<h2 id="adding-sea-orm-as-a-dependency"><a class="header" href="#adding-sea-orm-as-a-dependency">Adding <code>sea-orm</code> as a Dependency</a></h2>
+<pre><code class="language-sh">$ cargo init bakery-backend
+</code></pre>
+<pre><code class="language-diff"># Cargo.toml
+
+...
+
+[dependencies]
++ sea-orm = { version = "^0.12.0", features = [ "sqlx-mysql", "runtime-async-std-native-tls", "macros" ] }
+
+...
+
+</code></pre>
+<p>The DB driver feature <code>sqlx-mysql</code> is used because we are using MySQL.</p>
+<p>The second feature, <code>runtime-async-std-native-tls</code> is an async runtime arbitrarily chosen for this project. More information can be found on the <a href="https://www.sea-ql.org/SeaORM/docs/install-and-config/database-and-async-runtime/#async_runtime">docs</a>.</p>
+<p>Finally, the <code>macros</code> feature is an optional feature that allows the use of some <code>Derive</code> macros.</p>
+<h2 id="connecting-to-the-database-server"><a class="header" href="#connecting-to-the-database-server">Connecting to the Database server</a></h2>
+<p>We add <code>futures</code> as a dependency so that we can make use of asynchronous programming with <code>async</code>/<code>await</code>.</p>
+<pre><code class="language-diff"># Cargo.toml
+
+...
+
+[dependencies]
++ futures = "0.3.28"
+sea-orm = { version = "^0.12.0", features = [ "sqlx-mysql", "runtime-async-std-native-tls", "macros" ] }
+
+...
+
+</code></pre>
+<p>Connect to the database server:</p>
+<pre><pre class="playground"><code class="language-rust  no_run">// main.rs
+
+use futures::executor::block_on;
+use sea_orm::{Database, DbErr};
+
+// Change this according to your database implementation,
+// or supply it as an environment variable.
+// the whole database URL string follows the following format:
+// "protocol://username:password@host:port/database"
+// We put the database name (that last bit) in a separate variable simply for convenience.
+const DATABASE_URL: &amp;str = "mysql://root:root@localhost:3306";
+const DB_NAME: &amp;str = "bakeries_db";
+
+async fn run() -&gt; Result&lt;(), DbErr&gt; {
+    let db = Database::connect(DATABASE_URL).await?;
+
+    Ok(())
+}
+
+fn main() {
+    if let Err(err) = block_on(run()) {
+        panic!("{}", err);
+    }
+}</code></pre></pre>
+<p>If everything is correctly set up, the program should terminate gracefully.</p>
+<p>If it panicks, it could be that the database URL is wrong.</p>
+<p>If it hangs, it could be that the database is not up and running.</p>
+<h2 id="creating-a-database"><a class="header" href="#creating-a-database">Creating a Database</a></h2>
+<p>For MySQL and PostgreSQL, we can create a specific database instance. Let's call it <code>bakeries_db</code>.</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>...
+// main.rs
+- use sea_orm::{Database, DbErr};
++ use sea_orm::{ConnectionTrait, Database, DbBackend, DbErr, Statement};
+
+...
+
+async fn run() -&gt; Result&lt;(), DbErr&gt; {
+    let db = Database::connect(DATABASE_URL).await?;
+
++   let db = &amp;match db.get_database_backend() {
++       DbBackend::MySql =&gt; {
++           db.execute(Statement::from_string(
++               db.get_database_backend(),
++               format!("CREATE DATABASE IF NOT EXISTS `{}`;", DB_NAME),
++           ))
++           .await?;
++
++           let url = format!("{}/{}", DATABASE_URL, DB_NAME);
++           Database::connect(&amp;url).await?
++       }
++       DbBackend::Postgres =&gt; {
++           db.execute(Statement::from_string(
++               db.get_database_backend(),
++               format!("DROP DATABASE IF EXISTS \"{}\";", DB_NAME),
++           ))
++           .await?;
++           db.execute(Statement::from_string(
++               db.get_database_backend(),
++               format!("CREATE DATABASE \"{}\";", DB_NAME),
++           ))
++           .await?;
++
++           let url = format!("{}/{}", DATABASE_URL, DB_NAME);
++           Database::connect(&amp;url).await?
++       }
++       DbBackend::Sqlite =&gt; db,
++   };
+
+    Ok(())
+}
+
+...
+<span class="boring">}</span></code></pre></pre>
+<p>This snippet shows that SeaORM is database-agnostic. You may only handle the case for your chosen database if you are sure only one type of database will be used.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="migration-cli"><a class="header" href="#migration-cli">Migration (CLI)</a></h1>
+<p><em>This and the next sections concern those who are getting a taste of SeaORM by creating a new, toy database schema. If you already have an existing database schema, feel free to skip over to <a href="ch01-04-entity-generation.html">Section 1.4</a>.</em></p>
+<p>In this section, we define the following simple schema with migrations.</p>
+<p><img src="./assets/er_diagram.png" alt="ER diagram of two entities, Bakery and Chef. Chef has a foreign key referencing Bakery." /></p>
+<h2 id="initialize-using-sea-orm-cli"><a class="header" href="#initialize-using-sea-orm-cli">Initialize using <code>sea-orm-cli</code></a></h2>
+<p>For beginners, it is recommended to use <code>sea-orm-cli</code> to define and run the migrations.</p>
+<pre><code class="language-sh"># Install `sea-orm-cli`
+$ cargo install sea-orm-cli
+
+# List all available migration commands that are supported by `sea-orm-cli`
+$ sea-orm-cli migrate -h
+</code></pre>
+<p>Initialize the <code>migration</code> folder:</p>
+<pre><code class="language-sh">$ sea-orm-cli migrate init
+
+# The folder structure will be as follows:
+.
+├── Cargo.toml
+├── migration
+│   ├── Cargo.toml
+│   ├── README.md
+│   └── src
+│       ├── lib.rs
+│       ├── m20220101_000001_create_table.rs
+│       └── main.rs
+└── src
+    └── main.rs
+</code></pre>
+<h2 id="define-the-migrations"><a class="header" href="#define-the-migrations">Define the migrations</a></h2>
+<p>Update the migration files to define the <code>Bakery</code> and <code>Chef</code> tables:</p>
+<p>The filename must follow the format <code>m&lt;date&gt;_&lt;6-digit-index&gt;_&lt;description&gt;.rs</code>.</p>
+<p>For more information about defining migrations, read the documentation of <a href="https://docs.rs/sea-orm-migration/*/sea_orm_migration/manager/struct.SchemaManager.html"><code>SchemaManager</code></a>.</p>
+<pre><code class="language-diff">- m20220101_000001_create_table.rs
++ m20220101_000001_create_bakery_table.rs
++ m20220101_000002_create_chef_table.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// m20220101_000001_create_bakery_table.rs
+
+use sea_orm_migration::prelude::*;
+
+pub struct Migration;
+
+impl MigrationName for Migration {
+    fn name(&amp;self) -&gt; &amp;str {
+        "m20220101_000001_create_bakery_table" // Make sure this matches with the file name
+    }
+}
+
+#[async_trait::async_trait]
+impl MigrationTrait for Migration {
+    // Define how to apply this migration: Create the Bakery table.
+    async fn up(&amp;self, manager: &amp;SchemaManager) -&gt; Result&lt;(), DbErr&gt; {
+        manager
+            .create_table(
+                Table::create()
+                    .table(Bakery::Table)
+                    .col(
+                        ColumnDef::new(Bakery::Id)
+                            .integer()
+                            .not_null()
+                            .auto_increment()
+                            .primary_key(),
+                    )
+                    .col(ColumnDef::new(Bakery::Name).string().not_null())
+                    .col(ColumnDef::new(Bakery::ProfitMargin).double().not_null())
+                    .to_owned(),
+            )
+            .await
+    }
+
+    // Define how to rollback this migration: Drop the Bakery table.
+    async fn down(&amp;self, manager: &amp;SchemaManager) -&gt; Result&lt;(), DbErr&gt; {
+        manager
+            .drop_table(Table::drop().table(Bakery::Table).to_owned())
+            .await
+    }
+}
+
+#[derive(Iden)]
+pub enum Bakery {
+    Table,
+    Id,
+    Name,
+    ProfitMargin,
+}
+<span class="boring">}</span></code></pre></pre>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// m20220101_000002_create_chef_table.rs
+
+use sea_orm_migration::prelude::*;
+
+use super::m20220101_000001_create_bakery_table::Bakery;
+
+pub struct Migration;
+
+impl MigrationName for Migration {
+    fn name(&amp;self) -&gt; &amp;str {
+        "m_20220101_000002_create_chef_table" // Make sure this matches with the file name
+    }
+}
+
+#[async_trait::async_trait]
+impl MigrationTrait for Migration {
+    // Define how to apply this migration: Create the Chef table.
+    async fn up(&amp;self, manager: &amp;SchemaManager) -&gt; Result&lt;(), DbErr&gt; {
+        manager
+            .create_table(
+                Table::create()
+                    .table(Chef::Table)
+                    .col(
+                        ColumnDef::new(Chef::Id)
+                            .integer()
+                            .not_null()
+                            .auto_increment()
+                            .primary_key(),
+                    )
+                    .col(ColumnDef::new(Chef::Name).string().not_null())
+                    .col(ColumnDef::new(Chef::ContactDetails).json())
+                    .col(ColumnDef::new(Chef::BakeryId).integer().not_null())
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk-chef-bakery_id")
+                            .from(Chef::Table, Chef::BakeryId)
+                            .to(Bakery::Table, Bakery::Id),
+                    )
+                    .to_owned(),
+            )
+            .await
+    }
+
+    // Define how to rollback this migration: Drop the Chef table.
+    async fn down(&amp;self, manager: &amp;SchemaManager) -&gt; Result&lt;(), DbErr&gt; {
+        manager
+            .drop_table(Table::drop().table(Chef::Table).to_owned())
+            .await
+    }
+}
+
+// For ease of access
+#[derive(Iden)]
+pub enum Chef {
+    Table,
+    Id,
+    Name,
+    ContactDetails,
+    BakeryId,
+}
+<span class="boring">}</span></code></pre></pre>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// migration/src/lib.rs
+
+pub use sea_orm_migration::prelude::*;
+
+// Add each migration file as a module
+mod m20220101_000001_create_bakery_table;
+mod m20220101_000002_create_chef_table;
+
+pub struct Migrator;
+
+#[async_trait::async_trait]
+impl MigratorTrait for Migrator {
+    fn migrations() -&gt; Vec&lt;Box&lt;dyn MigrationTrait&gt;&gt; {
+        vec![
+            // Define the order of migrations.
+            Box::new(m20220101_000001_create_bakery_table::Migration),
+            Box::new(m20220101_000002_create_chef_table::Migration),
+        ]
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p><strong>Important</strong>: Make sure the following features are enabled in the <code>migration</code> crate. The database driver feature must match the database being used.</p>
+<pre><code class="language-diff"># migration/Cargo.toml
+
+...
+
+[dependencies.sea-orm-migration]
+version = "^0.12.0"
+features = [
++   "sqlx-mysql",
++   "runtime-async-std-native-tls",
+]
+</code></pre>
+<h2 id="perform-the-migrations"><a class="header" href="#perform-the-migrations">Perform the migrations</a></h2>
+<p>Perform all the migrations through <code>sea-orm-cli</code>:</p>
+<p><em>Make sure you are running this command at the project root.</em></p>
+<pre><code class="language-sh"># Change the value of DATABASE_URL according to your database implementation.
+# Make sure the database name is also supplied for MySQL or PostgreSQL.
+$ DATABASE_URL="mysql://root:root@localhost:3306/bakeries_db" sea-orm-cli migrate refresh
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="migration-api"><a class="header" href="#migration-api">Migration (API)</a></h1>
+<p>If you prefer to set up and run the migrations programmatically, we provide the <code>Migrator</code> API for that.</p>
+<p>This section covers how to perform migrations without the need to install and use the CLI tool.</p>
+<h2 id="preparation"><a class="header" href="#preparation">Preparation</a></h2>
+<p>Add the cargo dependency <code>sea-orm-migration</code>:</p>
+<pre><code class="language-diff">// Cargo.toml
+
+...
+
+[dependencies]
+futures = "0.3.28"
+sea-orm = { version = "^0.12.0", features = [ "sqlx-mysql", "runtime-async-std-native-tls", "macros" ] }
++ sea-orm-migration = "^0.12.0"
+
+...
+
+</code></pre>
+<p>Create a module named <code>migrator</code>:</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/main.rs
+
++ mod migrator;
+
+use futures::executor::block_on;
+use sea_orm::{ConnectionTrait, Database, DbBackend, DbErr, Statement};
+
+...
+<span class="boring">}</span></code></pre></pre>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/migrator/mod.rs (create new file)
+
+use sea_orm_migration::prelude::*;
+
+pub struct Migrator;
+
+#[async_trait::async_trait]
+impl MigratorTrait for Migrator {
+    fn migrations() -&gt; Vec&lt;Box&lt;dyn MigrationTrait&gt;&gt; {
+        vec![]
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="define-the-migrations-1"><a class="header" href="#define-the-migrations-1">Define the migrations</a></h2>
+<p>Define a <code>Migration</code> in a file and include it in <code>migrator/mod.rs</code>:</p>
+<p>The filename must follow the format <code>m&lt;date&gt;_&lt;6-digit-index&gt;_&lt;description&gt;.rs</code>.</p>
+<p>For more information about defining migrations, read the documentation of <a href="https://docs.rs/sea-orm-migration/*/sea_orm_migration/manager/struct.SchemaManager.html"><code>SchemaManager</code></a>.</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/migrator/m20220602_000001_create_bakery_table.rs (create new file)
+
+use sea_orm_migration::prelude::*;
+
+pub struct Migration;
+
+impl MigrationName for Migration {
+    fn name(&amp;self) -&gt; &amp;str {
+        "m_20220602_000001_create_bakery_table"
+    }
+}
+
+#[async_trait::async_trait]
+impl MigrationTrait for Migration {
+    // Define how to apply this migration: Create the Bakery table.
+    async fn up(&amp;self, manager: &amp;SchemaManager) -&gt; Result&lt;(), DbErr&gt; {
+        manager
+            .create_table(
+                Table::create()
+                    .table(Bakery::Table)
+                    .col(
+                        ColumnDef::new(Bakery::Id)
+                            .integer()
+                            .not_null()
+                            .auto_increment()
+                            .primary_key(),
+                    )
+                    .col(ColumnDef::new(Bakery::Name).string().not_null())
+                    .col(ColumnDef::new(Bakery::ProfitMargin).double().not_null())
+                    .to_owned(),
+            )
+            .await
+    }
+
+    // Define how to rollback this migration: Drop the Bakery table.
+    async fn down(&amp;self, manager: &amp;SchemaManager) -&gt; Result&lt;(), DbErr&gt; {
+        manager
+            .drop_table(Table::drop().table(Bakery::Table).to_owned())
+            .await
+    }
+}
+
+#[derive(Iden)]
+pub enum Bakery {
+    Table,
+    Id,
+    Name,
+    ProfitMargin,
+}
+<span class="boring">}</span></code></pre></pre>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/migrator/m20220602_000002_create_chef_table.rs (create new file)
+
+use sea_orm_migration::prelude::*;
+
+use super::m20220602_000001_create_bakery_table::Bakery;
+
+pub struct Migration;
+
+impl MigrationName for Migration {
+    fn name(&amp;self) -&gt; &amp;str {
+        "m_20220602_000002_create_chef_table"
+    }
+}
+
+#[async_trait::async_trait]
+impl MigrationTrait for Migration {
+    // Define how to apply this migration: Create the Chef table.
+    async fn up(&amp;self, manager: &amp;SchemaManager) -&gt; Result&lt;(), DbErr&gt; {
+        manager
+            .create_table(
+                Table::create()
+                    .table(Chef::Table)
+                    .col(
+                        ColumnDef::new(Chef::Id)
+                            .integer()
+                            .not_null()
+                            .auto_increment()
+                            .primary_key(),
+                    )
+                    .col(ColumnDef::new(Chef::Name).string().not_null())
+                    .col(ColumnDef::new(Chef::ContactDetails).json())
+                    .col(ColumnDef::new(Chef::BakeryId).integer().not_null())
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk-chef-bakery_id")
+                            .from(Chef::Table, Chef::BakeryId)
+                            .to(Bakery::Table, Bakery::Id),
+                    )
+                    .to_owned(),
+            )
+            .await
+    }
+
+    // Define how to rollback this migration: Drop the Chef table.
+    async fn down(&amp;self, manager: &amp;SchemaManager) -&gt; Result&lt;(), DbErr&gt; {
+        manager
+            .drop_table(Table::drop().table(Chef::Table).to_owned())
+            .await
+    }
+}
+
+#[derive(Iden)]
+pub enum Chef {
+    Table,
+    Id,
+    Name,
+    ContactDetails,
+    BakeryId,
+}
+<span class="boring">}</span></code></pre></pre>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/migrator/mod.rs
+
+use sea_orm_migration::prelude::*;
+
++ mod m20220602_000001_create_bakery_table;
++ mod m20220602_000002_create_chef_table;
+
+pub struct Migrator;
+
+#[async_trait::async_trait]
+impl MigratorTrait for Migrator {
+    fn migrations() -&gt; Vec&lt;Box&lt;dyn MigrationTrait&gt;&gt; {
+        vec![
++           Box::new(m20220602_000001_create_bakery_table::Migration),
++           Box::new(m20220602_000002_create_chef_table::Migration),
+        ]
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="perform-the-migrations-1"><a class="header" href="#perform-the-migrations-1">Perform the migrations</a></h2>
+<p>Use the <a href="https://docs.rs/sea-orm-migration/*/sea_orm_migration/migrator/trait.MigratorTrait.html"><code>MigratorTrait API</code></a> to perform the migrations. Verify the correctness of the database schema with <a href="https://docs.rs/sea-orm-migration/*/sea_orm_migration/manager/struct.SchemaManager.html"><code>SchemaManager</code></a>.</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/main.rs
+
+...
+
++ use sea_orm_migration::prelude::*;
+
+...
+
+async fn run() -&gt; Result&lt;(), DbErr&gt; {
+
+    ...
+
++   let schema_manager = SchemaManager::new(db); // To investigate the schema
+
++   Migrator::refresh(db).await?;
++   assert!(schema_manager.has_table("bakery").await?);
++   assert!(schema_manager.has_table("chef").await?);
+
+    Ok(())
+}
+
+...
+<span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="generate-entity-from-database"><a class="header" href="#generate-entity-from-database">Generate Entity from Database</a></h1>
+<p>Now that we have a database with a defined schema, we can generate the entities with <code>sea-orm-cli</code>.</p>
+<p><code>sea-orm-cli</code> is able to discover the schema given the database URL and generated the appropriate entity files.</p>
+<pre><code class="language-sh"># In case you have not installed `sea-orm-cli`
+$ cargo install sea-orm-cli
+</code></pre>
+<pre><code class="language-sh"># Generate entity files of database `bakeries_db` to `src/entities`
+$ sea-orm-cli generate entity \
+    -u mysql://root:root@localhost:3306/bakeries_db \
+    -o src/entities
+</code></pre>
+<p>The generated entity files:</p>
+<pre><code>bakery-backend
+├── Cargo.toml
+├── migration
+│   └── ...
+└── src
+    ├── entities
+    │   ├── chef.rs
+    │   ├── bakery.rs
+    │   ├── mod.rs
+    │   └── prelude.rs
+    └── main.rs
+</code></pre>
+<p>Put the focus on <code>chef.rs</code> and <code>bakery.rs</code>, they are the entities representing the tables <code>Chef</code> and <code>Bakery</code>, respectively.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="basic-crud-operations"><a class="header" href="#basic-crud-operations">Basic CRUD Operations</a></h1>
+<p>In this section, we showcase how to perform basic operations with the schema we've defined.</p>
+<h2 id="use-the-entities"><a class="header" href="#use-the-entities"><code>use</code> the Entities</a></h2>
+<p>The entities are the Rust representation of the tables in the database. SeaORM enables us to make use of those entities to perform operations on the database programmatically.</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/main.rs
+
++ mod entities;
+
+...
+
++ use entities::{prelude::*, *};
+
+...
+<span class="boring">}</span></code></pre></pre>
+<h2 id="insert-and-update"><a class="header" href="#insert-and-update">Insert and Update</a></h2>
+<p>Insert and update operations can be performed using <code>ActiveModel</code> of the entities.</p>
+<p>Let's insert a new bakery called <em>Happy Bakery</em> into our <code>Bakery</code> table.</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/main.rs
+
+...
+
+- use sea_orm::{ConnectionTrait, Database, DbBackend, DbErr, Statement};
++ use sea_orm::*;
+
+...
+
+async fn run() -&gt; Result&lt;(), DbErr&gt; {
+
+    ...
+
+    let happy_bakery = bakery::ActiveModel {
+        name: ActiveValue::Set("Happy Bakery".to_owned()),
+        profit_margin: ActiveValue::Set(0.0),
+        ..Default::default()
+    };
+    let res = Bakery::insert(happy_bakery).exec(db).await?;
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Suppose, later on, the owner of <em>Happy Bakery</em> adopts a brand new perspective of life, and renames it to <em>Sad Bakery</em>.</p>
+<p>We can perform the update as follows:</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let sad_bakery = bakery::ActiveModel {
+    id: ActiveValue::Set(res.last_insert_id),
+    name: ActiveValue::Set("Sad Bakery".to_owned()),
+    profit_margin: ActiveValue::NotSet,
+};
+sad_bakery.update(db).await?;
+<span class="boring">}</span></code></pre></pre>
+<p>Let's welcome John, the first employee of <em>Sad Bakery</em>!</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let john = chef::ActiveModel {
+    name: ActiveValue::Set("John".to_owned()),
+    bakery_id: ActiveValue::Set(res.last_insert_id), // a foreign key
+    ..Default::default()
+};
+Chef::insert(john).exec(db).await?;
+<span class="boring">}</span></code></pre></pre>
+<h2 id="find-single-entity"><a class="header" href="#find-single-entity">Find (single entity)</a></h2>
+<p>We can find all or some of the bakeries in the database as follows:</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Finding all is built-in
+let bakeries: Vec&lt;bakery::Model&gt; = Bakery::find().all(db).await?;
+assert_eq!(bakeries.len(), 1);
+
+// Finding by id is built-in
+let sad_bakery: Option&lt;bakery::Model&gt; = Bakery::find_by_id(1).one(db).await?;
+assert_eq!(sad_bakery.unwrap().name, "Sad Bakery");
+
+// Finding by arbitrary column with `filter()`
+let sad_bakery: Option&lt;bakery::Model&gt; = Bakery::find()
+    .filter(bakery::Column::Name.eq("Sad Bakery"))
+    .one(db)
+    .await?;
+assert_eq!(sad_bakery.unwrap().id, 1);
+<span class="boring">}</span></code></pre></pre>
+<p>For relational select on multiple entities, visit the next <a href="ch01-06-relational-select.html">section</a>.</p>
+<h2 id="delete"><a class="header" href="#delete">Delete</a></h2>
+<p>Sadly, <em>Sad Bakery</em> is unable to survive in the rapidly changing economy; it has been forced to liquidate!</p>
+<p>We have no choice but to remove its entry in our database:</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let john = chef::ActiveModel {
+    id: ActiveValue::Set(1), // The primary key must be set
+    ..Default::default()
+};
+john.delete(db).await?;
+
+let sad_bakery = bakery::ActiveModel {
+    id: ActiveValue::Set(1), // The primary key must be set
+    ..Default::default()
+};
+sad_bakery.delete(db).await?;
+
+let bakeries: Vec&lt;bakery::Model&gt; = Bakery::find().all(db).await?;
+assert!(bakeries.is_empty());
+<span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="relational-select"><a class="header" href="#relational-select">Relational Select</a></h1>
+<p>In the previous section, we explored how to <a href="ch01-05-basic-crud-operations.html#find-single-entity">perform select on a single entity</a>.</p>
+<p>However, relational databases are known for connecting entities with relations, such that we can perform queries <strong>across different entities</strong>.</p>
+<p>For example, given a bakery, we can find all the chefs working there.</p>
+<p>Suppose the following code were run before, inserting the bakery and the chefs it employed into the database.</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let la_boulangerie = bakery::ActiveModel {
+    name: ActiveValue::Set("La Boulangerie".to_owned()),
+    profit_margin: ActiveValue::Set(0.0),
+    ..Default::default()
+};
+let bakery_res = Bakery::insert(la_boulangerie).exec(db).await?;
+
+for chef_name in ["Jolie", "Charles", "Madeleine", "Frederic"] {
+    let chef = chef::ActiveModel {
+        name: ActiveValue::Set(chef_name.to_owned()),
+        bakery_id: ActiveValue::Set(bakery_res.last_insert_id),
+        ..Default::default()
+    };
+    Chef::insert(chef).exec(db).await?;
+}
+<span class="boring">}</span></code></pre></pre>
+<p>There are 4 chefs working at the bakery <em>La Boulangerie</em>, and we can find them later on as follows:</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// First find *La Boulangerie* as a Model
+let la_boulangerie: bakery::Model = Bakery::find_by_id(bakery_res.last_insert_id)
+    .one(db)
+    .await?
+    .unwrap();
+
+let chefs: Vec&lt;chef::Model&gt; = la_boulangerie.find_related(Chef).all(db).await?;
+let mut chef_names: Vec&lt;String&gt; = chefs.into_iter().map(|b| b.name).collect();
+chef_names.sort_unstable();
+
+assert_eq!(chef_names, ["Charles", "Frederic", "Jolie", "Madeleine"]);
+<span class="boring">}</span></code></pre></pre>
+<p>As new bakeries open in the town, it would be inefficient to do <code>find_related</code> on each of the bakeries.</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>    // Inserting two bakeries and their chefs
+    let la_boulangerie = bakery::ActiveModel {
+        name: ActiveValue::Set("La Boulangerie".to_owned()),
+        profit_margin: ActiveValue::Set(0.0),
+        ..Default::default()
+    };
+    let bakery_res = Bakery::insert(la_boulangerie).exec(db).await?;
+    for chef_name in ["Jolie", "Charles", "Madeleine", "Frederic"] {
+        let chef = chef::ActiveModel {
+            name: ActiveValue::Set(chef_name.to_owned()),
+            bakery_id: ActiveValue::Set(bakery_res.last_insert_id),
+            ..Default::default()
+        };
+        Chef::insert(chef).exec(db).await?;
+    }
+    let la_id = bakery_res.last_insert_id;
+
+    let arte_by_padaria = bakery::ActiveModel {
+        name: ActiveValue::Set("Arte by Padaria".to_owned()),
+        profit_margin: ActiveValue::Set(0.2),
+        ..Default::default()
+    };
+    let bakery_res = Bakery::insert(arte_by_padaria).exec(db).await?;
+    for chef_name in ["Brian", "Charles", "Kate", "Samantha"] {
+        let chef = chef::ActiveModel {
+            name: ActiveValue::Set(chef_name.to_owned()),
+            bakery_id: ActiveValue::Set(bakery_res.last_insert_id),
+            ..Default::default()
+        };
+        Chef::insert(chef).exec(db).await?;
+    }
+    let arte_id = bakery_res.last_insert_id;
+
+    // would then need two sets of find_related to find 
+<span class="boring">}</span></code></pre></pre>
+<p>We can utilize a loader to do the heavy lifting for us.</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>    // First find bakeries as Models
+    let bakeries: Vec&lt;bakery::Model&gt; = Bakery::find()
+        .filter(
+            Condition::any()
+                .add(bakery::Column::Id.eq(la_id))
+                .add(bakery::Column::Id.eq(arte_id))
+        )
+        .all(db)
+        .await?;
+
+    // Then use loader to load the chefs in one query.
+    let chefs: Vec&lt;Vec&lt;chef::Model&gt;&gt; = bakeries.load_many(Chef, db).await?;
+    let mut la_chef_names: Vec&lt;String&gt; = chefs[0].to_owned().into_iter().map(|b| b.name).collect();
+    la_chef_names.sort_unstable();
+    let mut arte_chef_names: Vec&lt;String&gt; = chefs[1].to_owned().into_iter().map(|b| b.name).collect();
+    arte_chef_names.sort_unstable();
+
+    assert_eq!(la_chef_names, ["Charles", "Frederic", "Jolie", "Madeleine"]);
+    assert_eq!(arte_chef_names, ["Brian", "Charles", "Kate", "Samantha"]);
+<span class="boring">}</span></code></pre></pre>
+<p>Using a loader can greatly reduce the traffic of the database.</p>
+<p>For more advanced usage, visit the <a href="https://www.sea-ql.org/SeaORM/docs/basic-crud/select/#find-related-models">documentation</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="testing-with-mock-interface"><a class="header" href="#testing-with-mock-interface">Testing with Mock Interface</a></h1>
+<p>In some cases, we want to verify the application logic without using a real database. As such, SeaORM provides a <code>MockDatabase</code> interface to be used in development.</p>
+<p>For example, we don't want to set up and use a real database for unit testing because the database layer should be independent of the application logic layer. Using a mock interface provides stable and correct behavior in the database layer, hence any errors that emerge can only be due to bugs in the application logic layer.</p>
+<p>Also, a real database may not be preferred when we want to maximize the portability of the development environment. Using a mock interface effective takes away the need for setting up and maintaining a real database, therefore application logic developers can do their work virtually anywhere.</p>
+<h2 id="add-the-mock-cargo-feature"><a class="header" href="#add-the-mock-cargo-feature">Add the <code>mock</code> Cargo feature</a></h2>
+<pre><code class="language-diff">// Cargo.toml
+
+...
+
+- sea-orm = { version = "^0.12.0", features = [ ... ] }
++ sea-orm = { version = "^0.12.0", features = [ ... , "mock" ] }
+
+...
+</code></pre>
+<h2 id="define-the-expected-query-results"><a class="header" href="#define-the-expected-query-results">Define the expected query results</a></h2>
+<p>First, we define what we want our mock database to return.</p>
+<p>Note that the function <code>append_query_results()</code> takes a vector of vectors, where each vector nested inside represent the result of a single query.</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let db: &amp;DatabaseConnection = &amp;MockDatabase::new(DatabaseBackend::MySql)
+    .append_query_results([
+        // First query result
+        vec![bakery::Model {
+            id: 1,
+            name: "Happy Bakery".to_owned(),
+            profit_margin: 0.0,
+        }],
+        // Second query result
+        vec![
+            bakery::Model {
+                id: 1,
+                name: "Happy Bakery".to_owned(),
+                profit_margin: 0.0,
+            },
+            bakery::Model {
+                id: 2,
+                name: "Sad Bakery".to_owned(),
+                profit_margin: 100.0,
+            },
+            bakery::Model {
+                id: 3,
+                name: "La Boulangerie".to_owned(),
+                profit_margin: 17.89,
+            },
+        ],
+    ])
+    .append_query_results([
+        // Third query result
+        vec![
+            chef::Model {
+                id: 1,
+                name: "Jolie".to_owned(),
+                contact_details: None,
+                bakery_id: 3,
+            },
+            chef::Model {
+                id: 2,
+                name: "Charles".to_owned(),
+                contact_details: None,
+                bakery_id: 3,
+            },
+            chef::Model {
+                id: 3,
+                name: "Madeleine".to_owned(),
+                contact_details: None,
+                bakery_id: 3,
+            },
+            chef::Model {
+                id: 4,
+                name: "Frederic".to_owned(),
+                contact_details: None,
+                bakery_id: 3,
+            },
+        ]
+    ])
+    .into_connection();
+<span class="boring">}</span></code></pre></pre>
+<p><em>Note: if a query result contains multiple models (like the second and third ones above) and <code>Entity::find().one(db)</code> is called, only the first one will be returned. The rest of the models in the query will be discarded.</em></p>
+<h2 id="use-the-returned-query-results"><a class="header" href="#use-the-returned-query-results">Use the returned query results</a></h2>
+<p>Then the query results can be mocked and passed to other parts of the application logic.</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let happy_bakery: Option&lt;bakery::Model&gt; = Bakery::find().one(db).await?;
+assert_eq!(
+    happy_bakery.unwrap(),
+    bakery::Model {
+        id: 1,
+        name: "Happy Bakery".to_owned(),
+        profit_margin: 0.0,
+    }
+);
+
+let all_bakeries: Vec&lt;bakery::Model&gt; = Bakery::find().all(db).await?;
+assert_eq!(
+    all_bakeries,
+    vec![
+        bakery::Model {
+            id: 1,
+            name: "Happy Bakery".to_owned(),
+            profit_margin: 0.0,
+        },
+        bakery::Model {
+            id: 2,
+            name: "Sad Bakery".to_owned(),
+            profit_margin: 100.0,
+        },
+        bakery::Model {
+            id: 3,
+            name: "La Boulangerie".to_owned(),
+            profit_margin: 17.89,
+        },
+    ]
+);
+
+let la_boulangerie_chefs: Vec&lt;chef::Model&gt; = Chef::find().all(db).await?;
+assert_eq!(
+    la_boulangerie_chefs,
+    vec![
+        chef::Model {
+            id: 1,
+            name: "Jolie".to_owned(),
+            contact_details: None,
+            bakery_id: 3,
+        },
+        chef::Model {
+            id: 2,
+            name: "Charles".to_owned(),
+            contact_details: None,
+            bakery_id: 3,
+        },
+        chef::Model {
+            id: 3,
+            name: "Madeleine".to_owned(),
+            contact_details: None,
+            bakery_id: 3,
+        },
+        chef::Model {
+            id: 4,
+            name: "Frederic".to_owned(),
+            contact_details: None,
+            bakery_id: 3,
+        },
+    ]
+);
+<span class="boring">}</span></code></pre></pre>
+<h2 id="mock-execution-results"><a class="header" href="#mock-execution-results">Mock execution results</a></h2>
+<p>To mock the results of CRUD operations, we can use <code>append_exec_results()</code>.</p>
+<p>As it is highly similar to the above, it won't be covered in detail in this tutorial. For more information, refer to the <a href="https://www.sea-ql.org/SeaORM/docs/write-test/mock/#mocking-execution-result">documentation</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="optional-building-sql-queries-with-seaquery"><a class="header" href="#optional-building-sql-queries-with-seaquery">Optional: Building SQL Queries with SeaQuery</a></h1>
+<p>If you prefer the flexibility of SQL, you can use <a href="https://crates.io/crates/sea-query">SeaQuery</a> to build SQL-like statements for any queries or operations.</p>
+<p>SeaQuery is built-in for SeaORM, so no extra setup is required.</p>
+<h2 id="insert-statements"><a class="header" href="#insert-statements">Insert statements</a></h2>
+<p>Raw SQL:</p>
+<pre><code class="language-sql">INSERT INTO `bakery` (`name`, `profit_margin`) VALUES ('SQL Bakery', -100)
+</code></pre>
+<p>SeaQuery:</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use sea_query::{Alias, Query};
+
+let columns: Vec&lt;Alias&gt; = ["name", "profit_margin"]
+    .into_iter()
+    .map(Alias::new)
+    .collect();
+
+let mut stmt = Query::insert();
+stmt.into_table(bakery::Entity).columns(columns);
+
+// Invoke `values_panic()` for each row
+stmt.values_panic(["SQL Bakery".into(), (-100.0).into()]);
+
+let builder = db.get_database_backend();
+db.execute(builder.build(&amp;stmt)).await?;
+<span class="boring">}</span></code></pre></pre>
+<h2 id="select-statements"><a class="header" href="#select-statements">Select statements</a></h2>
+<p>Raw SQL:</p>
+<pre><code class="language-sql">SELECT `chef`.`name` FROM `chef` JOIN `bakery` ON `chef`.`bakery_id` = `bakery`.`id` ORDER BY `chef`.`name` ASC
+</code></pre>
+<p>SeaQuery:</p>
+<p>If you are only interested in some of the columns, define a struct to hold the query result. It has to derive from the trait <code>FromQueryResult</code>.</p>
+<p>If all columns are of interest, then the generated <code>Model</code> structs (e.g. <code>chef::Model</code>) can be used.</p>
+<p>The fields of the struct must match the column names of the query result.</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use sea_query::{Alias, Expr, JoinType, Order, Query};
+
+#[derive(FromQueryResult)]
+struct ChefNameResult {
+    name: String,
+}
+
+...
+
+let column = (chef::Entity, Alias::new("name"));
+
+let mut stmt = Query::select();
+stmt.column(column.clone()) // Use `expr_as` instead of `column` if renaming is necessary
+    .from(chef::Entity)
+    .join(
+        JoinType::Join,
+        bakery::Entity,
+        Expr::col((chef::Entity, Alias::new("bakery_id")))
+            .equals((bakery::Entity, Alias::new("id"))),
+    )
+    .order_by(column, Order::Asc);
+
+let builder = db.get_database_backend();
+let chef = ChefNameResult::find_by_statement(builder.build(&amp;stmt))
+    .all(db)
+    .await?;
+
+let chef_names = chef.into_iter().map(|b| b.name).collect::&lt;Vec&lt;_&gt;&gt;();
+
+assert_eq!(
+    chef_names,
+    vec!["Charles", "Frederic", "Jolie", "Madeleine"]
+);
+<span class="boring">}</span></code></pre></pre>
+<h2 id="testing-and-debugging"><a class="header" href="#testing-and-debugging">Testing and Debugging</a></h2>
+<p>It's often useful to check the raw SQL of the SeaQuery-generated statements.</p>
+<p>Use <code>stmt.to_string(query_builder)</code> to do that.</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Check the raw SQL of `stmt` in MySQL syntax
+println!({}, stmt.to_string(MysqlQueryBuilder));
+<span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="chapter-2---integration-with-rocket"><a class="header" href="#chapter-2---integration-with-rocket">Chapter 2 - Integration with Rocket</a></h1>
+<p><em>Full source code available on <a href="https://github.com/SeaQL/sea-orm-tutorial/tree/master/rocket-example">GitHub</a>.</em></p>
+<p>In Chapter 1, we've explored how to interact with a database in Rust.</p>
+<p>In real applications, however, we'd probably want to expose those operations in a Web API for generic usage.</p>
+<p>To achieve that, we leverage web frameworks like <a href="https://rocket.rs/">Rocket</a>.</p>
+<p>You'll soon discover how simple and painless it is to use SeaORM in a Rocket application!</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="create-a-rocket-project"><a class="header" href="#create-a-rocket-project">Create a Rocket project</a></h1>
+<p>Create a new binary crate:</p>
+<pre><code class="language-sh">$ cargo new rocket-example --bin
+$ cd rocket-example
+</code></pre>
+<p>Add <a href="https://crates.io/crates/rocket"><code>rocket</code></a> as a dependency:</p>
+<pre><code class="language-diff"># Cargo.toml
+
+...
+
+[dependencies]
++ rocket = { version = "^0.5.0-rc.2", features = ["json"] }
+
+...
+
+</code></pre>
+<p><em>Pay attention to the version that you're using. <code>rocket</code> and/or its dependencies may not compile on the stable build of the Rust compiler if an early version of <code>rocket</code> is used.</em></p>
+<p>The following should compile and run:</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/main.rs
+
+use rocket::*;
+
+#[get("/")]
+async fn index() -&gt; &amp;'static str {
+    "Hello, bakeries!"
+}
+
+#[launch] // The "main" function of the program
+fn rocket() -&gt; _ {
+    rocket::build().mount("/", routes![index])
+}
+
+<span class="boring">}</span></code></pre></pre>
+<p>To verify it works:</p>
+<pre><code class="language-sh">$ cargo run
+</code></pre>
+<pre><code>GET localhost:8000/
+
+"Hello, bakeries!"
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="connect-to-database"><a class="header" href="#connect-to-database">Connect to Database</a></h1>
+<p>First, we define a function to help us create a database and/or connect to it.</p>
+<p>It is basically the same as in <a href="ch01-01-project-setup.html#creating-a-database">Section 1.1</a>.</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/setup.rs
+
+use sea_orm::*;
+
+// Replace with your database URL and database name
+const DATABASE_URL: &amp;str = "mysql://root:root@localhost:3306";
+const DB_NAME: &amp;str = "bakeries_db";
+
+pub(super) async fn set_up_db() -&gt; Result&lt;DatabaseConnection, DbErr&gt; {
+    let db = Database::connect(DATABASE_URL).await?;
+
+    let db = match db.get_database_backend() {
+        DbBackend::MySql =&gt; {
+            db.execute(Statement::from_string(
+                db.get_database_backend(),
+                format!("CREATE DATABASE IF NOT EXISTS `{}`;", DB_NAME),
+            ))
+            .await?;
+
+            let url = format!("{}/{}", DATABASE_URL, DB_NAME);
+            Database::connect(&amp;url).await?
+        }
+        DbBackend::Postgres =&gt; {
+            db.execute(Statement::from_string(
+                db.get_database_backend(),
+                format!("DROP DATABASE IF EXISTS \"{}\";", DB_NAME),
+            ))
+            .await?;
+            db.execute(Statement::from_string(
+                db.get_database_backend(),
+                format!("CREATE DATABASE \"{}\";", DB_NAME),
+            ))
+            .await?;
+
+            let url = format!("{}/{}", DATABASE_URL, DB_NAME);
+            Database::connect(&amp;url).await?
+        }
+        DbBackend::Sqlite =&gt; db,
+    };
+
+    Ok(db)
+}
+<span class="boring">}</span></code></pre></pre>
+<p>We instruct Rocket to manage the database connection as a <a href="https://rocket.rs/v0.5-rc/guide/state/#state">state</a>.</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/main.rs
+
+#[launch]
+fn rocket() -&gt; _ {
++   let db = match set_up_db().await {
++       Ok(db) =&gt; db,
++       Err(err) =&gt; panic!("{}", err),
++   };
+
+    rocket::build()
++       .manage(db)
+        .mount("/", routes![index, bakeries])
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The database connection can then be accessed and used as in <a href="ch01-05-basic-crud-operations.html">previous sections</a>.</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/main.rs
+
+use rocket::serde::json::Json;
+
+...
+
+#[get("/bakeries")]
+async fn bakeries(db: &amp;State&lt;DatabaseConnection&gt;) -&gt; Json&lt;Vec&lt;String&gt;&gt; {
+    let db = db as &amp;DatabaseConnection;
+
+    let bakery_names = Bakery::find()
+        .all(db)
+        .await
+        .unwrap()
+        .into_iter()
+        .map(|b| b.name)
+        .collect::&lt;Vec&lt;String&gt;&gt;();
+
+    Json(bakery_names)
+}
+
+...
+
+#[launch]
+fn rocket() -&gt; _ {
+   rocket::build()
+    .mount(
+        "/",
+        // Don't forget to mount the new endpoint handlers
+        routes![
+            index,
++           bakeries
+        ]
+    )
+}
+<span class="boring">}</span></code></pre></pre>
+<p>To verify it works:</p>
+<pre><code class="language-sh">$ cargo run
+</code></pre>
+<pre><code>GET localhost:8000/bakeries
+
+["Bakery Names", "In The", "Database", "If Any"]
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="error-handling"><a class="header" href="#error-handling">Error Handling</a></h1>
+<p>First, define a <a href="https://rocket.rs/v0.5-rc/guide/responses/#custom-responders">custom responder</a>:</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/main.rs
+
+#[derive(Responder)]
+#[response(status = 500, content_type = "json")]
+struct ErrorResponder {
+    message: String,
+}
+
+// The following impl's are for easy conversion of error types.
+
+impl From&lt;DbErr&gt; for ErrorResponder {
+    fn from(err: DbErr) -&gt; ErrorResponder {
+        ErrorResponder {
+            message: err.to_string(),
+        }
+    }
+}
+
+impl From&lt;String&gt; for ErrorResponder {
+    fn from(string: String) -&gt; ErrorResponder {
+        ErrorResponder { message: string }
+    }
+}
+
+impl From&lt;&amp;str&gt; for ErrorResponder {
+    fn from(str: &amp;str) -&gt; ErrorResponder {
+        str.to_owned().into()
+    }
+}
+
+<span class="boring">}</span></code></pre></pre>
+<p>To catch and handle the errors:</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/main.rs
+
+#[get("/bakeries")]
+async fn bakeries(db: &amp;State&lt;DatabaseConnection&gt;)
+- -&gt; Json&lt;Vec&lt;String&gt;&gt;
++ -&gt; Result&lt;Json&lt;Vec&lt;String&gt;&gt;, ErrorResponder&gt;
+{
+    let db = db as &amp;DatabaseConnection;
+
+    let bakery_names = Bakery::find()
+        .all(db)
+        .await
+-       .unwrap()
++       .map_err(Into::into)?
+        .into_iter()
+        .map(|b| b.name)
+        .collect::&lt;Vec&lt;String&gt;&gt;();
+
+-   Json(bakery_names)
++   Ok(Json(bakery_names))
+}
+<span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="web-api-integration"><a class="header" href="#web-api-integration">Web API Integration</a></h1>
+<p>We can wrap more of the backend's functionalities into our Rocket application.</p>
+<p>Check <a href="https://rocket.rs/v0.5-rc/guide/">Rocket's official documentation</a> for how to use their interfaces.</p>
+<p>Below are some examples: <em>(Don't forget to mount all new handlers in <code>rocket()</code>!)</em></p>
+<h2 id="fetch-one-bakery-by-id"><a class="header" href="#fetch-one-bakery-by-id">Fetch one Bakery by id</a></h2>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[get("/bakeries/&lt;id&gt;")]
+async fn bakery_by_id(db: &amp;State&lt;DatabaseConnection&gt;, id: i32) -&gt; Result&lt;String, ErrorResponder&gt; {
+    let db = db as &amp;DatabaseConnection;
+
+    let bakery = Bakery::find_by_id(id).one(db).await.map_err(Into::into)?;
+
+    Ok(if let Some(bakery) = bakery {
+        bakery.name
+    } else {
+        return Err(format!("No bakery with id {id} is found.").into());
+    })
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="add-a-new-bakery"><a class="header" href="#add-a-new-bakery">Add a new Bakery</a></h2>
+<p>Query parameters are used for input here for simplicity. Alternatively, use <a href="https://rocket.rs/v0.5-rc/guide/requests/#body-data">Body Data</a>.</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use entities::*;
+
+#[post("/bakeries?&lt;name&gt;&amp;&lt;profit_margin&gt;")]
+async fn new_bakery(
+    db: &amp;State&lt;DatabaseConnection&gt;,
+    name: &amp;str,
+    profit_margin: Option&lt;f64&gt;,
+) -&gt; Result&lt;(), ErrorResponder&gt; {
+    let db = db as &amp;DatabaseConnection;
+
+    let new_bakery = bakery::ActiveModel {
+        name: ActiveValue::Set(name.to_owned()),
+        profit_margin: ActiveValue::Set(profit_margin.unwrap_or_default()),
+        ..Default::default()
+    };
+
+    Bakery::insert(new_bakery)
+        .exec(db)
+        .await
+        .map_err(Into::into)?;
+
+    Ok(())
+}
+<span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="optional-simple-frontend-using-templates"><a class="header" href="#optional-simple-frontend-using-templates">Optional: Simple Frontend Using Templates</a></h1>
+<p>To make your application a little more accessible, Rocket provides the <a href="https://rocket.rs/v0.5-rc/guide/responses/#templates"><code>Templates</code></a> interface for frontend support.</p>
+<p>Follow their <a href="https://rocket.rs/v0.5-rc/guide/responses/#templates">guide</a> for a more comprehensive documentation.</p>
+<p>Some examples can be found in the <a href="https://github.com/SeaQL/sea-orm/tree/master/examples/rocket_example">SeaORM official Rocket example</a> and <code>rocket-example</code> in the <a href="https://github.com/SeaQL/sea-orm-tutorial/tree/master/rocket-example">repo</a> of this tutorial.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="chapter-3---integration-with-graphql"><a class="header" href="#chapter-3---integration-with-graphql">Chapter 3 - Integration with GraphQL</a></h1>
+<p><em>Full source code available on <a href="https://github.com/SeaQL/sea-orm-tutorial/tree/master/graphql-example">GitHub</a>.</em></p>
+<p>We've created a web application with Rocket in Chapter 2, but you may notice that the RESTful API of the application lacks flexibility.</p>
+<p>For example, a <code>GET</code> request to the endpoint <code>/bakeries</code>, if successful, always gives us an array of names of the bakeries in the database. This is a toy implementation to demonstrate how things <em>could</em> work, but in reality we also need to provide ways for getting other attributes (e.g. <em>profit_margin</em>).</p>
+<p>If we simply return everything in a response every time, the user ends up receiving extra data they didn't need. If we want to keep things small, we'll have to design and model different use cases and create many endpoints to cater for them.</p>
+<p>To combat this, <a href="https://graphql.org/">GraphQL</a>, an alternative solution to RESTful API's, provides the flexibility we <em>(may)</em> need.</p>
+<p>With GraphQL, the user describes the desired data in the <strong>request body</strong>. Then the server <strong>prepares exactly that</strong> and sends it back in the response. As a result, only one endpoint is needed and no extra data is transmitted.</p>
+<p>As the experience is greatly enhanced on the client side, the burden of implementing ways to retrieve data flexibly is heavier on the server side. This problem is severe in the world of JavaScript, as quite a lot of boilerplate code is required to implement a GraphQL server there. However, thanks to Rust's powerful type system and macro support, many of GraphQL's features can actually be implemented rather painlessly.</p>
+<p>In this chapter, we'll build a Rocket application with GraphQL support powered by <a href="https://crates.io/crates/async-graphql"><code>async_graphql</code></a>. Of course, <code>SeaORM</code> will serve as the bridge between the GraphQL resolvers and the database.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="project-setup-1"><a class="header" href="#project-setup-1">Project Setup</a></h1>
+<h2 id="create-a-rocket-application"><a class="header" href="#create-a-rocket-application">Create a Rocket application</a></h2>
+<p>The initial setup of this chapter is vastly similar to that of the previous chapter.</p>
+<p>Refer to <a href="ch02-01-project-setup.html">Section 2.1</a> and <a href="ch02-02-connect-to-database.html">Section 2.2</a> to create a Rocket application and configure the database connection.</p>
+<h2 id="set-up-async_graphql-support"><a class="header" href="#set-up-async_graphql-support">Set up <code>async_graphql</code> support</a></h2>
+<p>Add the crates as dependencies:</p>
+<pre><code class="language-diff">// Cargo.toml
+
+...
+
+[dependencies]
++ async-graphql = "6.0.4"
++ async-graphql-rocket = "6.0.4"
+
+...
+</code></pre>
+<p>Make sure the entities are generated (<a href="ch01-04-entity-generation.html">Section 1.4</a>), and extend them to support basic GraphQL queries by attributes:</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/entities/chef.rs
+
++ use async_graphql::SimpleObject;
+use sea_orm::entity::prelude::*;
+
+- #[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
++ #[derive(Clone, Debug, PartialEq, DeriveEntityModel, SimpleObject)]
+#[sea_orm(table_name = "chef")]
+pub struct Model {
+
+...
+<span class="boring">}</span></code></pre></pre>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/entities/bakery.rs
+
++ use async_graphql::SimpleObject;
+use sea_orm::entity::prelude::*;
+
+- #[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
++ #[derive(Clone, Debug, PartialEq, DeriveEntityModel, SimpleObject)]
+#[sea_orm(table_name = "bakery")]
+pub struct Model {
+
+...
+<span class="boring">}</span></code></pre></pre>
+<p>Create a struct to serve as the root of queries. The root level query requests will be defined here:</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/schema.rs
+
+use async_graphql::Object;
+
+pub(crate) struct QueryRoot;
+
+#[Object]
+impl QueryRoot {
+    async fn hello(&amp;self) -&gt; String {
+        "Hello GraphQL".to_owned()
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Build the <code>Schema</code> and attach it to Rocket as a state, and create an endpoint to serve GraphQL requests:</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/main.rs
+
+mod entities;
+mod migrator;
++ mod schema;
+mod setup;
+
++ use async_graphql::{EmptyMutation, EmptySubscription, Schema};
++ use async_graphql_rocket::*;
+use rocket::*;
++ use schema::*;
+use sea_orm::*;
+use setup::set_up_db;
+
++ type SchemaType = Schema&lt;QueryRoot, EmptyMutation, EmptySubscription&gt;;
+
+...
+
++ #[rocket::post("/graphql", data = "&lt;request&gt;", format = "application/json")]
++ async fn graphql_request(schema: &amp;State&lt;SchemaType&gt;, request: GraphQLRequest) -&gt; GraphQLResponse {
++    request.execute(schema).await
++ }
+
+...
+
+#[launch]
+async fn rocket() -&gt; _ {
+    let db = match set_up_db().await {
+        Ok(db) =&gt; db,
+        Err(err) =&gt; panic!("{}", err),
+    };
+
+    // Build the Schema
++   let schema = Schema::build(QueryRoot, EmptyMutation, EmptySubscription)
++       .data(db) // Add the database connection to the GraphQL global context
++       .finish();
+
+    rocket::build()
+-       .manage(db) // db is now managed by schema
++       .manage(schema) // schema is managed by rocket
+-       .mount("/", routes![index])
++       .mount("/", routes![index, graphql_request])
+        .register("/", catchers![not_found])
+}
+...
+<span class="boring">}</span></code></pre></pre>
+<p>To verify it works:</p>
+<pre><code class="language-sh">$ cargo run
+</code></pre>
+<p>For debugging, GraphQL requests can be sent via the <a href="ch03-04-graphql-playground.html">GraphQL Playground</a>.</p>
+<pre><code>GraphQL Request:
+{
+  hello
+}
+
+Response:
+{
+  "data": {
+    "hello": "Hello GraphQL"
+  }
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="query-with-graphql"><a class="header" href="#query-with-graphql">Query with GraphQL</a></h1>
+<p>To support queries, we extend the <code>QueryRoot</code> struct:</p>
+<h2 id="basic-queries"><a class="header" href="#basic-queries">Basic Queries</a></h2>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/schema.rs
+
+- use async_graphql::Object;
++ use async_graphql::{Context, Object};
++ use sea_orm::*;
+
++ use crate::entities::{prelude::*, *};
+
+pub(crate) struct QueryRoot;
+
+#[Object]
+impl QueryRoot {
+    ...
+
+    // For finding all bakeries
++   async fn bakeries(&amp;self, ctx: &amp;Context&lt;'_&gt;) -&gt; Result&lt;Vec&lt;bakery::Model&gt;, DbErr&gt; {
++       let db = ctx.data::&lt;DatabaseConnection&gt;().unwrap();
++       Bakery::find().all(db).await
++   }
+
+    // For finding one bakery by id
++   async fn bakery(&amp;self, ctx: &amp;Context&lt;'_&gt;, id: i32) -&gt; Result&lt;Option&lt;bakery::Model&gt;, DbErr&gt; {
++       let db = ctx.data::&lt;DatabaseConnection&gt;().unwrap();
++
++       Bakery::find_by_id(id).one(db).await
++   }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Example queries:</p>
+<pre><code>GraphQL Request:
+{
+  bakeries {
+    name
+  }
+}
+
+Response:
+{
+  "data": {
+    "bakeries": [
+      {
+        "name": "ABC Bakery"
+      },
+      {
+        "name": "La Boulangerie"
+      },
+      {
+        "name": "Sad Bakery"
+      }
+    ]
+  }
+}
+</code></pre>
+<pre><code>GraphQL Request:
+{
+  bakery(id: 1) {
+    name
+  }
+}
+
+Response:
+{
+  "data": {
+    "bakery": {
+      "name": "ABC Bakery"
+    }
+  }
+}
+</code></pre>
+<p><em>If <code>name</code> is replaced by other fields of <code>bakery::Model</code>, the requests will automatically be supported. This is because <code>bakery::Model</code> derives from <code>async_graphql::SimpleObject</code> in the previous section.</em></p>
+<h2 id="relational-query"><a class="header" href="#relational-query">Relational Query</a></h2>
+<p>One of the most appealing features of GraphQL is its convenient support for relational queries.</p>
+<p>Recall that a Bakery may hire many chefs. We can give <code>bakery::Model</code> ComplexObject support to allow for this relational query.</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/entities/bakery.rs
+
+#[derive(Clone, Debug, PartialEq, DeriveEntityModel, SimpleObject)]
++ #[graphql(complex, name = "Bakery")]
+#[sea_orm(table_name = "bakery")]
+pub struct Model {
+
+...
+<span class="boring">}</span></code></pre></pre>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/schema.rs
+
+- use async_graphql::{Context, Object};
++ use async_graphql::{ComplexObject, Context, Object};
+
+...
+
++ #[ComplexObject]
++ impl bakery::Model {
++   async fn chefs(&amp;self, ctx: &amp;Context&lt;'_&gt;) -&gt; Result&lt;Vec&lt;chef::Model&gt;, DbErr&gt; {
++       let db = ctx.data::&lt;DatabaseConnection&gt;().unwrap();
++
++       self.find_related(Chef).all(db).await
++   }
++ }
+<span class="boring">}</span></code></pre></pre>
+<p>Example query:</p>
+<pre><code>GraphQL Request:
+{
+  bakery(id: 1) {
+    name,
+    chefs {
+      name
+    }
+  }
+}
+
+Response:
+{
+  "data": {
+    "bakery": {
+      "name": "ABC Bakery",
+      "chefs": [
+        {
+          "name": "Sanford"
+        },
+        {
+          "name": "Billy"
+        }
+      ]
+    }
+  }
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="mutation"><a class="header" href="#mutation">Mutation</a></h1>
+<h2 id="preparation-1"><a class="header" href="#preparation-1">Preparation</a></h2>
+<p>To support mutations with GraphQL, we need to create a struct to serve as the root, as for queries.</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/schema.rs
+
+...
+
+pub(crate) struct QueryRoot;
++ pub(crate) struct MutationRoot;
+
+...
+<span class="boring">}</span></code></pre></pre>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/main.rs
+
+...
+
+- use async_graphql::{EmptyMutation, EmptySubscription, Schema};
++ use async_graphql::{EmptySubscription, Schema};
+
+...
+
+- type SchemaType = Schema&lt;QueryRoot, EmptyMutation, EmptySubscription&gt;;
++ type SchemaType = Schema&lt;QueryRoot, MutationRoot, EmptySubscription&gt;;
+
+...
+
+#[launch]
+async fn rocket() -&gt; _ {
+    let db = match set_up_db().await {
+        Ok(db) =&gt; db,
+        Err(err) =&gt; panic!("{}", err),
+    };
+
+-   let schema = Schema::build(QueryRoot, EmptyMutation, EmptySubscription)
++   let schema = Schema::build(QueryRoot, MutationRoot, EmptySubscription)
+       .data(db) // Add the database connection to the GraphQL global context
+       .finish();
+
+...
+<span class="boring">}</span></code></pre></pre>
+<h2 id="define-resolvers"><a class="header" href="#define-resolvers">Define resolvers</a></h2>
+<p>Define the mutation resolvers just like the ones for queries:</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/schema.rs
+
+...
+
+#[Object]
+impl MutationRoot {
+    // For inserting a bakery
+    async fn add_bakery(&amp;self, ctx: &amp;Context&lt;'_&gt;, name: String) -&gt; Result&lt;bakery::Model, DbErr&gt; {
+        let db = ctx.data::&lt;DatabaseConnection&gt;().unwrap();
+
+        let res = Bakery::insert(bakery::ActiveModel {
+            name: ActiveValue::Set(name),
+            profit_margin: ActiveValue::Set(0.0),
+            ..Default::default()
+        })
+        .exec(db)
+        .await?;
+
+        Bakery::find_by_id(res.last_insert_id)
+            .one(db)
+            .await
+            .map(|b| b.unwrap())
+    }
+
+    // For inserting a chef
+    async fn add_chef(
+        &amp;self,
+        ctx: &amp;Context&lt;'_&gt;,
+        name: String,
+        bakery_id: i32,
+    ) -&gt; Result&lt;chef::Model, DbErr&gt; {
+        let db = ctx.data::&lt;DatabaseConnection&gt;().unwrap();
+
+        let res = Chef::insert(chef::ActiveModel {
+            name: ActiveValue::Set(name),
+            bakery_id: ActiveValue::Set(bakery_id),
+            ..Default::default()
+        })
+        .exec(db)
+        .await?;
+
+        Chef::find_by_id(res.last_insert_id)
+            .one(db)
+            .await
+            .map(|b| b.unwrap())
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Examples:</p>
+<pre><code>GraphQL Request:
+mutation {
+  addChefy(name: "Excellent Bakery") {
+    id,
+    name,
+    profitMargin
+  }
+}
+
+Response:
+{
+  "data": {
+    "addChefy": {
+      "id": 4,
+      "name": "Excellent Bakery",
+      "profitMargin": 0
+    }
+  }
+}
+</code></pre>
+<pre><code>GraphQL Request:
+mutation {
+  addChef(name: "Chris", bakeryId: 1) {
+    id,
+    name,
+    bakery {
+      chefs {
+        name
+      }
+    }
+  }
+}
+
+Response:
+{
+  "data": {
+    "addChef": {
+      "id": 3,
+      "name": "Chris",
+      "bakery": {
+        "chefs": [
+          {
+            "name": "Sanford"
+          },
+          {
+            "name": "Billy"
+          },
+          {
+            "name": "Chris"
+          }
+        ]
+      }
+    }
+  }
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="optional-graphql-playground"><a class="header" href="#optional-graphql-playground">Optional: GraphQL Playground</a></h1>
+<h2 id="overview"><a class="header" href="#overview">Overview</a></h2>
+<p>When you are developing the GraphQL API, you probably want to send requests to verify the correctness of your implementation.</p>
+<p>A locally hosted GraphQL Playground is perfect for this.</p>
+<p>Simply type your request body on the left and the response data will be shown on the right.</p>
+<p><img src="assets/graphql_playground_hello.png" alt="GraphQL Playground with the &quot;hello&quot; test request." /></p>
+<h2 id="setup"><a class="header" href="#setup">Setup</a></h2>
+<p>Add a <code>GET</code> handler that returns a <code>rocket::response::content::RawHTML&lt;String&gt;</code>, which is the Playground HTML generated by <code>async-graphql</code>:</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/main.rs
+
+...
+
+use async_graphql::{EmptySubscription, Schema};
+use async_graphql::{
++   http::{playground_source, GraphQLPlaygroundConfig},
+    EmptySubscription, Schema,
+};
+use async_graphql_rocket::*;
+- use rocket::*;
++ use rocket::{response::content, *};
+
+...
+
++ #[rocket::get("/graphql")]
++ fn graphql_playground() -&gt; content::RawHtml&lt;String&gt; {
++   content::RawHtml(playground_source(GraphQLPlaygroundConfig::new("/graphql")))
++ }
+
+...
+
+    rocket::build()
+        .manage(schema)
+-       .mount("/", routes![index, graphql_request])
++       .mount("/", routes![index, graphql_playground, graphql_request])
+
+...
+<span class="boring">}</span></code></pre></pre>
+<h2 id="major-merits"><a class="header" href="#major-merits">Major Merits</a></h2>
+<h3 id="autocomplete-requests"><a class="header" href="#autocomplete-requests">Autocomplete requests</a></h3>
+<p><img src="assets/graphql_playground_autocomplete.png" alt="Requests are autocompleted in GraphQL Playground" /></p>
+<p>The Playground discovers all the types and their attributes and autocompletes your requests for you.</p>
+<h3 id="preview-documentation"><a class="header" href="#preview-documentation">Preview Documentation</a></h3>
+<p><img src="assets/graphql_playground_docs.png" alt="Documentation is easily accessible in GraphQL Playground" /></p>
+<p>You can open up the DOCS panel on the side to see the comprehensive documentation for your GraphQL API.</p>
+<h3 id="export-schema"><a class="header" href="#export-schema">Export Schema</a></h3>
+<p><img src="assets/graphql_playground_schema.png" alt="The schema can be viewed and exported in GraphQL Playground" /></p>
+<p>On the SCHEMA panel, you can view the <a href="https://graphql.org/learn/schema/">schema</a> of your GraphQL API, and export it in JSON or SDL format.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="appendix"><a class="header" href="#appendix">Appendix</a></h1>
+<p>Thanks for reading the SeaORM tutorial from start to end! Glad you make it this far!!</p>
+<p>We have a few more things for you, read on!</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="seaography"><a class="header" href="#seaography">Seaography</a></h1>
+<p>If you are building a web API that perform selecting nested relation extensively. Consider serving a GraphQL server instead. <a href="https://github.com/SeaQL/seaography">seaography</a> is a GraphQL framework for building GraphQL resolvers using SeaORM entities. With GraphQL resolver in place select above nested relation is straightforward and easy. Check "<a href="https://www.sea-ql.org/blog/2022-09-27-getting-started-with-seaography/#query-data-via-graphql">Getting Started with Seaography</a>" to learn more.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="cookbook"><a class="header" href="#cookbook">Cookbook</a></h1>
+<p>The <a href="https://www.sea-ql.org/sea-orm-cookbook/">SeaORM Cookbook</a> is a collection of frequently asked questions and the best practice of SeaORM.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            MathJax.Hub.Register.StartupHook('End', function() {
+                window.setTimeout(window.print, 100);
+            });
+        });
+        </script>
+
+    </div>
+    </body>
+</html>

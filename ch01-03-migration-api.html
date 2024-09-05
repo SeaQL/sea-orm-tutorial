@@ -1,0 +1,444 @@
+<!DOCTYPE HTML>
+<html lang="en" class="rust" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Migration (API) - SeaORM Tutorials</title>
+
+
+        <!-- Custom HTML head -->
+        <script src="/sea-ql.js"></script>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "rust";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('rust')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="ch00-00-introduction.html">Introduction</a></li><li class="chapter-item expanded "><a href="ch01-00-build-backend-getting-started.html"><strong aria-hidden="true">1.</strong> Chapter 1 - Building a Backend with SeaORM</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch01-01-project-setup.html"><strong aria-hidden="true">1.1.</strong> Project Setup</a></li><li class="chapter-item expanded "><a href="ch01-02-migration-cli.html"><strong aria-hidden="true">1.2.</strong> Migration (CLI)</a></li><li class="chapter-item expanded "><a href="ch01-03-migration-api.html" class="active"><strong aria-hidden="true">1.3.</strong> Migration (API)</a></li><li class="chapter-item expanded "><a href="ch01-04-entity-generation.html"><strong aria-hidden="true">1.4.</strong> Generate Entity from Database</a></li><li class="chapter-item expanded "><a href="ch01-05-basic-crud-operations.html"><strong aria-hidden="true">1.5.</strong> Basic CRUD Operations</a></li><li class="chapter-item expanded "><a href="ch01-06-relational-select.html"><strong aria-hidden="true">1.6.</strong> Relational Select</a></li><li class="chapter-item expanded "><a href="ch01-07-mock-testing.html"><strong aria-hidden="true">1.7.</strong> Testing with Mock Interface</a></li><li class="chapter-item expanded "><a href="ch01-08-sql-with-sea-query.html"><strong aria-hidden="true">1.8.</strong> Optional: Building SQL Queries with SeaQuery</a></li></ol></li><li class="chapter-item expanded "><a href="ch02-00-integration-with-rocket.html"><strong aria-hidden="true">2.</strong> Chapter 2 - Integration with Rocket</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch02-01-project-setup.html"><strong aria-hidden="true">2.1.</strong> Project Setup</a></li><li class="chapter-item expanded "><a href="ch02-02-connect-to-database.html"><strong aria-hidden="true">2.2.</strong> Connect to Database</a></li><li class="chapter-item expanded "><a href="ch02-03-error-handling.html"><strong aria-hidden="true">2.3.</strong> Error Handling</a></li><li class="chapter-item expanded "><a href="ch02-04-web-api-integration.html"><strong aria-hidden="true">2.4.</strong> Web API Integration</a></li><li class="chapter-item expanded "><a href="ch02-05-simple-frontend-using-templates.html"><strong aria-hidden="true">2.5.</strong> Optional: Simple Frontend Using Templates</a></li></ol></li><li class="chapter-item expanded "><a href="ch03-00-integration-with-graphql.html"><strong aria-hidden="true">3.</strong> Chapter 3 - Integration with GraphQL</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch03-01-project-setup.html"><strong aria-hidden="true">3.1.</strong> Project Setup</a></li><li class="chapter-item expanded "><a href="ch03-02-query.html"><strong aria-hidden="true">3.2.</strong> Query</a></li><li class="chapter-item expanded "><a href="ch03-03-mutation.html"><strong aria-hidden="true">3.3.</strong> Mutation</a></li><li class="chapter-item expanded "><a href="ch03-04-graphql-playground.html"><strong aria-hidden="true">3.4.</strong> Optional: GraphQL Playground</a></li></ol></li><li class="chapter-item expanded "><a href="ch99-00-appendix.html"><strong aria-hidden="true">4.</strong> Appendix</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch99-01-seaography.html"><strong aria-hidden="true">4.1.</strong> Seaography</a></li><li class="chapter-item expanded "><a href="ch99-02-cookbook.html"><strong aria-hidden="true">4.2.</strong> Cookbook</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">SeaORM Tutorials</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/SeaQL/sea-orm-tutorial/" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/SeaQL/sea-orm-tutorial/edit/master/tutorials-book/src/ch01-03-migration-api.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="migration-api"><a class="header" href="#migration-api">Migration (API)</a></h1>
+<p>If you prefer to set up and run the migrations programmatically, we provide the <code>Migrator</code> API for that.</p>
+<p>This section covers how to perform migrations without the need to install and use the CLI tool.</p>
+<h2 id="preparation"><a class="header" href="#preparation">Preparation</a></h2>
+<p>Add the cargo dependency <code>sea-orm-migration</code>:</p>
+<pre><code class="language-diff">// Cargo.toml
+
+...
+
+[dependencies]
+futures = "0.3.28"
+sea-orm = { version = "^0.12.0", features = [ "sqlx-mysql", "runtime-async-std-native-tls", "macros" ] }
++ sea-orm-migration = "^0.12.0"
+
+...
+
+</code></pre>
+<p>Create a module named <code>migrator</code>:</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/main.rs
+
++ mod migrator;
+
+use futures::executor::block_on;
+use sea_orm::{ConnectionTrait, Database, DbBackend, DbErr, Statement};
+
+...
+<span class="boring">}</span></code></pre></pre>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/migrator/mod.rs (create new file)
+
+use sea_orm_migration::prelude::*;
+
+pub struct Migrator;
+
+#[async_trait::async_trait]
+impl MigratorTrait for Migrator {
+    fn migrations() -&gt; Vec&lt;Box&lt;dyn MigrationTrait&gt;&gt; {
+        vec![]
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="define-the-migrations"><a class="header" href="#define-the-migrations">Define the migrations</a></h2>
+<p>Define a <code>Migration</code> in a file and include it in <code>migrator/mod.rs</code>:</p>
+<p>The filename must follow the format <code>m&lt;date&gt;_&lt;6-digit-index&gt;_&lt;description&gt;.rs</code>.</p>
+<p>For more information about defining migrations, read the documentation of <a href="https://docs.rs/sea-orm-migration/*/sea_orm_migration/manager/struct.SchemaManager.html"><code>SchemaManager</code></a>.</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/migrator/m20220602_000001_create_bakery_table.rs (create new file)
+
+use sea_orm_migration::prelude::*;
+
+pub struct Migration;
+
+impl MigrationName for Migration {
+    fn name(&amp;self) -&gt; &amp;str {
+        "m_20220602_000001_create_bakery_table"
+    }
+}
+
+#[async_trait::async_trait]
+impl MigrationTrait for Migration {
+    // Define how to apply this migration: Create the Bakery table.
+    async fn up(&amp;self, manager: &amp;SchemaManager) -&gt; Result&lt;(), DbErr&gt; {
+        manager
+            .create_table(
+                Table::create()
+                    .table(Bakery::Table)
+                    .col(
+                        ColumnDef::new(Bakery::Id)
+                            .integer()
+                            .not_null()
+                            .auto_increment()
+                            .primary_key(),
+                    )
+                    .col(ColumnDef::new(Bakery::Name).string().not_null())
+                    .col(ColumnDef::new(Bakery::ProfitMargin).double().not_null())
+                    .to_owned(),
+            )
+            .await
+    }
+
+    // Define how to rollback this migration: Drop the Bakery table.
+    async fn down(&amp;self, manager: &amp;SchemaManager) -&gt; Result&lt;(), DbErr&gt; {
+        manager
+            .drop_table(Table::drop().table(Bakery::Table).to_owned())
+            .await
+    }
+}
+
+#[derive(Iden)]
+pub enum Bakery {
+    Table,
+    Id,
+    Name,
+    ProfitMargin,
+}
+<span class="boring">}</span></code></pre></pre>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/migrator/m20220602_000002_create_chef_table.rs (create new file)
+
+use sea_orm_migration::prelude::*;
+
+use super::m20220602_000001_create_bakery_table::Bakery;
+
+pub struct Migration;
+
+impl MigrationName for Migration {
+    fn name(&amp;self) -&gt; &amp;str {
+        "m_20220602_000002_create_chef_table"
+    }
+}
+
+#[async_trait::async_trait]
+impl MigrationTrait for Migration {
+    // Define how to apply this migration: Create the Chef table.
+    async fn up(&amp;self, manager: &amp;SchemaManager) -&gt; Result&lt;(), DbErr&gt; {
+        manager
+            .create_table(
+                Table::create()
+                    .table(Chef::Table)
+                    .col(
+                        ColumnDef::new(Chef::Id)
+                            .integer()
+                            .not_null()
+                            .auto_increment()
+                            .primary_key(),
+                    )
+                    .col(ColumnDef::new(Chef::Name).string().not_null())
+                    .col(ColumnDef::new(Chef::ContactDetails).json())
+                    .col(ColumnDef::new(Chef::BakeryId).integer().not_null())
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk-chef-bakery_id")
+                            .from(Chef::Table, Chef::BakeryId)
+                            .to(Bakery::Table, Bakery::Id),
+                    )
+                    .to_owned(),
+            )
+            .await
+    }
+
+    // Define how to rollback this migration: Drop the Chef table.
+    async fn down(&amp;self, manager: &amp;SchemaManager) -&gt; Result&lt;(), DbErr&gt; {
+        manager
+            .drop_table(Table::drop().table(Chef::Table).to_owned())
+            .await
+    }
+}
+
+#[derive(Iden)]
+pub enum Chef {
+    Table,
+    Id,
+    Name,
+    ContactDetails,
+    BakeryId,
+}
+<span class="boring">}</span></code></pre></pre>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/migrator/mod.rs
+
+use sea_orm_migration::prelude::*;
+
++ mod m20220602_000001_create_bakery_table;
++ mod m20220602_000002_create_chef_table;
+
+pub struct Migrator;
+
+#[async_trait::async_trait]
+impl MigratorTrait for Migrator {
+    fn migrations() -&gt; Vec&lt;Box&lt;dyn MigrationTrait&gt;&gt; {
+        vec![
++           Box::new(m20220602_000001_create_bakery_table::Migration),
++           Box::new(m20220602_000002_create_chef_table::Migration),
+        ]
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="perform-the-migrations"><a class="header" href="#perform-the-migrations">Perform the migrations</a></h2>
+<p>Use the <a href="https://docs.rs/sea-orm-migration/*/sea_orm_migration/migrator/trait.MigratorTrait.html"><code>MigratorTrait API</code></a> to perform the migrations. Verify the correctness of the database schema with <a href="https://docs.rs/sea-orm-migration/*/sea_orm_migration/manager/struct.SchemaManager.html"><code>SchemaManager</code></a>.</p>
+<pre><pre class="playground"><code class="language-rust  no_run"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// src/main.rs
+
+...
+
++ use sea_orm_migration::prelude::*;
+
+...
+
+async fn run() -&gt; Result&lt;(), DbErr&gt; {
+
+    ...
+
++   let schema_manager = SchemaManager::new(db); // To investigate the schema
+
++   Migrator::refresh(db).await?;
++   assert!(schema_manager.has_table("bakery").await?);
++   assert!(schema_manager.has_table("chef").await?);
+
+    Ok(())
+}
+
+...
+<span class="boring">}</span></code></pre></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch01-02-migration-cli.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch01-04-entity-generation.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch01-02-migration-cli.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch01-04-entity-generation.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
