@@ -14,7 +14,7 @@ let la_boulangerie = bakery::ActiveModel {
     profit_margin: ActiveValue::Set(0.0),
     ..Default::default()
 };
-let bakery_res = Bakery::insert(la_boulangerie).exec(db).await?;
+let bakery_res = Bakery::insert(la_boulangerie).exec(&db).await?;
 
 for chef_name in ["Jolie", "Charles", "Madeleine", "Frederic"] {
     let chef = chef::ActiveModel {
@@ -22,7 +22,7 @@ for chef_name in ["Jolie", "Charles", "Madeleine", "Frederic"] {
         bakery_id: ActiveValue::Set(bakery_res.last_insert_id),
         ..Default::default()
     };
-    Chef::insert(chef).exec(db).await?;
+    Chef::insert(chef).exec(&db).await?;
 }
 ```
 
@@ -31,11 +31,11 @@ There are 4 chefs working at the bakery _La Boulangerie_, and we can find them l
 ```rust, no_run
 // First find *La Boulangerie* as a Model
 let la_boulangerie: bakery::Model = Bakery::find_by_id(bakery_res.last_insert_id)
-    .one(db)
+    .one(&db)
     .await?
     .unwrap();
 
-let chefs: Vec<chef::Model> = la_boulangerie.find_related(Chef).all(db).await?;
+let chefs: Vec<chef::Model> = la_boulangerie.find_related(Chef).all(&db).await?;
 let mut chef_names: Vec<String> = chefs.into_iter().map(|b| b.name).collect();
 chef_names.sort_unstable();
 
