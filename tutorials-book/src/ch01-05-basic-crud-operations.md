@@ -10,6 +10,9 @@ The entities are the Rust representation of the tables in the database. SeaORM e
 // src/main.rs
 
 + mod entities;
++ use entities::{bakery, chef};
++ use entities::bakery::Entity as Bakery;
++ use entities::chef::Entity as Chef;
 
 ...
 
